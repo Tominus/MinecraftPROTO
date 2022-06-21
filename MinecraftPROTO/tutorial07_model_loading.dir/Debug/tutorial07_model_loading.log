@@ -1,0 +1,8 @@
+﻿  Building Custom Rule D:/P2/MinecraftPROTO/ogl-master/CMakeLists.txt
+  tutorial07.cpp
+  shader.cpp
+  controls.cpp
+  texture.cpp
+  objloader.cpp
+D:\P2\MinecraftPROTO\ogl-master\tutorial07_model_loading\tutorial07.cpp(162,49): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  tutorial07_model_loading.vcxproj -> D:\P2\MinecraftPROTO\MinecraftPROTO\Debug\tutorial07_model_loading.exe
