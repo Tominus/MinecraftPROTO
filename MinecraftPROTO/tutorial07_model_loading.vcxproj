@@ -115,7 +115,8 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
 C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -E copy D:/P2/MinecraftPROTO/MinecraftPROTO/$(Configuration)/tutorial07_model_loading.exe D:/P2/MinecraftPROTO/ogl-master/tutorial07_model_loading/
 if %errorlevel% neq 0 goto :cmEnd
@@ -171,7 +172,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
 C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -E copy D:/P2/MinecraftPROTO/MinecraftPROTO/$(Configuration)/tutorial07_model_loading.exe D:/P2/MinecraftPROTO/ogl-master/tutorial07_model_loading/
 if %errorlevel% neq 0 goto :cmEnd
@@ -227,7 +229,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
 C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -E copy D:/P2/MinecraftPROTO/MinecraftPROTO/$(Configuration)/tutorial07_model_loading.exe D:/P2/MinecraftPROTO/ogl-master/tutorial07_model_loading/
 if %errorlevel% neq 0 goto :cmEnd
@@ -282,7 +285,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
 C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -E copy D:/P2/MinecraftPROTO/MinecraftPROTO/$(Configuration)/tutorial07_model_loading.exe D:/P2/MinecraftPROTO/ogl-master/tutorial07_model_loading/
 if %errorlevel% neq 0 goto :cmEnd
@@ -365,8 +369,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Block_Render.cpp" />
     <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\tutorial07_model_loading\tutorial07.cpp" />
     <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\common\shader.cpp" />
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Block_Render.h" />
     <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\shader.hpp" />
     <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\common\controls.cpp" />
     <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\controls.hpp" />

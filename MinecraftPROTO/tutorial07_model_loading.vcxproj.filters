@@ -16,6 +16,9 @@
     <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\common\objloader.cpp">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Block_Render.cpp">
+      <Filter>Source Files\GameRender</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\shader.hpp">
@@ -29,6 +32,9 @@
     </ClInclude>
     <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\objloader.hpp">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Block_Render.h">
+      <Filter>Source Files\GameRender</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +57,9 @@
     </Filter>
     <Filter Include="shaders">
       <UniqueIdentifier>{D7D8C192-2299-3F95-B67A-D1DB777F472C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameRender">
+      <UniqueIdentifier>{f64d97bd-f988-4922-a160-1d8e2fc21812}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
