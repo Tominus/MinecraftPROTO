@@ -19,6 +19,9 @@
     <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Block_Render.cpp">
       <Filter>Source Files\GameRender</Filter>
     </ClCompile>
+    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Chunk.cpp">
+      <Filter>Source Files\GameRender</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\shader.hpp">
@@ -35,6 +38,12 @@
     </ClInclude>
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Block_Render.h">
       <Filter>Source Files\GameRender</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Chunk.h">
+      <Filter>Source Files\GameRender</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GlobalDefine.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

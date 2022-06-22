@@ -181,9 +181,9 @@ GLuint loadDDS(const char * imagepath){
 
 	// "Bind" the newly created texture : all future texture functions will modify this texture
 	glBindTexture(GL_TEXTURE_2D, textureID);
-	glPixelStorei(GL_UNPACK_ALIGNMENT,1);	
+	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 	
-	unsigned int blockSize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16; 
+	unsigned int blockSize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
 	unsigned int offset = 0;
 
 	/* load the mipmaps */ 
@@ -202,6 +202,10 @@ GLuint loadDDS(const char * imagepath){
 		if(height < 1) height = 1;
 
 	} 
+
+	//Added for 16x texture without blending
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	free(buffer); 
 

@@ -370,9 +370,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Block_Render.cpp" />
+    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Chunk.cpp" />
     <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\tutorial07_model_loading\tutorial07.cpp" />
     <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\common\shader.cpp" />
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Block_Render.h" />
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Chunk.h" />
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GlobalDefine.h" />
     <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\shader.hpp" />
     <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\common\controls.cpp" />
     <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\controls.hpp" />

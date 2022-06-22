@@ -2,7 +2,7 @@
 #define CONTROLS_HPP
 
 void computeMatricesFromInputs();
-glm::mat4 getViewMatrix();
-glm::mat4 getProjectionMatrix();
+const glm::mat4& getViewMatrix();
+const glm::mat4& getProjectionMatrix();
 
 #endif
