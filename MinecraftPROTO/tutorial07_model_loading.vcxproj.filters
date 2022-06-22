@@ -36,14 +36,14 @@
     <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\objloader.hpp">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GlobalDefine.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Block_Render.h">
       <Filter>Source Files\GameRender</Filter>
     </ClInclude>
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Chunk.h">
       <Filter>Source Files\GameRender</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GlobalDefine.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -68,7 +68,7 @@
       <UniqueIdentifier>{D7D8C192-2299-3F95-B67A-D1DB777F472C}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\GameRender">
-      <UniqueIdentifier>{f64d97bd-f988-4922-a160-1d8e2fc21812}</UniqueIdentifier>
+      <UniqueIdentifier>{673708fe-a596-419d-9958-6bb8123731b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

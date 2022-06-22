@@ -1,0 +1,20 @@
+# CMake generation dependency list for this directory.
+C:/Users/PERE0601/Desktop/cmake-3.23.0-windows-x86_64/share/cmake-3.23/Modules/BasicConfigVersion-SameMajorVersion.cmake.in
+C:/Users/PERE0601/Desktop/cmake-3.23.0-windows-x86_64/share/cmake-3.23/Modules/CMakePackageConfigHelpers.cmake
+C:/Users/PERE0601/Desktop/cmake-3.23.0-windows-x86_64/share/cmake-3.23/Modules/CheckCSourceCompiles.cmake
+C:/Users/PERE0601/Desktop/cmake-3.23.0-windows-x86_64/share/cmake-3.23/Modules/CheckIncludeFile.c.in
+C:/Users/PERE0601/Desktop/cmake-3.23.0-windows-x86_64/share/cmake-3.23/Modules/CheckIncludeFile.cmake
+C:/Users/PERE0601/Desktop/cmake-3.23.0-windows-x86_64/share/cmake-3.23/Modules/CheckLibraryExists.cmake
+C:/Users/PERE0601/Desktop/cmake-3.23.0-windows-x86_64/share/cmake-3.23/Modules/FindDoxygen.cmake
+C:/Users/PERE0601/Desktop/cmake-3.23.0-windows-x86_64/share/cmake-3.23/Modules/FindOpenGL.cmake
+C:/Users/PERE0601/Desktop/cmake-3.23.0-windows-x86_64/share/cmake-3.23/Modules/FindPackageHandleStandardArgs.cmake
+C:/Users/PERE0601/Desktop/cmake-3.23.0-windows-x86_64/share/cmake-3.23/Modules/FindPackageMessage.cmake
+C:/Users/PERE0601/Desktop/cmake-3.23.0-windows-x86_64/share/cmake-3.23/Modules/FindThreads.cmake
+C:/Users/PERE0601/Desktop/cmake-3.23.0-windows-x86_64/share/cmake-3.23/Modules/Internal/CheckSourceCompiles.cmake
+C:/Users/PERE0601/Desktop/cmake-3.23.0-windows-x86_64/share/cmake-3.23/Modules/WriteBasicConfigVersionFile.cmake
+D:/P2/MinecraftPROTO/ogl-master/external/glfw-3.1.2/CMakeLists.txt
+D:/P2/MinecraftPROTO/ogl-master/external/glfw-3.1.2/cmake_uninstall.cmake.in
+D:/P2/MinecraftPROTO/ogl-master/external/glfw-3.1.2/docs/Doxyfile.in
+D:/P2/MinecraftPROTO/ogl-master/external/glfw-3.1.2/src/glfw3.pc.in
+D:/P2/MinecraftPROTO/ogl-master/external/glfw-3.1.2/src/glfw3Config.cmake.in
+D:/P2/MinecraftPROTO/ogl-master/external/glfw-3.1.2/src/glfw_config.h.in

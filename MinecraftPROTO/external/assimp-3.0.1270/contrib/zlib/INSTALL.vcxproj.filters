@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\P2\MinecraftPROTO\MinecraftPROTO\CMakeFiles\f8e6d352e78a0a7dd3f8d0c13287ecc7\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{7B711892-8210-3B4F-A53B-AC6FD64ED352}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
