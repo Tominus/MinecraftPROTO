@@ -1,4 +1,2 @@
-﻿  Block_Render.cpp
-  Chunk.cpp
-..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Block_Render.cpp(140,47): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+﻿  Chunk.cpp
   tutorial07_model_loading.vcxproj -> D:\P2\MinecraftPROTO\MinecraftPROTO\Debug\tutorial07_model_loading.exe

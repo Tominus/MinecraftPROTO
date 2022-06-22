@@ -16,11 +16,20 @@
     <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\common\objloader.cpp">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Block_Render.cpp">
-      <Filter>Source Files\GameRender</Filter>
+    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\Block_Render.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Chunk.cpp">
-      <Filter>Source Files\GameRender</Filter>
+    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\Chunk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\ChunksManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\TextureLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\World.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -36,14 +45,26 @@
     <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\objloader.hpp">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\Block_Render.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\Block_Type.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\Chunk.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\ChunksManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GlobalDefine.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Block_Render.h">
-      <Filter>Source Files\GameRender</Filter>
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\TextureLoader.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GameRender\Chunk.h">
-      <Filter>Source Files\GameRender</Filter>
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\World.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -66,9 +87,6 @@
     </Filter>
     <Filter Include="shaders">
       <UniqueIdentifier>{D7D8C192-2299-3F95-B67A-D1DB777F472C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\GameRender">
-      <UniqueIdentifier>{673708fe-a596-419d-9958-6bb8123731b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

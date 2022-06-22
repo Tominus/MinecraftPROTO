@@ -6,17 +6,16 @@
 #include <glfw3.h>
 GLFWwindow* window;
 
-#include "tutorial07_model_loading/Scripts/GameRender/Chunk.h"
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-using namespace glm;
 
 #include <common/shader.hpp>
 #include <common/texture.hpp>
 #include <common/controls.hpp>
 #include <common/objloader.hpp>
 #include <time.h>
+
+#include "Scripts/World.h"
 
 int main( void )
 {
@@ -65,40 +64,31 @@ int main( void )
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
-
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
-
-	GLuint programID = LoadShaders( "TransformVertexShader.vertexshader", "TextureFragmentShader.fragmentshader" );
-	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
-	glUseProgram(programID);
-
 	
-	GLuint Texture = loadDDS("TexturesDDS/block/amethyst_block.DDS");
 
-	Chunk* _chunk = new Chunk(Texture, MatrixID);
+	//--- Init
+	World* _world = &World::Instance();
+	_world->InitWorld();
 
-	glm::mat4 ModelMatrix(1.0);
+
+	//--- Start
+	_world->Start();
+	const GLuint& _matrixID = _world->GetMatrixID();
 
 	do{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		computeMatricesFromInputs();
-		const glm::mat4& MVP = getProjectionMatrix() * getViewMatrix() * ModelMatrix;
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+		const glm::mat4& MVP = getProjectionMatrix() * getViewMatrix() * glm::mat4(1.0);
+		glUniformMatrix4fv(_matrixID, 1, GL_FALSE, &MVP[0][0]);
 
-		_chunk->Render();
+		_world->Update();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-	}
-	while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
+	} while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
-	delete _chunk;
 
-	glDeleteProgram(programID);
-	glDeleteVertexArrays(1, &VertexArrayID);
 	glfwTerminate();
 
 	return 0;
