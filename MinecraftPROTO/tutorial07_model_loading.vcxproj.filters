@@ -31,6 +31,9 @@
     <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\MainGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\shader.hpp">
@@ -64,6 +67,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\World.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\MainGame.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

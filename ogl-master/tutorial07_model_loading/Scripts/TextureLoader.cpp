@@ -20,11 +20,16 @@ TextureLoader::~TextureLoader()
 
 void TextureLoader::LoadTextures()
 {
-	blockTextureID.emplace(Block_Type::Acacia_Log, LoadFile_DDS("TexturesDDS/block/acacia_log.dds"));
-	blockTextureID.emplace(Block_Type::Amethyst_Block, LoadFile_DDS("TexturesDDS/block/amethyst_block.dds"));
-	blockTextureID.emplace(Block_Type::Barrel_Side, LoadFile_DDS("TexturesDDS/block/barrel_side.dds"));
-	blockTextureID.emplace(Block_Type::Deepslate_Diamond_Ore, LoadFile_DDS("TexturesDDS/block/deepslate_diamond_ore.dds"));
+
+	//---
+	blockTextureID.emplace(Block_Type::Acacia_Log, LoadFile_BMP("TexturesBMP/block/acacia_log.bmp"));
+	blockTextureID.emplace(Block_Type::Amethyst_Block, LoadFile_BMP("TexturesBMP/block/amethyst_block.bmp"));
+	blockTextureID.emplace(Block_Type::Barrel_Side, LoadFile_BMP("TexturesBMP/block/barrel_side.bmp"));
+	blockTextureID.emplace(Block_Type::Deepslate_Diamond_Ore, LoadFile_BMP("TexturesBMP/block/deepslate_diamond_ore.bmp"));
+
+	//---
 	blockTextureID.emplace(Block_Type::Glass, LoadFile_DDS("TexturesDDS/block/glass.dds"));
+	blockTextureID.emplace(Block_Type::Red_Stained_Glass, LoadFile_DDS("TexturesDDS/block/red_stained_glass.dds"));
 }
 
 GLuint TextureLoader::LoadFile_DDS(const char* _path)
@@ -117,6 +122,66 @@ GLuint TextureLoader::LoadFile_DDS(const char* _path)
 	free(_buffer);
 
 	return _textureID;
+}
+
+GLuint TextureLoader::LoadFile_BMP(const char* _path)
+{
+	unsigned char header[54];
+	unsigned int dataPos;
+	unsigned int imageSize;
+	unsigned int width, height;
+	unsigned char* data;
+
+	FILE* file = fopen(_path, "rb");
+	if (!file) {
+		printf("%s could not be opened. Are you in the right directory ? Don't forget to read the FAQ !\n", _path);
+		getchar();
+		return 0;
+	}
+
+	// Read the header, i.e. the 54 first bytes
+
+	// If less than 54 bytes are read, problem
+	if (fread(header, 1, 54, file) != 54) {
+		printf("Not a correct BMP file\n");
+		return 0;
+	}
+	// A BMP files always begins with "BM"
+	if (header[0] != 'B' || header[1] != 'M') {
+		printf("Not a correct BMP file\n");
+		return 0;
+	}
+	// Make sure this is a 24bpp file
+	if (*(int*)&(header[0x1E]) != 0) { printf("Not a correct BMP file\n");    return 0; }
+	if (*(int*)&(header[0x1C]) != 24) { printf("Not a correct BMP file\n");    return 0; }
+
+	// Read the information about the image
+	dataPos = *(int*)&(header[0x0A]);
+	imageSize = *(int*)&(header[0x22]);
+	width = *(int*)&(header[0x12]);
+	height = *(int*)&(header[0x16]);
+
+	// Some BMP files are misformatted, guess missing information
+	if (imageSize == 0)    imageSize = width * height * 3; // 3 : one byte for each Red, Green and Blue component
+	if (dataPos == 0)      dataPos = 54; // The BMP header is done that way
+
+	// Create a buffer
+	data = new unsigned char[imageSize];
+	fread(data, 1, imageSize, file);
+	fclose(file);
+
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
+
+	delete[] data;
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
+
+	return textureID;
 }
 
 const GLuint& TextureLoader::GetBlockTextureID(const Block_Type& _blockType) const

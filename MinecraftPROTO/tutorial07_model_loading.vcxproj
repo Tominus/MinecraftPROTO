@@ -372,6 +372,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\Block_Render.cpp" />
     <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\Chunk.cpp" />
     <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\ChunksManager.cpp" />
+    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\MainGame.cpp" />
     <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\TextureLoader.cpp" />
     <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\World.cpp" />
     <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\tutorial07_model_loading\tutorial07.cpp" />
@@ -381,6 +382,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\Chunk.h" />
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\ChunksManager.h" />
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GlobalDefine.h" />
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\MainGame.h" />
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\TextureLoader.h" />
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\World.h" />
     <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\shader.hpp" />

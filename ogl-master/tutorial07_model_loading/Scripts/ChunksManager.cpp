@@ -27,6 +27,10 @@ void ChunksManager::Render()
 	const size_t& _max = worldChunks.size();
 	for (size_t i = 0; i < _max; i++)
 	{
-		worldChunks[i]->Render();
+		worldChunks[i]->Render_NormalBlock();
+	}
+	for (size_t i = 0; i < _max; i++)
+	{
+		worldChunks[i]->Render_AlphaBlock();
 	}
 }

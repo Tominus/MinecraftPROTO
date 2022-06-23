@@ -15,10 +15,17 @@ private:
 	~Chunk();
 
 	void Render();
+	void Render_Alpha();
+
+	void Render_NormalBlock();
+	void Render_AlphaBlock();
 
 private:
 	std::vector<std::vector<std::vector<Block_Render*>>> blocks;
 	// TODO Chunk_Data && Chunk_Render + Generator
+
+	std::vector<Block_Render*> normalBlocks;
+	std::vector<Block_Render*> alphaBlocks;
 
 	glm::vec3 chunkPosition;
 	glm::vec3 worldPosition;

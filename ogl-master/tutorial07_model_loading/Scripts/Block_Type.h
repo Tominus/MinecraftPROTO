@@ -8,4 +8,5 @@ enum class Block_Type
 	Barrel_Side,
 	Deepslate_Diamond_Ore,
 	Glass,
+	Red_Stained_Glass,
 };

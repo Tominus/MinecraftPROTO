@@ -14,6 +14,7 @@ private:
 
 	void LoadTextures();
 	GLuint LoadFile_DDS(const char* _path);
+	GLuint LoadFile_BMP(const char* _path);
 
 public:
 	const GLuint& GetBlockTextureID(const Block_Type& _blockType) const;

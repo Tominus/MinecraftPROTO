@@ -8,9 +8,16 @@ class ChunksManager;
 
 class World
 {
+	friend class MainGame;
+
 private:
 	World() {};
 	~World();
+
+	void InitWorld();
+
+	void Start();
+	void Update();
 
 public:
 	inline static World& Instance()
@@ -18,11 +25,6 @@ public:
 		static World instance;
 		return instance;
 	}
-
-	void InitWorld();
-
-	void Start();
-	void Update();
 
 	inline TextureLoader* GetTextureLoader() const { return textureLoader; }
 	inline ChunksManager* GetChunkManager() const { return chunkManager; }

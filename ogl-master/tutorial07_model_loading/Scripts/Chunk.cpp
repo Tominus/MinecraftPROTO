@@ -11,23 +11,37 @@ Chunk::Chunk(const GLuint& _matrixID, const glm::vec3& _position)
 	worldPosition = _position * 16.0f;
 	const World* _world = &World::Instance();
 	const TextureLoader* textureLoader = _world->GetTextureLoader();
-	const int& _randMax = (int)Block_Type::Glass + 1;
+	const uint& _randMax = (uint)Block_Type::Red_Stained_Glass + 1;
 
 	for (size_t x = 0; x < Chunk_Size; x++)
 	{
-		std::vector<std::vector<Block_Render*>> blocksX;
+		std::vector<std::vector<Block_Render*>> _blocksX;
 		for (size_t y = 0; y < Chunk_Size; y++)
 		{
-			std::vector<Block_Render*> blocksXY;
+			std::vector<Block_Render*> _blocksXY;
 			for (size_t z = 0; z < Chunk_Size; z++)
 			{
-				blocksXY.push_back(new Block_Render(textureLoader->GetBlockTextureID((Block_Type)(rand() % _randMax)), _matrixID));
+				const Block_Type& _type = (Block_Type)(rand() % _randMax);
+				Block_Render* _block = new Block_Render(textureLoader->GetBlockTextureID(_type), _matrixID);
+				_blocksXY.push_back(_block);
+
+				//--- DELETE
+				_block->position = worldPosition + glm::vec3(x, y, z);
+
+				if (_type == Block_Type::Glass || _type == Block_Type::Red_Stained_Glass)
+				{
+					alphaBlocks.push_back(_block);
+				}
+				else
+				{
+					normalBlocks.push_back(_block);
+				}
 			}
 
-			blocksX.push_back(blocksXY);
+			_blocksX.push_back(_blocksXY);
 		}
 
-		blocks.push_back(blocksX);
+		blocks.push_back(_blocksX);
 	}
 }
 
@@ -55,7 +69,9 @@ void Chunk::Render()
 		{
 			for (size_t z = 0; z < Chunk_Size; z++)
 			{
-				blocks[x][y][z]->Render(_worldPosition);
+				Block_Render* _block = blocks[x][y][z];
+				if (_block->textureID != 5)
+					_block->Render(_worldPosition);
 				_worldPosition.z++;
 			}
 			_worldPosition.z = worldPosition.z;
@@ -63,5 +79,46 @@ void Chunk::Render()
 		}
 		_worldPosition.y = worldPosition.y;
 		_worldPosition.x++;
+	}
+}
+
+void Chunk::Render_Alpha()
+{
+	glm::vec3 _worldPosition(worldPosition);
+
+	for (size_t x = 0; x < Chunk_Size; x++)
+	{
+		for (size_t y = 0; y < Chunk_Size; y++)
+		{
+			for (size_t z = 0; z < Chunk_Size; z++)
+			{
+				Block_Render* _block = blocks[x][y][z];
+				if (_block->textureID == 5)
+					_block->Render_Alpha(_worldPosition);
+				_worldPosition.z++;
+			}
+			_worldPosition.z = worldPosition.z;
+			_worldPosition.y++;
+		}
+		_worldPosition.y = worldPosition.y;
+		_worldPosition.x++;
+	}
+}
+
+void Chunk::Render_NormalBlock()
+{
+	const uint& _max = normalBlocks.size();
+	for (size_t i = 0; i < _max; i++)
+	{
+		normalBlocks[i]->Render();
+	}
+}
+
+void Chunk::Render_AlphaBlock()
+{
+	const uint& _max = alphaBlocks.size();
+	for (size_t i = 0; i < _max; i++)
+	{
+		alphaBlocks[i]->Render_Alpha();
 	}
 }
