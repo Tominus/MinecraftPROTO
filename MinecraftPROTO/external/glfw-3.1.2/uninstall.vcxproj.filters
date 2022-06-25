@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="D:\P2\MinecraftPROTO\MinecraftPROTO\CMakeFiles\7b6f44fdc93f72e4f20c19782250b15f\uninstall.rule">
+    <CustomBuild Include="E:\Github\MinecraftPROTO\MinecraftPROTO\CMakeFiles\ff8032679d15ace6f8aee9070db0bdff\uninstall.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
-    <CustomBuild Include="D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\CMakeLists.txt" />
+    <CustomBuild Include="E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="D:\P2\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\uninstall" />
+    <None Include="E:\Github\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\uninstall" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{7B711892-8210-3B4F-A53B-AC6FD64ED352}</UniqueIdentifier>
+      <UniqueIdentifier>{88FF72FE-288E-3643-B7AF-62E6BE992F58}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

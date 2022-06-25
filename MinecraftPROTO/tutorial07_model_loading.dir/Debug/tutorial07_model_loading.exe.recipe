@@ -2,10 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\P2\MinecraftPROTO\MinecraftPROTO\x64\Debug\ZERO_CHECK</FullPath>
-    </ProjectOutput>
-    <ProjectOutput>
-      <FullPath>D:\P2\MinecraftPROTO\MinecraftPROTO\Debug\tutorial07_model_loading.exe</FullPath>
+      <FullPath>E:\Github\MinecraftPROTO\MinecraftPROTO\Debug\tutorial07_model_loading.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

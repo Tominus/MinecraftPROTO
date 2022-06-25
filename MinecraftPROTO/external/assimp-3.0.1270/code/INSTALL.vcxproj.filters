@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="D:\P2\MinecraftPROTO\MinecraftPROTO\CMakeFiles\1d84a9043da53cad2405638dc3d7ffd8\INSTALL_force.rule">
+    <CustomBuild Include="E:\Github\MinecraftPROTO\MinecraftPROTO\CMakeFiles\5d4644f91f14fcfc72fe9f21277c4273\INSTALL_force.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{7B711892-8210-3B4F-A53B-AC6FD64ED352}</UniqueIdentifier>
+      <UniqueIdentifier>{88FF72FE-288E-3643-B7AF-62E6BE992F58}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

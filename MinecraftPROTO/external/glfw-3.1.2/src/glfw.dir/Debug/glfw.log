@@ -1,4 +1,4 @@
-﻿  Building Custom Rule D:/P2/MinecraftPROTO/ogl-master/external/glfw-3.1.2/src/CMakeLists.txt
+﻿  Building Custom Rule E:/Github/MinecraftPROTO/ogl-master/external/glfw-3.1.2/src/CMakeLists.txt
   context.c
   init.c
   input.c
@@ -11,4 +11,4 @@
   win32_window.c
   winmm_joystick.c
   wgl_context.c
-  glfw.vcxproj -> D:\P2\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\src\Debug\glfw3.lib
+  glfw.vcxproj -> E:\Github\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\src\Debug\glfw3.lib

@@ -1,87 +1,87 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\LoadOGL.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\LoadOGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\LoadOGLCore.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\LoadOGLCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwColors.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwColors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwBar.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwBar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwEventGLFW.c">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwEventGLFW.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwFonts.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwFonts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwMgr.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwMgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwOpenGL.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwOpenGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwOpenGLCore.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwOpenGLCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwPrecomp.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwPrecomp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\AntPerfTimer.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\AntPerfTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\LoadOGL.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\LoadOGL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\LoadOGLCore.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\LoadOGLCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\MiniGLFW.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\MiniGLFW.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\resource.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwBar.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwColors.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwColors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwFonts.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwFonts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwGraph.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwGraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwMgr.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwMgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwOpenGL.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwOpenGL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwOpenGLCore.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwOpenGLCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwPrecomp.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\src\TwPrecomp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\P2\MinecraftPROTO\ogl-master\external\CMakeLists.txt" />
+    <CustomBuild Include="E:\Github\MinecraftPROTO\ogl-master\external\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{990FF771-820F-3D0D-B1FB-8BD150F7E2A3}</UniqueIdentifier>
+      <UniqueIdentifier>{73C931AB-EA53-33B2-B1B0-281865DA9CEC}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{78D130F0-4E07-3278-A592-20DC9C8A1715}</UniqueIdentifier>
+      <UniqueIdentifier>{B27B20D0-5612-3D13-8708-2D54FA71A328}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

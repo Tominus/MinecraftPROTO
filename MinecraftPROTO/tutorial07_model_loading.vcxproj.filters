@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\tutorial07_model_loading\tutorial07.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\tutorial07_model_loading\tutorial07.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\common\shader.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\common\shader.cpp">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\common\controls.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\common\controls.cpp">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\common\texture.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\common\texture.cpp">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\common\objloader.cpp">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\common\objloader.cpp">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\Block_Render.cpp">
@@ -25,27 +25,27 @@
     <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\ChunksManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\MainGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\TextureLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\ogl-master\tutorial07_model_loading\Scripts\MainGame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\shader.hpp">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\common\shader.hpp">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\controls.hpp">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\common\controls.hpp">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\texture.hpp">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\common\texture.hpp">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\common\objloader.hpp">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\common\objloader.hpp">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\Block_Render.h">
@@ -63,36 +63,36 @@
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\GlobalDefine.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\MainGame.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\TextureLoader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\World.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\ogl-master\tutorial07_model_loading\Scripts\MainGame.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\P2\MinecraftPROTO\ogl-master\CMakeLists.txt" />
+    <CustomBuild Include="E:\Github\MinecraftPROTO\ogl-master\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="D:\P2\MinecraftPROTO\ogl-master\tutorial07_model_loading\TransformVertexShader.vertexshader">
+    <None Include="E:\Github\MinecraftPROTO\ogl-master\tutorial07_model_loading\TransformVertexShader.vertexshader">
       <Filter>shaders</Filter>
     </None>
-    <None Include="D:\P2\MinecraftPROTO\ogl-master\tutorial07_model_loading\TextureFragmentShader.fragmentshader">
+    <None Include="E:\Github\MinecraftPROTO\ogl-master\tutorial07_model_loading\TextureFragmentShader.fragmentshader">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{78D130F0-4E07-3278-A592-20DC9C8A1715}</UniqueIdentifier>
+      <UniqueIdentifier>{B27B20D0-5612-3D13-8708-2D54FA71A328}</UniqueIdentifier>
     </Filter>
     <Filter Include="common">
-      <UniqueIdentifier>{A04EF856-E324-3944-86B1-EDC7BFB770CB}</UniqueIdentifier>
+      <UniqueIdentifier>{354A946E-3C59-3D7B-B537-7B591B268FC8}</UniqueIdentifier>
     </Filter>
     <Filter Include="shaders">
-      <UniqueIdentifier>{D7D8C192-2299-3F95-B67A-D1DB777F472C}</UniqueIdentifier>
+      <UniqueIdentifier>{DF2A3400-35BE-3FC4-BD7D-FEF8D49A3F9A}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

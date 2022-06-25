@@ -1,27 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\tests\events.c">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\tests\events.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\deps\getopt.c">
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\deps\getopt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\deps\getopt.h">
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\deps\getopt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\tests\CMakeLists.txt" />
+    <CustomBuild Include="E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\tests\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{990FF771-820F-3D0D-B1FB-8BD150F7E2A3}</UniqueIdentifier>
+      <UniqueIdentifier>{73C931AB-EA53-33B2-B1B0-281865DA9CEC}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{78D130F0-4E07-3278-A592-20DC9C8A1715}</UniqueIdentifier>
+      <UniqueIdentifier>{B27B20D0-5612-3D13-8708-2D54FA71A328}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

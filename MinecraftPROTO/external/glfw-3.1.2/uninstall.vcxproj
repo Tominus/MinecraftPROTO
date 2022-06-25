@@ -22,7 +22,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6C47E112-9E2A-3307-8050-286D476B51E3}</ProjectGuid>
+    <ProjectGuid>{84AD9DE6-3554-3BC6-9680-E659103E9580}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
@@ -105,10 +105,10 @@
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\P2\MinecraftPROTO\MinecraftPROTO\CMakeFiles\7b6f44fdc93f72e4f20c19782250b15f\uninstall.rule">
+    <CustomBuild Include="E:\Github\MinecraftPROTO\MinecraftPROTO\CMakeFiles\ff8032679d15ace6f8aee9070db0bdff\uninstall.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -P D:/P2/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/cmake_uninstall.cmake
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -P E:/Github/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/cmake_uninstall.cmake
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -117,12 +117,12 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\uninstall</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\uninstall</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</VerifyInputsAndOutputsExist>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'"></Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -P D:/P2/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/cmake_uninstall.cmake
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -P E:/Github/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/cmake_uninstall.cmake
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -131,12 +131,12 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\uninstall</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\uninstall</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</VerifyInputsAndOutputsExist>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'"></Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -P D:/P2/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/cmake_uninstall.cmake
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -P E:/Github/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/cmake_uninstall.cmake
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -145,12 +145,12 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\uninstall</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\uninstall</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</VerifyInputsAndOutputsExist>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'"></Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -P D:/P2/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/cmake_uninstall.cmake
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -P E:/Github/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/cmake_uninstall.cmake
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -159,17 +159,17 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\uninstall</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\uninstall</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</VerifyInputsAndOutputsExist>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\CMakeLists.txt">
+    <CustomBuild Include="E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/P2/MinecraftPROTO/ogl-master/external/glfw-3.1.2/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule E:/Github/MinecraftPROTO/ogl-master/external/glfw-3.1.2/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -SD:/P2/MinecraftPROTO/ogl-master -BD:/P2/MinecraftPROTO/MinecraftPROTO --check-stamp-file D:/P2/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/CMakeFiles/generate.stamp
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -SE:/Github/MinecraftPROTO/ogl-master -BE:/Github/MinecraftPROTO/MinecraftPROTO --check-stamp-file E:/Github/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -177,12 +177,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CMakePackageConfigHelpers.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckCSourceCompiles.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckIncludeFile.c.in;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckIncludeFile.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckLibraryExists.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindDoxygen.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindOpenGL.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindPackageMessage.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindThreads.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\Internal\CheckSourceCompiles.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\WriteBasicConfigVersionFile.cmake;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\cmake_uninstall.cmake.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\docs\Doxyfile.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3.pc.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3Config.cmake.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw_config.h.in;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CMakePackageConfigHelpers.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckCSourceCompiles.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckForPthreads.c;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckFunctionExists.c;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckIncludeFile.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckLibraryExists.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindDoxygen.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindOpenGL.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindPackageMessage.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindThreads.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\Internal\CheckSourceCompiles.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\WriteBasicConfigVersionFile.cmake;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\cmake_uninstall.cmake.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\docs\Doxyfile.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3.pc.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3Config.cmake.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw_config.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/P2/MinecraftPROTO/ogl-master/external/glfw-3.1.2/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule E:/Github/MinecraftPROTO/ogl-master/external/glfw-3.1.2/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -SD:/P2/MinecraftPROTO/ogl-master -BD:/P2/MinecraftPROTO/MinecraftPROTO --check-stamp-file D:/P2/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/CMakeFiles/generate.stamp
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -SE:/Github/MinecraftPROTO/ogl-master -BE:/Github/MinecraftPROTO/MinecraftPROTO --check-stamp-file E:/Github/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -190,12 +190,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CMakePackageConfigHelpers.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckCSourceCompiles.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckIncludeFile.c.in;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckIncludeFile.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckLibraryExists.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindDoxygen.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindOpenGL.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindPackageMessage.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindThreads.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\Internal\CheckSourceCompiles.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\WriteBasicConfigVersionFile.cmake;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\cmake_uninstall.cmake.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\docs\Doxyfile.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3.pc.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3Config.cmake.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw_config.h.in;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CMakePackageConfigHelpers.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckCSourceCompiles.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckForPthreads.c;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckFunctionExists.c;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckIncludeFile.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckLibraryExists.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindDoxygen.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindOpenGL.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindPackageMessage.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindThreads.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\Internal\CheckSourceCompiles.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\WriteBasicConfigVersionFile.cmake;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\cmake_uninstall.cmake.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\docs\Doxyfile.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3.pc.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3Config.cmake.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw_config.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/P2/MinecraftPROTO/ogl-master/external/glfw-3.1.2/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule E:/Github/MinecraftPROTO/ogl-master/external/glfw-3.1.2/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -SD:/P2/MinecraftPROTO/ogl-master -BD:/P2/MinecraftPROTO/MinecraftPROTO --check-stamp-file D:/P2/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/CMakeFiles/generate.stamp
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -SE:/Github/MinecraftPROTO/ogl-master -BE:/Github/MinecraftPROTO/MinecraftPROTO --check-stamp-file E:/Github/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -203,12 +203,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CMakePackageConfigHelpers.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckCSourceCompiles.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckIncludeFile.c.in;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckIncludeFile.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckLibraryExists.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindDoxygen.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindOpenGL.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindPackageMessage.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindThreads.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\Internal\CheckSourceCompiles.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\WriteBasicConfigVersionFile.cmake;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\cmake_uninstall.cmake.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\docs\Doxyfile.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3.pc.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3Config.cmake.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw_config.h.in;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CMakePackageConfigHelpers.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckCSourceCompiles.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckForPthreads.c;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckFunctionExists.c;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckIncludeFile.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckLibraryExists.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindDoxygen.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindOpenGL.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindPackageMessage.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindThreads.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\Internal\CheckSourceCompiles.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\WriteBasicConfigVersionFile.cmake;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\cmake_uninstall.cmake.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\docs\Doxyfile.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3.pc.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3Config.cmake.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw_config.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/P2/MinecraftPROTO/ogl-master/external/glfw-3.1.2/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule E:/Github/MinecraftPROTO/ogl-master/external/glfw-3.1.2/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -SD:/P2/MinecraftPROTO/ogl-master -BD:/P2/MinecraftPROTO/MinecraftPROTO --check-stamp-file D:/P2/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/CMakeFiles/generate.stamp
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -SE:/Github/MinecraftPROTO/ogl-master -BE:/Github/MinecraftPROTO/MinecraftPROTO --check-stamp-file E:/Github/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -216,18 +216,18 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CMakePackageConfigHelpers.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckCSourceCompiles.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckIncludeFile.c.in;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckIncludeFile.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\CheckLibraryExists.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindDoxygen.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindOpenGL.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindPackageMessage.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\FindThreads.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\Internal\CheckSourceCompiles.cmake;C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\share\cmake-3.23\Modules\WriteBasicConfigVersionFile.cmake;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\cmake_uninstall.cmake.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\docs\Doxyfile.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3.pc.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3Config.cmake.in;D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw_config.h.in;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CMakePackageConfigHelpers.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckCSourceCompiles.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckForPthreads.c;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckFunctionExists.c;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckIncludeFile.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\CheckLibraryExists.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindDoxygen.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindOpenGL.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindPackageMessage.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\FindThreads.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\Internal\CheckSourceCompiles.cmake;C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\share\cmake-3.24\Modules\WriteBasicConfigVersionFile.cmake;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\cmake_uninstall.cmake.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\docs\Doxyfile.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3.pc.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw3Config.cmake.in;E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\src\glfw_config.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="D:\P2\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\uninstall">
+    <None Include="E:\Github\MinecraftPROTO\MinecraftPROTO\external\glfw-3.1.2\CMakeFiles\uninstall">
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="D:\P2\MinecraftPROTO\MinecraftPROTO\ZERO_CHECK.vcxproj">
-      <Project>{F017BAD5-0E5B-35EB-8CE8-28CC84C5D3D9}</Project>
+    <ProjectReference Include="E:\Github\MinecraftPROTO\MinecraftPROTO\ZERO_CHECK.proj">
+      <Project>{50B04C8B-6DD7-3055-94B8-42FF0EB8C998}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

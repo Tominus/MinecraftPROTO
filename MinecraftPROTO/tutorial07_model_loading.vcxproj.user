@@ -3,30 +3,30 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerEnvironment></LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommand>D:\P2\MinecraftPROTO\MinecraftPROTO\Debug\tutorial07_model_loading.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>E:\Github\MinecraftPROTO\MinecraftPROTO\Debug\tutorial07_model_loading.exe</LocalDebuggerCommand>
     <LocalDebuggerCommandArguments></LocalDebuggerCommandArguments>
-    <LocalDebuggerWorkingDirectory>D:/P2/MinecraftPROTO/ogl-master/tutorial07_model_loading/</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>E:/Github/MinecraftPROTO/ogl-master/tutorial07_model_loading/</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerEnvironment></LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommand>D:\P2\MinecraftPROTO\MinecraftPROTO\Release\tutorial07_model_loading.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>E:\Github\MinecraftPROTO\MinecraftPROTO\Release\tutorial07_model_loading.exe</LocalDebuggerCommand>
     <LocalDebuggerCommandArguments></LocalDebuggerCommandArguments>
-    <LocalDebuggerWorkingDirectory>D:/P2/MinecraftPROTO/ogl-master/tutorial07_model_loading/</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>E:/Github/MinecraftPROTO/ogl-master/tutorial07_model_loading/</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <LocalDebuggerEnvironment></LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommand>D:\P2\MinecraftPROTO\MinecraftPROTO\MinSizeRel\tutorial07_model_loading.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>E:\Github\MinecraftPROTO\MinecraftPROTO\MinSizeRel\tutorial07_model_loading.exe</LocalDebuggerCommand>
     <LocalDebuggerCommandArguments></LocalDebuggerCommandArguments>
-    <LocalDebuggerWorkingDirectory>D:/P2/MinecraftPROTO/ogl-master/tutorial07_model_loading/</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>E:/Github/MinecraftPROTO/ogl-master/tutorial07_model_loading/</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <LocalDebuggerEnvironment></LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommand>D:\P2\MinecraftPROTO\MinecraftPROTO\RelWithDebInfo\tutorial07_model_loading.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>E:\Github\MinecraftPROTO\MinecraftPROTO\RelWithDebInfo\tutorial07_model_loading.exe</LocalDebuggerCommand>
     <LocalDebuggerCommandArguments></LocalDebuggerCommandArguments>
-    <LocalDebuggerWorkingDirectory>D:/P2/MinecraftPROTO/ogl-master/tutorial07_model_loading/</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>E:/Github/MinecraftPROTO/ogl-master/tutorial07_model_loading/</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
 
 </Project>

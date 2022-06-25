@@ -22,7 +22,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{25875350-9EB9-3BCC-B182-EB8B33E4CA97}</ProjectGuid>
+    <ProjectGuid>{6F0FC459-2EE9-3336-BF85-DADE8068B903}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
@@ -59,26 +59,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">BulletDynamics.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">BulletDynamics</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">BulletDynamics.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">BulletDynamics</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">BulletDynamics.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">BulletDynamics</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">BulletDynamics.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">BulletDynamics</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;D:\P2\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;D:\P2\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;E:\Github\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;E:\Github\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -96,10 +96,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;TW_STATIC;TW_NO_LIB_PRAGMA;TW_NO_DIRECT3D;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;ASSIMP_BUILD_BOOST_WORKAROUND;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;D:\P2\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;D:\P2\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;E:\Github\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;E:\Github\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;D:\P2\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;D:\P2\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;E:\Github\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;E:\Github\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -112,7 +112,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;D:\P2\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;D:\P2\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;E:\Github\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;E:\Github\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -130,10 +130,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;TW_STATIC;TW_NO_LIB_PRAGMA;TW_NO_DIRECT3D;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;ASSIMP_BUILD_BOOST_WORKAROUND;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;D:\P2\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;D:\P2\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;E:\Github\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;E:\Github\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;D:\P2\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;D:\P2\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;E:\Github\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;E:\Github\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -146,7 +146,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;D:\P2\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;D:\P2\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;E:\Github\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;E:\Github\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -164,10 +164,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;TW_STATIC;TW_NO_LIB_PRAGMA;TW_NO_DIRECT3D;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;ASSIMP_BUILD_BOOST_WORKAROUND;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;D:\P2\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;D:\P2\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;E:\Github\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;E:\Github\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;D:\P2\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;D:\P2\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;E:\Github\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;E:\Github\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -180,7 +180,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;D:\P2\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;D:\P2\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;E:\Github\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;E:\Github\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -197,10 +197,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;TW_STATIC;TW_NO_LIB_PRAGMA;TW_NO_DIRECT3D;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;ASSIMP_BUILD_BOOST_WORKAROUND;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;D:\P2\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;D:\P2\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;E:\Github\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;E:\Github\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\P2\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;D:\P2\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;D:\P2\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;D:\P2\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Github\MinecraftPROTO\ogl-master\external\glfw-3.1.2\include\GLFW;E:\Github\MinecraftPROTO\ogl-master\external\glew-1.13.0\include;E:\Github\MinecraftPROTO\ogl-master\external\AntTweakBar-1.16\include;E:\Github\MinecraftPROTO\ogl-master\external\assimp-3.0.1270\code\BoostWorkaround;E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src;\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -212,11 +212,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\CMakeLists.txt">
+    <CustomBuild Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/P2/MinecraftPROTO/ogl-master/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule E:/Github/MinecraftPROTO/ogl-master/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -SD:/P2/MinecraftPROTO/ogl-master -BD:/P2/MinecraftPROTO/MinecraftPROTO --check-stamp-file D:/P2/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeFiles/generate.stamp
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -SE:/Github/MinecraftPROTO/ogl-master -BE:/Github/MinecraftPROTO/MinecraftPROTO --check-stamp-file E:/Github/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -225,11 +225,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/P2/MinecraftPROTO/ogl-master/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule E:/Github/MinecraftPROTO/ogl-master/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -SD:/P2/MinecraftPROTO/ogl-master -BD:/P2/MinecraftPROTO/MinecraftPROTO --check-stamp-file D:/P2/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeFiles/generate.stamp
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -SE:/Github/MinecraftPROTO/ogl-master -BE:/Github/MinecraftPROTO/MinecraftPROTO --check-stamp-file E:/Github/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -238,11 +238,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/P2/MinecraftPROTO/ogl-master/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule E:/Github/MinecraftPROTO/ogl-master/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -SD:/P2/MinecraftPROTO/ogl-master -BD:/P2/MinecraftPROTO/MinecraftPROTO --check-stamp-file D:/P2/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeFiles/generate.stamp
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -SE:/Github/MinecraftPROTO/ogl-master -BE:/Github/MinecraftPROTO/MinecraftPROTO --check-stamp-file E:/Github/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -251,11 +251,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/P2/MinecraftPROTO/ogl-master/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule E:/Github/MinecraftPROTO/ogl-master/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -SD:/P2/MinecraftPROTO/ogl-master -BD:/P2/MinecraftPROTO/MinecraftPROTO --check-stamp-file D:/P2/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeFiles/generate.stamp
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -SE:/Github/MinecraftPROTO/ogl-master -BE:/Github/MinecraftPROTO/MinecraftPROTO --check-stamp-file E:/Github/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletDynamics/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -264,65 +264,65 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\P2\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\Github\MinecraftPROTO\MinecraftPROTO\external\bullet-2.81-rev2613\src\BulletDynamics\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Character\btKinematicCharacterController.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btConeTwistConstraint.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btContactConstraint.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btGearConstraint.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btGeneric6DofConstraint.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btGeneric6DofSpringConstraint.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btHinge2Constraint.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btHingeConstraint.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btPoint2PointConstraint.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSequentialImpulseConstraintSolver.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSliderConstraint.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSolve2LinearConstraint.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btTypedConstraint.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btUniversalConstraint.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btDiscreteDynamicsWorld.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btRigidBody.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btSimpleDynamicsWorld.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\Bullet-C-API.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Vehicle\btRaycastVehicle.cpp" />
-    <ClCompile Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Vehicle\btWheelInfo.cpp" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\btBulletDynamicsCommon.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\btBulletCollisionCommon.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btConeTwistConstraint.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btConstraintSolver.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btContactConstraint.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btContactSolverInfo.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btGearConstraint.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btGeneric6DofConstraint.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btGeneric6DofSpringConstraint.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btHinge2Constraint.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btHingeConstraint.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btJacobianEntry.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btPoint2PointConstraint.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSequentialImpulseConstraintSolver.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSliderConstraint.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSolve2LinearConstraint.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSolverBody.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSolverConstraint.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btTypedConstraint.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btUniversalConstraint.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btActionInterface.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btDiscreteDynamicsWorld.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btDynamicsWorld.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btSimpleDynamicsWorld.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btRigidBody.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Vehicle\btRaycastVehicle.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Vehicle\btVehicleRaycaster.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Vehicle\btWheelInfo.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Character\btCharacterControllerInterface.h" />
-    <ClInclude Include="D:\P2\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Character\btKinematicCharacterController.h" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Character\btKinematicCharacterController.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btConeTwistConstraint.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btContactConstraint.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btGearConstraint.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btGeneric6DofConstraint.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btGeneric6DofSpringConstraint.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btHinge2Constraint.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btHingeConstraint.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btPoint2PointConstraint.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSequentialImpulseConstraintSolver.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSliderConstraint.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSolve2LinearConstraint.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btTypedConstraint.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btUniversalConstraint.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btDiscreteDynamicsWorld.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btRigidBody.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btSimpleDynamicsWorld.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\Bullet-C-API.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Vehicle\btRaycastVehicle.cpp" />
+    <ClCompile Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Vehicle\btWheelInfo.cpp" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\btBulletDynamicsCommon.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\btBulletCollisionCommon.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btConeTwistConstraint.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btConstraintSolver.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btContactConstraint.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btContactSolverInfo.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btGearConstraint.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btGeneric6DofConstraint.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btGeneric6DofSpringConstraint.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btHinge2Constraint.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btHingeConstraint.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btJacobianEntry.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btPoint2PointConstraint.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSequentialImpulseConstraintSolver.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSliderConstraint.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSolve2LinearConstraint.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSolverBody.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btSolverConstraint.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btTypedConstraint.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\ConstraintSolver\btUniversalConstraint.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btActionInterface.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btDiscreteDynamicsWorld.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btDynamicsWorld.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btSimpleDynamicsWorld.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Dynamics\btRigidBody.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Vehicle\btRaycastVehicle.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Vehicle\btVehicleRaycaster.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Vehicle\btWheelInfo.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Character\btCharacterControllerInterface.h" />
+    <ClInclude Include="E:\Github\MinecraftPROTO\ogl-master\external\bullet-2.81-rev2613\src\BulletDynamics\Character\btKinematicCharacterController.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="D:\P2\MinecraftPROTO\MinecraftPROTO\ZERO_CHECK.vcxproj">
-      <Project>{F017BAD5-0E5B-35EB-8CE8-28CC84C5D3D9}</Project>
+    <ProjectReference Include="E:\Github\MinecraftPROTO\MinecraftPROTO\ZERO_CHECK.proj">
+      <Project>{50B04C8B-6DD7-3055-94B8-42FF0EB8C998}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

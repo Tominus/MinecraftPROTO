@@ -21,8 +21,7 @@ public:
 
 
 private:
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> uvs;
+	unsigned int verticesSize;
 
 	glm::vec3 position;
 

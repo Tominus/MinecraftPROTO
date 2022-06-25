@@ -28,8 +28,8 @@ void TextureLoader::LoadTextures()
 	blockTextureID.emplace(Block_Type::Deepslate_Diamond_Ore, LoadFile_BMP("TexturesBMP/block/deepslate_diamond_ore.bmp"));
 
 	//---
-	blockTextureID.emplace(Block_Type::Glass, LoadFile_DDS("TexturesDDS/block/glass.dds"));
 	blockTextureID.emplace(Block_Type::Red_Stained_Glass, LoadFile_DDS("TexturesDDS/block/red_stained_glass.dds"));
+	blockTextureID.emplace(Block_Type::Glass, LoadFile_DDS("TexturesDDS/block/glass.dds"));
 }
 
 GLuint TextureLoader::LoadFile_DDS(const char* _path)

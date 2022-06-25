@@ -1,6 +1,6 @@
-^D:\P2\MINECRAFTPROTO\OGL-MASTER\EXTERNAL\GLFW-3.1.2\SRC\CMAKELISTS.TXT
+^E:\GITHUB\MINECRAFTPROTO\OGL-MASTER\EXTERNAL\GLFW-3.1.2\SRC\CMAKELISTS.TXT
 setlocal
-C:\Users\PERE0601\Desktop\cmake-3.23.0-windows-x86_64\bin\cmake.exe -SD:/P2/MinecraftPROTO/ogl-master -BD:/P2/MinecraftPROTO/MinecraftPROTO --check-stamp-file D:/P2/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/src/CMakeFiles/generate.stamp
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -SE:/Github/MinecraftPROTO/ogl-master -BE:/Github/MinecraftPROTO/MinecraftPROTO --check-stamp-file E:/Github/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/src/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

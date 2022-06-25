@@ -1,4 +1,4 @@
-# Install script for directory: D:/P2/MinecraftPROTO/ogl-master/external
+# Install script for directory: E:/Github/MinecraftPROTO/ogl-master/external
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,13 +34,13 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("D:/P2/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/cmake_install.cmake")
-  include("D:/P2/MinecraftPROTO/MinecraftPROTO/external/assimp-3.0.1270/contrib/zlib/cmake_install.cmake")
-  include("D:/P2/MinecraftPROTO/MinecraftPROTO/external/assimp-3.0.1270/code/cmake_install.cmake")
-  include("D:/P2/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletSoftBody/cmake_install.cmake")
-  include("D:/P2/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletCollision/cmake_install.cmake")
-  include("D:/P2/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletDynamics/cmake_install.cmake")
-  include("D:/P2/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/LinearMath/cmake_install.cmake")
+  include("E:/Github/MinecraftPROTO/MinecraftPROTO/external/glfw-3.1.2/cmake_install.cmake")
+  include("E:/Github/MinecraftPROTO/MinecraftPROTO/external/assimp-3.0.1270/contrib/zlib/cmake_install.cmake")
+  include("E:/Github/MinecraftPROTO/MinecraftPROTO/external/assimp-3.0.1270/code/cmake_install.cmake")
+  include("E:/Github/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletSoftBody/cmake_install.cmake")
+  include("E:/Github/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletCollision/cmake_install.cmake")
+  include("E:/Github/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/BulletDynamics/cmake_install.cmake")
+  include("E:/Github/MinecraftPROTO/MinecraftPROTO/external/bullet-2.81-rev2613/src/LinearMath/cmake_install.cmake")
 
 endif()
 

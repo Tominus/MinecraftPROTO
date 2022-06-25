@@ -1,0 +1,10 @@
+^E:\GITHUB\MINECRAFTPROTO\OGL-MASTER\CMAKELISTS.TXT
+setlocal
+C:\Users\P.tom\Desktop\cmake-3.24.0-rc1-windows-x86_64\bin\cmake.exe -SE:/Github/MinecraftPROTO/ogl-master -BE:/Github/MinecraftPROTO/MinecraftPROTO --check-stamp-file E:/Github/MinecraftPROTO/MinecraftPROTO/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
