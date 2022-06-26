@@ -144,11 +144,9 @@ void Block_Render::Render_Alpha(const glm::vec3& _chunkOffset)
 {
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-	if (textureID == 5)
-	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	}
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
 
 	const glm::mat4& MVP = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), _chunkOffset) * glm::mat4(1.0f);
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
@@ -166,10 +164,7 @@ void Block_Render::Render_Alpha(const glm::vec3& _chunkOffset)
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 
-	if (textureID == 5)
-	{
-		glDisable(GL_BLEND);
-	}
+	glDisable(GL_BLEND);	
 }
 
 void Block_Render::Render()
@@ -197,15 +192,9 @@ void Block_Render::Render_Alpha()
 {
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-	if (textureID == 5)
-	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		//glDisable(GL_DEPTH_TEST);
-		//glDepthFunc(GL_LESS);
-		//glDisable(GL_CULL_FACE);
-	}
 
 	const glm::mat4& MVP = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), position) * glm::mat4(1.0f);
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
@@ -223,11 +212,5 @@ void Block_Render::Render_Alpha()
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 
-	if (textureID == 5)
-	{
-		glDisable(GL_BLEND);
-		//glEnable(GL_DEPTH_TEST);
-		//glDepthFunc(GL_LESS);
-		//glEnable(GL_CULL_FACE);
-	}
+	glDisable(GL_BLEND);
 }

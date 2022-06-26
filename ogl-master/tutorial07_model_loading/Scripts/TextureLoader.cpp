@@ -20,16 +20,15 @@ TextureLoader::~TextureLoader()
 
 void TextureLoader::LoadTextures()
 {
+	//---
+	blockTextureID.emplace(Block_Type::Acacia_Log, LoadFile_PNG("Textures/block/acacia_log.png"));
+	blockTextureID.emplace(Block_Type::Amethyst_Block, LoadFile_PNG("Textures/block/amethyst_block.png"));
+	blockTextureID.emplace(Block_Type::Barrel_Side, LoadFile_PNG("Textures/block/barrel_side.png"));
+	blockTextureID.emplace(Block_Type::Deepslate_Diamond_Ore, LoadFile_PNG("Textures/block/deepslate_diamond_ore.png"));
 
 	//---
-	blockTextureID.emplace(Block_Type::Acacia_Log, LoadFile_BMP("TexturesBMP/block/acacia_log.bmp"));
-	blockTextureID.emplace(Block_Type::Amethyst_Block, LoadFile_BMP("TexturesBMP/block/amethyst_block.bmp"));
-	blockTextureID.emplace(Block_Type::Barrel_Side, LoadFile_BMP("TexturesBMP/block/barrel_side.bmp"));
-	blockTextureID.emplace(Block_Type::Deepslate_Diamond_Ore, LoadFile_BMP("TexturesBMP/block/deepslate_diamond_ore.bmp"));
-
-	//---
-	blockTextureID.emplace(Block_Type::Red_Stained_Glass, LoadFile_DDS("TexturesDDS/block/red_stained_glass.dds"));
-	blockTextureID.emplace(Block_Type::Glass, LoadFile_DDS("TexturesDDS/block/glass.dds"));
+	blockTextureID.emplace(Block_Type::Glass, LoadFile_PNG("Textures/block/glass.png"));
+	blockTextureID.emplace(Block_Type::Red_Stained_Glass, LoadFile_PNG("Textures/block/red_stained_glass.png"));
 }
 
 GLuint TextureLoader::LoadFile_DDS(const char* _path)
@@ -182,6 +181,30 @@ GLuint TextureLoader::LoadFile_BMP(const char* _path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
 
 	return textureID;
+}
+
+GLuint TextureLoader::LoadFile_PNG(const char* _path)
+{
+	std::vector<unsigned char> _image;
+	unsigned int _width, _height;
+	
+	if (lodepng::decode(_image, _width, _height, _path) != 0)
+	{
+		printf("TextureLoader::LoadFile_PNG -> Invalid png file");
+		return 0;
+	}
+
+	GLuint _textureID;
+	glGenTextures(1, &_textureID);
+
+	glBindTexture(GL_TEXTURE_2D, _textureID);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _u2, _v2, 0, GL_RGBA, GL_UNSIGNED_BYTE, &_image2[0]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &_image[0]);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	return _textureID;
 }
 
 const GLuint& TextureLoader::GetBlockTextureID(const Block_Type& _blockType) const

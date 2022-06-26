@@ -22,15 +22,11 @@ void ChunksManager::AddChunk(const glm::vec3& _position)
 	worldChunks.push_back(new Chunk(_world->GetMatrixID(), _position));
 }
 
-void ChunksManager::Render()
+void ChunksManager::Render() //todo replace with Chunk_Render
 {
 	const size_t& _max = worldChunks.size();
 	for (size_t i = 0; i < _max; i++)
 	{
-		worldChunks[i]->Render_NormalBlock();
-	}
-	for (size_t i = 0; i < _max; i++)
-	{
-		worldChunks[i]->Render_AlphaBlock();
+		worldChunks[i]->Render();
 	}
 }

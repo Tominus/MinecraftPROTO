@@ -9,4 +9,5 @@ enum class Block_Type
 	Deepslate_Diamond_Ore,
 	Glass,
 	Red_Stained_Glass,
+	BLOCK_TYPE_MAX_NUMBER,
 };

@@ -4,7 +4,8 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-class Block_Render;
+class Chunk_Render;
+class Chunk_Data;
 
 class Chunk
 {
@@ -15,17 +16,10 @@ private:
 	~Chunk();
 
 	void Render();
-	void Render_Alpha();
-
-	void Render_NormalBlock();
-	void Render_AlphaBlock();
 
 private:
-	std::vector<std::vector<std::vector<Block_Render*>>> blocks;
-	// TODO Chunk_Data && Chunk_Render + Generator
-
-	std::vector<Block_Render*> normalBlocks;
-	std::vector<Block_Render*> alphaBlocks;
+	Chunk_Data* chunkData;
+	Chunk_Render* chunkRender;
 
 	glm::vec3 chunkPosition;
 	glm::vec3 worldPosition;
