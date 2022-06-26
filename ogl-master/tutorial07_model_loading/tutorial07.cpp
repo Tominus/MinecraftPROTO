@@ -16,7 +16,6 @@ GLFWwindow* window;
 #include <time.h>
 
 #include "Scripts/MainGame.h"
-#include "Scripts/Enet_LibTEST.h"
 
 int main( void )
 {
