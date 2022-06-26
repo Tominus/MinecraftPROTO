@@ -16,6 +16,7 @@ GLFWwindow* window;
 #include <time.h>
 
 #include "Scripts/MainGame.h"
+#include "Scripts/Enet_LibTEST.h"
 
 int main( void )
 {
@@ -64,8 +65,6 @@ int main( void )
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
-	
-	
 
 	MainGame* _mainGame = new MainGame(window);
 

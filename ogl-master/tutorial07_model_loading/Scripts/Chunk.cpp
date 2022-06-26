@@ -107,7 +107,7 @@ void Chunk::Render_Alpha()
 
 void Chunk::Render_NormalBlock()
 {
-	const uint& _max = normalBlocks.size();
+	const size_t& _max = normalBlocks.size();
 	for (size_t i = 0; i < _max; i++)
 	{
 		normalBlocks[i]->Render();
@@ -116,7 +116,7 @@ void Chunk::Render_NormalBlock()
 
 void Chunk::Render_AlphaBlock()
 {
-	const uint& _max = alphaBlocks.size();
+	const size_t& _max = alphaBlocks.size();
 	for (size_t i = 0; i < _max; i++)
 	{
 		alphaBlocks[i]->Render_Alpha();
