@@ -2,14 +2,16 @@
 
 #include "GlobalDefine.h"
 #include "TextureLoader.h"
-#include "ChunksManager.h"
+#include "Chunks_Manager.h"
+#include "Blocks_Global_Shapes.h"
 
 #include <common/shader.hpp>
 
 World::~World()
 {
 	delete textureLoader;
-	delete chunkManager;
+	delete chunksManager;
+	delete blocksGlobalShapes;
 	glDeleteProgram(programID);
 	glDeleteVertexArrays(1, &vertexArrayID);
 }
@@ -23,21 +25,25 @@ void World::InitWorld()
 	matrixID = glGetUniformLocation(programID, "MVP");
 	glUseProgram(programID);
 
+
 	textureLoader = new TextureLoader();
 	textureLoader->LoadTextures();
 
-	chunkManager = new ChunksManager();
+	blocksGlobalShapes = new Blocks_Global_Shapes();
+	blocksGlobalShapes->GenerateBlocksShapeDatas();
+
+	chunksManager = new Chunks_Manager();
 }
 
 void World::Start()
 {
-	for (size_t x = 0; x < 2; x++)
+	for (size_t x = 0; x < 5; x++)
 	{
-		for (size_t y = 0; y < 2; y++)
+		for (size_t y = 0; y < 5; y++)
 		{
-			for (size_t z = 0; z < 2; z++)
+			for (size_t z = 0; z < 5; z++)
 			{
-				chunkManager->AddChunk(glm::vec3(x, y, z));
+				chunksManager->AddChunk(glm::vec3(x, y, z));
 			}
 		}
 	}
@@ -45,5 +51,5 @@ void World::Start()
 
 void World::Update()
 {
-	chunkManager->Render();
+	chunksManager->Render();
 }

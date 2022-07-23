@@ -6,7 +6,8 @@ class Block;
 class Chunk_Data
 {
 	friend class Chunk;
-	friend class Chunk_Render;
+	friend class Chunk_Data_Generator;
+	friend class Chunk_Render_Generator;
 
 private:
 	Chunk_Data();

@@ -1,10 +1,10 @@
 #pragma once
-
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
 class TextureLoader;
-class ChunksManager;
+class Chunks_Manager;
+class Blocks_Global_Shapes;
 
 class World
 {
@@ -27,12 +27,14 @@ public:
 	}
 
 	inline TextureLoader* GetTextureLoader() const { return textureLoader; }
-	inline ChunksManager* GetChunkManager() const { return chunkManager; }
+	inline Chunks_Manager* GetChunksManager() const { return chunksManager; }
+	inline Blocks_Global_Shapes* GetBlocksGlobalShapes() const { return blocksGlobalShapes; }
 	inline const GLuint& GetMatrixID() const { return matrixID; }
 
 private:
 	TextureLoader* textureLoader;
-	ChunksManager* chunkManager;
+	Chunks_Manager* chunksManager;
+	Blocks_Global_Shapes* blocksGlobalShapes;
 
 	GLuint programID;
 	GLuint matrixID;

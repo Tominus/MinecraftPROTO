@@ -3,7 +3,8 @@
 
 class Block
 {
-	friend class Chunk_Data;
+	friend class Chunk_Data; // for the delete*
+	friend class Chunk_Data_Generator;
 
 private:
 	Block(const Block_Type& _blockType);
