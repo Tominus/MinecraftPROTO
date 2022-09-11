@@ -28,4 +28,5 @@
 
 /* Stock en .txt le rendu vertexs && uvs d'un chunk.
 * pour éviter de le recalculer au rechargement.
+* fonctionne qu'en solo.
 */

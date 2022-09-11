@@ -16,6 +16,7 @@ GLFWwindow* window;
 #include <time.h>
 
 #include "Scripts/MainGame.h"
+#include "Scripts/ThreadTEST.h"
 
 int main( void )
 {
@@ -65,11 +66,14 @@ int main( void )
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
 
+	ThreadTEST* _thread = new ThreadTEST();
 	MainGame* _mainGame = new MainGame(window);
 
+	_thread->StartThreadingTEST();
 	_mainGame->GameLoop();
 
 	delete _mainGame;
+	delete _thread;
 
 	glfwTerminate();
 
