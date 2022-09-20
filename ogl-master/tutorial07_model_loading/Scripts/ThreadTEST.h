@@ -13,11 +13,11 @@ public:
 
 	void Thread_1()
 	{
-		scanf("UwU 1");
+		//scanf("UwU 1");
 	}
 	void Thread_2(int x)
 	{
-		scanf("UwU %d", x);
+		//scanf("UwU %d", x);
 	}
 
 private:

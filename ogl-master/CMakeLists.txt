@@ -60,6 +60,42 @@ add_definitions(
 # Tutorial 7
 add_executable(tutorial07_model_loading
 	tutorial07_model_loading/tutorial07.cpp
+	
+	tutorial07_model_loading/Scripts/Block.cpp
+	tutorial07_model_loading/Scripts/Block.h
+	tutorial07_model_loading/Scripts/Block_Render.cpp	
+	tutorial07_model_loading/Scripts/Block_Render.h
+	tutorial07_model_loading/Scripts/Block_Shape_Data.cpp
+	tutorial07_model_loading/Scripts/Block_Shape_Data.h
+	tutorial07_model_loading/Scripts/Block_Shapes_Type.h
+	tutorial07_model_loading/Scripts/Block_Type.h
+	tutorial07_model_loading/Scripts/Blocks_Global_Shapes.cpp
+	tutorial07_model_loading/Scripts/Blocks_Global_Shapes.h
+	tutorial07_model_loading/Scripts/Chunk.cpp
+	tutorial07_model_loading/Scripts/Chunk.h
+	tutorial07_model_loading/Scripts/Chunk_Data.cpp
+	tutorial07_model_loading/Scripts/Chunk_Data.h
+	tutorial07_model_loading/Scripts/Chunk_Data_Generator.cpp
+	tutorial07_model_loading/Scripts/Chunk_Data_Generator.h
+	tutorial07_model_loading/Scripts/Chunk_Render.cpp
+	tutorial07_model_loading/Scripts/Chunk_Render.h
+	tutorial07_model_loading/Scripts/Chunk_Render_Generator.cpp
+	tutorial07_model_loading/Scripts/Chunk_Render_Generator.h
+	tutorial07_model_loading/Scripts/Chunks_Manager.cpp
+	tutorial07_model_loading/Scripts/Chunks_Manager.h
+	tutorial07_model_loading/Scripts/GlobalDefine.h
+	tutorial07_model_loading/Scripts/lodepng.cpp
+	tutorial07_model_loading/Scripts/lodepng.h
+	tutorial07_model_loading/Scripts/MainGame.cpp
+	tutorial07_model_loading/Scripts/MainGame.h
+	tutorial07_model_loading/Scripts/TextureLoader.cpp
+	tutorial07_model_loading/Scripts/TextureLoader.h
+	tutorial07_model_loading/Scripts/ThreadTEST.cpp
+	tutorial07_model_loading/Scripts/ThreadTEST.h
+	tutorial07_model_loading/Scripts/TODO.h
+	tutorial07_model_loading/Scripts/World.cpp
+	tutorial07_model_loading/Scripts/World.h
+	
 	common/shader.cpp
 	common/shader.hpp
 	common/controls.cpp
