@@ -90,8 +90,6 @@ add_executable(tutorial07_model_loading
 	tutorial07_model_loading/Scripts/MainGame.h
 	tutorial07_model_loading/Scripts/TextureLoader.cpp
 	tutorial07_model_loading/Scripts/TextureLoader.h
-	tutorial07_model_loading/Scripts/ThreadTEST.cpp
-	tutorial07_model_loading/Scripts/ThreadTEST.h
 	tutorial07_model_loading/Scripts/TODO.h
 	tutorial07_model_loading/Scripts/World.cpp
 	tutorial07_model_loading/Scripts/World.h
