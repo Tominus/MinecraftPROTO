@@ -1,6 +1,7 @@
 #include "MainGame.h"
 #include "World.h"
 #include <common/controls.hpp>
+#include "Thread_Manager.h"
 
 MainGame::MainGame()
 {
@@ -19,6 +20,11 @@ MainGame::~MainGame()
 
 void MainGame::GameLoop()
 {
+	//--- Pre Init
+	Thread_Manager* _threadManager = &Thread_Manager::Instance();
+	_threadManager->Initialize();
+
+
 	//--- Init
 	World* _world = &World::Instance();
 	_world->InitWorld();
