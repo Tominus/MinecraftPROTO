@@ -26,12 +26,19 @@ public:
 		return instance;
 	}
 
-private:
-	void Initialize();
 	void SetMaxThread(const unsigned int& _quantity);
 
-	//Maybe dangerous
+
+
+private:
+	void Initialize();
 	void InitializeThreads();
+
+	void Internal_SetMaxThread(const unsigned int& _quantity);
+	void ResetThreadObjs();//TODO
+
+public:
+	void SetThreadBehaviorFinished(Thread_Obj* _thread);//TODO
 
 private:
 	unsigned int maxSystemThread;

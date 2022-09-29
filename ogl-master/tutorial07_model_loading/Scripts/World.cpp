@@ -37,11 +37,11 @@ void World::InitWorld()
 
 void World::Start()
 {
-	for (size_t x = 0; x < 5; x++)
+	for (size_t x = 0; x < 1; x++)
 	{
-		for (size_t y = 0; y < 5; y++)
+		for (size_t y = 0; y < 1; y++)
 		{
-			for (size_t z = 0; z < 5; z++)
+			for (size_t z = 0; z < 1; z++)
 			{
 				chunksManager->AddChunk(glm::vec3(x, y, z));
 			}
