@@ -19,6 +19,8 @@ private:
 	void Start();
 	void Update();
 
+	void Generate();
+
 public:
 	inline static World& Instance()
 	{

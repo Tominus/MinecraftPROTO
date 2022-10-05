@@ -2,15 +2,15 @@
 
 Thread_Obj::Thread_Obj()
 {
-	thread = new std::thread();
+	//thread = new std::thread();
 }
 
 Thread_Obj::~Thread_Obj()
 {
-	delete thread;
+	//delete thread;
 }
 
 void Thread_Obj::FinishThread()
 {
-	std::invoke(callback, this);
+	std::invoke(onFinishThread, this);
 }

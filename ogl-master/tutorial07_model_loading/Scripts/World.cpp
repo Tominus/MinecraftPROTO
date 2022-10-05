@@ -4,6 +4,8 @@
 #include "TextureLoader.h"
 #include "Chunks_Manager.h"
 #include "Blocks_Global_Shapes.h"
+#include "Thread_Manager.h"
+#include "Thread_Obj.h"
 
 #include <common/shader.hpp>
 
@@ -37,13 +39,18 @@ void World::InitWorld()
 
 void World::Start()
 {
-	for (size_t x = 0; x < 1; x++)
+	Thread_Manager* _threadManager = &Thread_Manager::Instance();
+
+	for (size_t x = 0; x < 2; x++)
 	{
-		for (size_t y = 0; y < 1; y++)
+		for (size_t y = 0; y < 2; y++)
 		{
-			for (size_t z = 0; z < 1; z++)
+			for (size_t z = 0; z < 2; z++)
 			{
-				chunksManager->AddChunk(glm::vec3(x, y, z));
+				Thread_Obj* _thread = _threadManager->GetThreadObj();
+				_thread->thread = std::thread(Generate);
+
+				
 			}
 		}
 	}
@@ -52,4 +59,10 @@ void World::Start()
 void World::Update()
 {
 	chunksManager->Render();
+}
+
+void World::Generate()
+{
+	chunksManager->AddChunk(glm::vec3(x, y, z));
+	_thread->FinishThread();
 }

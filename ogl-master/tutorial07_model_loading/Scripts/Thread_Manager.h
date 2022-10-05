@@ -29,7 +29,6 @@ public:
 	void SetMaxThread(const unsigned int& _quantity);
 
 
-
 private:
 	void Initialize();
 	void InitializeThreads();
@@ -37,12 +36,19 @@ private:
 	void Internal_SetMaxThread(const unsigned int& _quantity);
 	void ResetThreadObjs();//TODO
 
+	void WaitForEndOfThread(Thread_Obj* _thread);
+
 public:
 	void SetThreadBehaviorFinished(Thread_Obj* _thread);//TODO
+
+	Thread_Obj* GetThreadObj();
 
 private:
 	unsigned int maxSystemThread;
 	unsigned int currentThreadQuantityUsed;
 
 	std::vector<Thread_Obj*> threadObjs;
+
+	std::vector<Thread_Obj*> validThreadObjs;
+	std::vector<Thread_Obj*> invalidThreadObjs;
 };
