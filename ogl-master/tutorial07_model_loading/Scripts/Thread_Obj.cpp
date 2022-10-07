@@ -26,7 +26,10 @@ void Thread_Obj::MIAOU()
 {
 	chunksManager->AddChunk(glm::vec3(0, 0, 0));
 	thread.detach();
-	chunksManager->onUpdate = [&]() { chunksManager->Miaou(); };
+	chunksManager->onUpdate = [&]()
+	{
+		chunksManager->Miaou();
+	};
 }
 
 void Thread_Obj::FinishThread()
