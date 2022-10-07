@@ -9,6 +9,7 @@ Chunks_Manager::Chunks_Manager()
 {
 	chunkDataGenerator = new Chunk_Data_Generator();
 	chunkRenderGenerator = new Chunk_Render_Generator(this);
+	onUpdate = []() {};//
 }
 
 Chunks_Manager::~Chunks_Manager()
@@ -40,6 +41,11 @@ Chunk* Chunks_Manager::GetChunkAtPosition(const glm::vec3& _position) const
 }
 
 void Chunks_Manager::Render() const
+{
+	std::invoke(onUpdate);
+}
+
+void Chunks_Manager::Miaou()
 {
 	const size_t& _max = worldChunks.size();
 	for (size_t i = 0; i < _max; i++)

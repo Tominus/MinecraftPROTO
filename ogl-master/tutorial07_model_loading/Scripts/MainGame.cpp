@@ -31,8 +31,8 @@ void MainGame::GameLoop()
 
 
 	//--- Start
-	_world->Start();
 	const GLuint& _matrixID = _world->GetMatrixID();
+	_world->Start();
 
 
 	do {

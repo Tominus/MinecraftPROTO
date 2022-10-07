@@ -8,6 +8,8 @@ class Chunk;
 class Chunk_Data_Generator;
 class Chunk_Render_Generator;
 
+#include <stdio.h>//
+#include <functional>//
 class Chunks_Manager
 {
 	friend class World;
@@ -15,9 +17,11 @@ class Chunks_Manager
 private:
 	Chunks_Manager();
 	~Chunks_Manager();
-
+public://
 	void AddChunk(const glm::vec3& _position);
 	void Render() const;
+	std::function<void()> onUpdate;//
+	void Miaou();
 
 public:
 	Chunk* GetChunkAtPosition(const glm::vec3& _position) const;

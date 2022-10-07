@@ -167,7 +167,7 @@ void Block_Render::Render_Alpha(const glm::vec3& _chunkOffset)
 	glDisable(GL_BLEND);	
 }
 
-void Block_Render::Render()
+/*void Block_Render::Render()
 {
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
@@ -186,7 +186,7 @@ void Block_Render::Render()
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
-}
+}*/
 
 void Block_Render::Render_Alpha()
 {

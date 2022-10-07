@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <functional>
 
+class Chunks_Manager;
+
 class Thread_Obj
 {
 	friend class Thread_Manager;
@@ -11,6 +13,8 @@ public:
 	Thread_Obj();
 	~Thread_Obj();
 
+	void TEST(Chunks_Manager* _chunkmanager);
+	void MIAOU();
 
 	void FinishThread();// DELETE ???
 
@@ -34,7 +38,7 @@ private:
 private:
 			public://
 	std::thread thread;
-
+	Chunks_Manager* chunksManager;
 	//Used to say to Thread_Manager thread is finished
 	std::function<void(Thread_Obj*)> onFinishThread;
 };

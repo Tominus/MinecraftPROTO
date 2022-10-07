@@ -16,7 +16,7 @@ public:
 	void Render(const glm::vec3& _chunkOffset);
 	void Render_Alpha(const glm::vec3& _chunkOffset);
 
-	void Render(); //TODO delete
+	//void Render(); //TODO delete
 	void Render_Alpha();
 
 

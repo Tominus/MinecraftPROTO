@@ -41,16 +41,15 @@ void World::Start()
 {
 	Thread_Manager* _threadManager = &Thread_Manager::Instance();
 
-	for (size_t x = 0; x < 2; x++)
+	for (size_t x = 0; x < 1; x++)
 	{
-		for (size_t y = 0; y < 2; y++)
+		for (size_t y = 0; y < 1; y++)
 		{
-			for (size_t z = 0; z < 2; z++)
+			for (size_t z = 0; z < 1; z++)
 			{
 				Thread_Obj* _thread = _threadManager->GetThreadObj();
-				_thread->thread = std::thread(Generate);
-
-				
+				_thread->TEST(chunksManager);
+				//_thread->thread = std::thread(&World::Generate, this, glm::vec3(x, y, z), _thread);
 			}
 		}
 	}
@@ -61,8 +60,8 @@ void World::Update()
 	chunksManager->Render();
 }
 
-void World::Generate()
+void World::Generate(const glm::vec3& _location, Thread_Obj* _thread)
 {
-	chunksManager->AddChunk(glm::vec3(x, y, z));
-	_thread->FinishThread();
+	chunksManager->AddChunk(_location);
+	//_thread->FinishThread();
 }

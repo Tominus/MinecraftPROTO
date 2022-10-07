@@ -38,7 +38,7 @@ Chunk_Render::~Chunk_Render()
 
 void Chunk_Render::Render()
 {
-	for each (const std::pair<const GLuint&, const Chunk_Render_Data*>& _data in renderDatas)
+	for each (const std::pair<const GLuint&, const Chunk_Render_Data*>&_data in renderDatas)
 	{
 		const Chunk_Render_Data* _chunkRenderData(_data.second);
 
@@ -54,6 +54,8 @@ void Chunk_Render::Render()
 		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, _chunkRenderData->uvsBuffer);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		const unsigned int& _fa = _chunkRenderData->verticesGlobalSize;
 
 		glDrawArrays(GL_TRIANGLES, 0, _chunkRenderData->verticesGlobalSize);
 
