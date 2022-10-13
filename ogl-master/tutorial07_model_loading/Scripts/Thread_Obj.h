@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <functional>
 
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+
 class Chunks_Manager;
 
 class Thread_Obj
@@ -13,17 +16,12 @@ public:
 	Thread_Obj();
 	~Thread_Obj();
 
-	void TEST(Chunks_Manager* _chunkmanager);
-	void MIAOU();
+	void TEST(Chunks_Manager* _chunkmanager, const glm::vec3& _loc);
+	void MIAOU(const glm::vec3& _loc);
 
 	void FinishThread();// DELETE ???
 
 	inline void OnBehavior(const std::function<void(Thread_Obj*)>& _callback)
-	{
-		std::invoke(_callback, this);
-	}
-
-	inline void OnTest(const std::function<void(Thread_Obj*)>& _callback)
 	{
 		std::invoke(_callback, this);
 	}

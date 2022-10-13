@@ -1,9 +1,6 @@
 #include "Thread_Obj.h"
 #include "World.h"
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-
 #include "Chunks_Manager.h"
 
 Thread_Obj::Thread_Obj()
@@ -16,15 +13,15 @@ Thread_Obj::~Thread_Obj()
 	//delete thread;
 }
 
-void Thread_Obj::TEST(Chunks_Manager* _chunkmanager)
+void Thread_Obj::TEST(Chunks_Manager* _chunkmanager, const glm::vec3& _loc)
 {
 	chunksManager = _chunkmanager;
-	thread = std::thread(&Thread_Obj::MIAOU, this);
+	thread = std::thread(&Thread_Obj::MIAOU, this, _loc);
 }
 
-void Thread_Obj::MIAOU()
+void Thread_Obj::MIAOU(const glm::vec3& _loc)
 {
-	chunksManager->AddChunk(glm::vec3(0, 0, 0));
+	chunksManager->AddChunk(_loc);
 	thread.detach();
 }
 
