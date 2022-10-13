@@ -22,7 +22,7 @@ void Thread_Obj::TEST(Chunks_Manager* _chunkmanager, const glm::vec3& _loc)
 void Thread_Obj::MIAOU(const glm::vec3& _loc)
 {
 	chunksManager->AddChunk(_loc);
-	thread.detach();
+	FinishThread();
 }
 
 void Thread_Obj::FinishThread()

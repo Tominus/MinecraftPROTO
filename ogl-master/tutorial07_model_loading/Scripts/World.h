@@ -44,6 +44,8 @@ private:
 	GLuint matrixID;
 	GLuint vertexArrayID;
 
+	glm::vec3 pos;//
+
 	//Init WorldClass
 	//Load datas
 	

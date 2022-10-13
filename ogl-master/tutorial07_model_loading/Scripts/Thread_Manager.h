@@ -41,7 +41,7 @@ private:
 public:
 	void SetThreadBehaviorFinished(Thread_Obj* _thread);//TODO
 
-	Thread_Obj* GetThreadObj();
+	Thread_Obj* GetValidThreadObj();
 
 private:
 	unsigned int maxSystemThread;

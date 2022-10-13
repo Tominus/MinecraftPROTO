@@ -67,9 +67,9 @@ void Thread_Manager::WaitForEndOfThread(Thread_Obj* _thread) //TODO TEST
 		Thread_Obj* _invalidThread = invalidThreadObjs[i];
 		if (_invalidThread == _thread)
 		{
-			//_thread->thread->join();
-			//invalidThreadObjs.erase(invalidThreadObjs.begin() + i);
-			//validThreadObjs.push_back(_thread);
+			_thread->thread.detach();
+			invalidThreadObjs.erase(invalidThreadObjs.begin() + i);
+			validThreadObjs.push_back(_thread);
 			return;
 		}
 	}
@@ -82,7 +82,7 @@ void Thread_Manager::SetThreadBehaviorFinished(Thread_Obj* _thread)
 	WaitForEndOfThread(_thread);
 }
 
-Thread_Obj* Thread_Manager::GetThreadObj() //TODO TEST
+Thread_Obj* Thread_Manager::GetValidThreadObj() //TODO TEST
 {
 	Thread_Obj* _tmpThread(nullptr);
 
@@ -94,8 +94,8 @@ Thread_Obj* Thread_Manager::GetThreadObj() //TODO TEST
 		validThreadObjs.pop_back();
 		invalidThreadObjs.push_back(_tmpThread);
 	}
-	else
-		printf("Thread_Manager::GetThreadObj -> Not enought valid thread");
+	//else
+		//printf("Thread_Manager::GetThreadObj -> Not enought valid thread");
 
 	return _tmpThread;
 }
