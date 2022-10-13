@@ -57,7 +57,7 @@ void World::Start()
 
 void World::Update()
 {
-	chunksManager->Render();
+	chunksManager->UpdateChunksManager();
 }
 
 void World::Generate(const glm::vec3& _location, Thread_Obj* _thread)

@@ -9,7 +9,12 @@ Chunks_Manager::Chunks_Manager()
 {
 	chunkDataGenerator = new Chunk_Data_Generator();
 	chunkRenderGenerator = new Chunk_Render_Generator(this);
-	onUpdate = []() {};//
+
+	onUpdate = [this]()
+	{
+		CheckForNewChunk();
+		UpdateRender();
+	};//
 }
 
 Chunks_Manager::~Chunks_Manager()
@@ -19,13 +24,22 @@ Chunks_Manager::~Chunks_Manager()
 	{
 		delete worldChunks[i];
 	}
+
+	const size_t& _max2 = chunkWaitingForCGgen.size();
+	for (size_t i = 0; i < _max2; i++)
+	{
+		delete chunkWaitingForCGgen[i];
+	}
+
 	delete chunkDataGenerator;
 	delete chunkRenderGenerator;
 }
 
 void Chunks_Manager::AddChunk(const glm::vec3& _position)
 {
-	worldChunks.push_back(new Chunk(chunkDataGenerator, chunkRenderGenerator, _position));
+	Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, _position);
+	chunkWaitingForCGgen.push_back(_chunk);
+	//worldChunks.push_back(new Chunk(chunkDataGenerator, chunkRenderGenerator, _position));
 }
 
 Chunk* Chunks_Manager::GetChunkAtPosition(const glm::vec3& _position) const
@@ -40,15 +54,31 @@ Chunk* Chunks_Manager::GetChunkAtPosition(const glm::vec3& _position) const
 	return nullptr;
 }
 
-void Chunks_Manager::Render() const
+void Chunks_Manager::UpdateChunksManager() const
 {
 	std::invoke(onUpdate);
 }
 
-void Chunks_Manager::Miaou()
+void Chunks_Manager::CheckForNewChunk()
+{
+	unsigned int _size = chunkWaitingForCGgen.size();
+	while (_size > 0)
+	{
+		Chunk* _chunk = chunkWaitingForCGgen[0];
+		_chunk->GenerateCGRender();
+
+		chunkWaitingForCGgen.erase(chunkWaitingForCGgen.begin());
+		--_size;
+
+		worldChunks.push_back(_chunk);
+	}
+}
+
+void Chunks_Manager::UpdateRender()
 {
 	const size_t& _max = worldChunks.size();
-	for (size_t i = 0; i < _max; i++)
+
+	for (size_t i(0); i < _max; ++i)
 	{
 		worldChunks[i]->Render();
 	}

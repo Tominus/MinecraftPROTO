@@ -20,12 +20,20 @@ private:
 
 	void Render() const;
 
+	void GenerateCGRender();
+
 public:
 	/*Return the position of the chunk.*/
-	const glm::vec3& GetChunkPosition() const;
+	inline const glm::vec3& GetChunkPosition() const
+	{
+		return chunkPosition;
+	}
 
 	/*Return the chunkPosition * 16.f to have his position in the world.*/
-	const glm::vec3& GetWorldPosition() const;
+	inline const glm::vec3& GetWorldPosition() const
+	{
+		return worldPosition;
+	}
 
 private:
 	Chunk_Data* chunkData;

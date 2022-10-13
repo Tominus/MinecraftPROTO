@@ -19,9 +19,11 @@ private:
 	~Chunks_Manager();
 public://
 	void AddChunk(const glm::vec3& _position);
-	void Render() const;
+	void UpdateChunksManager() const;
+
 	std::function<void()> onUpdate;//
-	void Miaou();
+	void CheckForNewChunk();//
+	void UpdateRender();
 
 public:
 	Chunk* GetChunkAtPosition(const glm::vec3& _position) const;
@@ -35,4 +37,7 @@ private:
 	Chunk_Data_Generator* chunkDataGenerator;
 	Chunk_Render_Generator* chunkRenderGenerator;
 
+	//
+	std::vector<Chunk*> chunkWaitingForCGgen;
+	//
 };

@@ -23,6 +23,7 @@ private:
 	~Chunk_Render_Generator();
 
 	void GenerateNewChunkRender(Chunk_Render* _chunkRender, Chunk_Data* _chunkData);
+	void GenerateChunkCGRender(std::map<GLuint, Chunk_Render_Data*>& _currentRenderDatas);
 
 	Chunk_Render_Data* GetChunkRenderData(std::map<GLuint, Chunk_Render_Data*>& _currentRenderDatas, const GLuint& _textureID);
 

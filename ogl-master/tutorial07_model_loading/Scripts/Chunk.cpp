@@ -32,12 +32,7 @@ void Chunk::Render() const
 	chunkRender->Render();
 }
 
-const glm::vec3& Chunk::GetChunkPosition() const
+void Chunk::GenerateCGRender()
 {
-	return chunkPosition;
-}
-
-const glm::vec3& Chunk::GetWorldPosition() const
-{
-	return worldPosition;
+	chunkRenderGenerator->GenerateChunkCGRender(chunkRender->renderDatas);
 }
