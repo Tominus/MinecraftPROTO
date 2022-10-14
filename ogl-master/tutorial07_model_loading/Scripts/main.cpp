@@ -15,7 +15,7 @@ GLFWwindow* window;
 #include <common/objloader.hpp>
 #include <time.h>
 
-#include "Scripts/MainGame.h"
+#include "MainGame.h"
 
 int main( void )
 {

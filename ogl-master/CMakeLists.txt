@@ -1,6 +1,6 @@
 # CMake entry point
 cmake_minimum_required (VERSION 2.6)
-project (Tutorials)
+project (MinecraftPROTO)
 
 find_package(OpenGL REQUIRED)
 
@@ -33,12 +33,9 @@ endif(INCLUDE_DISTRIB)
 
 
 include_directories(
-	external/AntTweakBar-1.16/include/
 	external/glfw-3.1.2/include/GLFW/
 	external/glm-0.9.7.1/
 	external/glew-1.13.0/include/
-	external/assimp-3.0.1270/include/
-	external/bullet-2.81-rev2613/src/
 	external/enet-1.3.17/include/
 	.
 )
@@ -59,7 +56,7 @@ add_definitions(
 
 # Tutorial 7
 add_executable(tutorial07_model_loading
-	tutorial07_model_loading/tutorial07.cpp
+	tutorial07_model_loading/Scripts/main.cpp
 	
 	tutorial07_model_loading/Scripts/Block.cpp
 	tutorial07_model_loading/Scripts/Block.h
