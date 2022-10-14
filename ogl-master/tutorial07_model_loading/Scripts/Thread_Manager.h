@@ -33,13 +33,14 @@ private:
 	void Initialize();
 	void InitializeThreads();
 
-	void Internal_SetMaxThread(const unsigned int& _quantity);
+	void Internal_SetMaxThread(unsigned int _quantity);
 	void ResetThreadObjs();//TODO
+	void InterruptThreadObjs();
 
-	void WaitForEndOfThread(Thread_Obj* _thread);
+	void DetachInvalidThread(Thread_Obj* _thread);
 
 public:
-	void SetThreadBehaviorFinished(Thread_Obj* _thread);//TODO
+	void SetThreadBehaviorFinished(Thread_Obj* _thread);
 
 	Thread_Obj* GetValidThreadObj();
 

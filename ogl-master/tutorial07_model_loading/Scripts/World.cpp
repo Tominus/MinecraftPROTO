@@ -11,8 +11,10 @@
 
 World::~World()
 {
-	delete textureLoader;
+	//Detach every thread before deleting others
 	delete chunksManager;
+
+	delete textureLoader;
 	delete blocksGlobalShapes;
 	glDeleteProgram(programID);
 	glDeleteVertexArrays(1, &vertexArrayID);
@@ -58,12 +60,12 @@ void World::Start()
 void World::Update()
 {
 	chunksManager->UpdateChunksManager();
-	Thread_Manager* _threadManager = &Thread_Manager::Instance();
 
+	Thread_Manager* _threadManager = &Thread_Manager::Instance();
 	Thread_Obj* _thread = _threadManager->GetValidThreadObj();
 	if (_thread)
 	{
-		if (pos.x == pos.z)
+		if (pos.x < pos.z)
 		{
 			++pos.x;
 			pos.z = 0;
@@ -73,11 +75,19 @@ void World::Update()
 			++pos.z;
 		}
 		_thread->TEST(chunksManager, pos);
+		/*_thread->AddThread([&, this](const glm::vec3& _location, Thread_Obj* _thread)
+			{
+				Generate(_location, _thread);
+			}, pos, _thread);*/
+		/*_thread->AddThread_OneParam(
+			[&, this](int _uwu)
+			{
+				ToDelete();
+			}, 5);*/
 	}
 }
 
 void World::Generate(const glm::vec3& _location, Thread_Obj* _thread)
 {
 	chunksManager->AddChunk(_location);
-	//_thread->FinishThread();
 }

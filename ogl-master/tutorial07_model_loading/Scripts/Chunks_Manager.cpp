@@ -14,7 +14,7 @@ Chunks_Manager::Chunks_Manager()
 	{
 		CheckForNewChunk();
 		UpdateRender();
-	};//
+	};
 }
 
 Chunks_Manager::~Chunks_Manager()
@@ -39,7 +39,6 @@ void Chunks_Manager::AddChunk(const glm::vec3& _position)
 {
 	Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, _position);
 	chunkWaitingForCGgen.push_back(_chunk);
-	//worldChunks.push_back(new Chunk(chunkDataGenerator, chunkRenderGenerator, _position));
 }
 
 Chunk* Chunks_Manager::GetChunkAtPosition(const glm::vec3& _position) const

@@ -26,6 +26,24 @@ public:
 		std::invoke(_callback, this);
 	}
 
+	/*template<typename ... Var>
+	inline void AddThread(std::function<void(Var ...)> _callback, Var... _param)
+	{
+		std::invoke(_callback, this, _param);
+	}
+
+	inline void AddThread_NoParam(std::function<void(Thread_Obj*)> _callback)
+	{
+		std::invoke(_callback, this);
+	}
+
+	template<typename Param1>
+	inline void AddThread_OneParam(std::function<void(Thread_Obj*)> _callback, Param1 _param)
+	{
+		std::invoke(_callback, this, _param);
+		thread = std::thread(_callback, this, _param);
+	}*/
+
 private:
 
 	inline void OnFinishThread(const std::function<void(Thread_Obj*)>& _callback)

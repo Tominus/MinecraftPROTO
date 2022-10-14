@@ -40,17 +40,17 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 	std::map<GLuint, Chunk_Render_Data*>& _currentRenderDatas = _chunkRender->renderDatas;
 
 	glm::vec3 _blockPosition;
-	for (size_t x = 0; x < Chunk_Size; x++)
+	for (size_t x = 0; x < Chunk_Size; ++x)
 	{
 		std::vector<std::vector<Chunk_Render_Shapes*>> _currentRenderShapesYZ;
 		_blockPosition.x = x;
 
-		for (size_t y = 0; y < Chunk_Size; y++)
+		for (size_t y = 0; y < Chunk_Size; ++y)
 		{
 			std::vector<Chunk_Render_Shapes*> _currentRenderShapesZ;
 			_blockPosition.y = y;
 
-			for (size_t z = 0; z < Chunk_Size; z++)
+			for (size_t z = 0; z < Chunk_Size; ++z)
 			{
 				_blockPosition.z = z;
 				const Block_Type& _blockType = _blocksData[x][y][z]->GetBlockType();

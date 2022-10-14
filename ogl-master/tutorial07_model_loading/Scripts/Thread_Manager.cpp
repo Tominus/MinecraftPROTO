@@ -5,6 +5,7 @@
 
 Thread_Manager::~Thread_Manager()
 {
+	InterruptThreadObjs();
 	for each (Thread_Obj* _threadObj in threadObjs)
 	{
 		delete _threadObj;
@@ -41,24 +42,37 @@ void Thread_Manager::SetMaxThread(const unsigned int& _quantity)
 	ResetThreadObjs();
 }
 
-void Thread_Manager::Internal_SetMaxThread(const unsigned int& _quantity)
+void Thread_Manager::Internal_SetMaxThread(unsigned int _quantity)
 {
-	unsigned int _currentThreadQty(_quantity);
-
-	if (_currentThreadQty > maxSystemThread)
+	if (_quantity > maxSystemThread)
 	{
-		_currentThreadQty = maxSystemThread;
+		_quantity = maxSystemThread;
 	}
 
-	currentThreadQuantityUsed = _currentThreadQty;
+	currentThreadQuantityUsed = _quantity;
 }
 
 void Thread_Manager::ResetThreadObjs()
 {
+	/**
+	* If you change the number of thread during game
+	* - if you add thread it's ok we do nothing
+	* - if you remove thread you have to wait them to join()
+	*/
 	printf("Thread_Manager::ResetThreadObjs -> TODO");
 }
 
-void Thread_Manager::WaitForEndOfThread(Thread_Obj* _thread) //TODO TEST
+void Thread_Manager::InterruptThreadObjs()
+{
+	const size_t& _max = invalidThreadObjs.size();
+
+	for (size_t i(0); i < _max; ++i)
+	{
+		invalidThreadObjs[i]->thread.detach();
+	}
+}
+
+void Thread_Manager::DetachInvalidThread(Thread_Obj* _thread)
 {
 	const size_t& _max = invalidThreadObjs.size();
 
@@ -79,10 +93,10 @@ void Thread_Manager::WaitForEndOfThread(Thread_Obj* _thread) //TODO TEST
 
 void Thread_Manager::SetThreadBehaviorFinished(Thread_Obj* _thread)
 {
-	WaitForEndOfThread(_thread);
+	DetachInvalidThread(_thread);
 }
 
-Thread_Obj* Thread_Manager::GetValidThreadObj() //TODO TEST
+Thread_Obj* Thread_Manager::GetValidThreadObj()
 {
 	Thread_Obj* _tmpThread(nullptr);
 
@@ -90,7 +104,7 @@ Thread_Obj* Thread_Manager::GetValidThreadObj() //TODO TEST
 
 	if (_max > 0)
 	{
-		 _tmpThread = validThreadObjs.at(_max - 1);
+		_tmpThread = validThreadObjs.at(_max - 1);
 		validThreadObjs.pop_back();
 		invalidThreadObjs.push_back(_tmpThread);
 	}
