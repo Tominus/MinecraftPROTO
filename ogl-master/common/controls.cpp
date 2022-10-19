@@ -53,8 +53,22 @@ void computeMatricesFromInputs(){
 	glfwSetCursorPos(window, 1024/2, 768/2);
 
 	// Compute new orientation
-	horizontalAngle += mouseSpeed * float(1024/2 - xpos );
+	horizontalAngle += mouseSpeed * float(1024 / 2 - xpos);
 	verticalAngle   += mouseSpeed * float( 768/2 - ypos );
+
+	/*if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		verticalAngle += deltaTime * speed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		verticalAngle -= deltaTime * speed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		horizontalAngle -= deltaTime * speed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		horizontalAngle += deltaTime * speed;
+	}*/
+
 
 	// Direction : Spherical coordinates to Cartesian coordinates conversion
 	glm::vec3 direction(

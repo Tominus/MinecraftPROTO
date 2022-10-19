@@ -8,10 +8,10 @@
 Permet uniquement de retrouver le rendu d'un block en particulier.*/
 struct Chunk_Render_Shapes
 {
-	std::vector<glm::vec3> vertexs;
-	std::vector<glm::vec2> uvs;
+	const std::vector<glm::vec3>* vertexs;
+	const std::vector<glm::vec2>* uvs;
 
-	Chunk_Render_Shapes(const std::vector<glm::vec3>& _vertexs, const std::vector<glm::vec2>& _uvs)
+	Chunk_Render_Shapes(const std::vector<glm::vec3>* _vertexs, const std::vector<glm::vec2>* _uvs)
 	{
 		vertexs = _vertexs;
 		uvs = _uvs;

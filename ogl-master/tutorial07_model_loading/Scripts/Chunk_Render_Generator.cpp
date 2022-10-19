@@ -60,8 +60,8 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 				
 
 				//render du blockShapes pour x y z si on doit faire un rendu sinon on met nullptr
-				const std::vector<glm::vec3>& _vertexs = _shapesData->GetVertexs();
-				const std::vector<glm::vec2>& _uvs = _shapesData->GetUVs();
+				const std::vector<glm::vec3>* _vertexs = _shapesData->GetVertexs();
+				const std::vector<glm::vec2>* _uvs = _shapesData->GetUVs();
 				Chunk_Render_Shapes* _currentShape = new Chunk_Render_Shapes(_vertexs, _uvs);
 				
 				Chunk_Render_Data* _currentChunkRenderData = GetChunkRenderData(_currentRenderDatas, _textureID);
@@ -70,11 +70,11 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 
 				if (_currentShape)
 				{
-					const size_t& _max = _vertexs.size();
-					for (size_t i = 0; i < _max; i++)
+					const size_t& _max = _vertexs->size();
+					for (size_t i = 0; i < _max; ++i)
 					{
-						_currentChunkRenderData->globalVertexs.push_back(_vertexs.at(i) + _blockPosition);
-						_currentChunkRenderData->globalUVs.push_back(_uvs.at(i));
+						_currentChunkRenderData->globalVertexs.push_back(_vertexs->at(i) + _blockPosition);
+						_currentChunkRenderData->globalUVs.push_back(_uvs->at(i));
 					}
 				}
 
@@ -91,9 +91,7 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 		}
 
 		_allBlockShapes.push_back(_currentRenderShapesYZ);
-	}
-
-	
+	}	
 }
 
 void Chunk_Render_Generator::GenerateChunkCGRender(std::map<GLuint, Chunk_Render_Data*>& _currentRenderDatas)

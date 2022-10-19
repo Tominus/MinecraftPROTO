@@ -17,7 +17,7 @@ void Blocks_Global_Shapes::GenerateBlocksShapeDatas()
 {
 	//Block
 	
-	std::vector<glm::vec3> _vertices = {
+	std::vector<glm::vec3>* _vertices = new std::vector<glm::vec3> {
 		glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::vec3(1.0f, 0.0f, 0.0f),
 		glm::vec3(1.0f, 0.0f, 1.0f),
@@ -60,7 +60,7 @@ void Blocks_Global_Shapes::GenerateBlocksShapeDatas()
 		glm::vec3(0.0f, 1.0f, 1.0f),
 		glm::vec3(0.0f, 0.0f, 1.0f),
 		};
-	std::vector<glm::vec2> _uvs = {
+	std::vector<glm::vec2>* _uvs = new std::vector<glm::vec2>{
 			glm::vec2(0.0f, 0.0f),
 			glm::vec2(0.0f, 1.0f),
 			glm::vec2(1.0f, 1.0f),
