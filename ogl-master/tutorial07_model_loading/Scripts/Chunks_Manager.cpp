@@ -20,13 +20,13 @@ Chunks_Manager::Chunks_Manager()
 Chunks_Manager::~Chunks_Manager()
 {
 	const size_t& _max = worldChunks.size();
-	for (size_t i = 0; i < _max; i++)
+	for (size_t i = 0; i < _max; ++i)
 	{
 		delete worldChunks[i];
 	}
 
 	const size_t& _max2 = chunkWaitingForCGgen.size();
-	for (size_t i = 0; i < _max2; i++)
+	for (size_t i = 0; i < _max2; ++i)
 	{
 		delete chunkWaitingForCGgen[i];
 	}
@@ -37,14 +37,16 @@ Chunks_Manager::~Chunks_Manager()
 
 void Chunks_Manager::AddChunk(const glm::vec3& _position)
 {
+	mutex_chunkWaitingForCGgen.lock();
 	Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, _position);
 	chunkWaitingForCGgen.push_back(_chunk);
+	mutex_chunkWaitingForCGgen.unlock();
 }
 
 Chunk* Chunks_Manager::GetChunkAtPosition(const glm::vec3& _position) const
 {
 	const size_t& _max = worldChunks.size();
-	for (size_t i = 0; i < _max; i++)
+	for (size_t i = 0; i < _max; ++i)
 	{
 		Chunk* _chunk = worldChunks[i];
 		if (_position == _chunk->chunkPosition)
@@ -60,6 +62,7 @@ void Chunks_Manager::UpdateChunksManager() const
 
 void Chunks_Manager::CheckForNewChunk()
 {
+	mutex_chunkWaitingForCGgen.lock();
 	unsigned int _size = chunkWaitingForCGgen.size();
 	while (_size > 0)
 	{
@@ -71,6 +74,7 @@ void Chunks_Manager::CheckForNewChunk()
 
 		worldChunks.push_back(_chunk);
 	}
+	mutex_chunkWaitingForCGgen.unlock();
 }
 
 void Chunks_Manager::UpdateRender()
@@ -80,5 +84,14 @@ void Chunks_Manager::UpdateRender()
 	for (size_t i(0); i < _max; ++i)
 	{
 		worldChunks[i]->Render();
+	}
+	
+	if (_max > 10)
+	{
+		for (size_t i = 0; i < 1; i++)
+		{
+			delete worldChunks[i];
+		}
+		worldChunks.erase(worldChunks.begin(), worldChunks.begin() + 1);
 	}
 }

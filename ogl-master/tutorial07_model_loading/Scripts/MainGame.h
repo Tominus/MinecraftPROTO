@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <glfw3.h>
 
+class Thread_Manager;
+
 class MainGame
 {
 public:
@@ -14,4 +16,5 @@ public:
 
 private:
 	GLFWwindow* window; //TODO Window class
+	Thread_Manager* threadManager;
 };

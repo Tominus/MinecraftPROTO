@@ -5,7 +5,7 @@ Block_Shape_Data::Block_Shape_Data(const std::vector<glm::vec3>* _vertexs, const
 	vertexs = _vertexs;
 	vertexsSize = vertexs->size();
 	uvs = _uvs;
-	uvsSize = _uvs->size();
+	uvsSize = uvs->size();
 }
 
 Block_Shape_Data::~Block_Shape_Data()

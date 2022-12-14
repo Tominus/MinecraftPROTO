@@ -96,7 +96,7 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 
 void Chunk_Render_Generator::GenerateChunkCGRender(std::map<GLuint, Chunk_Render_Data*>& _currentRenderDatas)
 {
-	for each (const std::pair<const GLuint&, Chunk_Render_Data*>&_data in _currentRenderDatas)
+	for each (const std::pair<const GLuint&, Chunk_Render_Data*>& _data in _currentRenderDatas)
 	{
 		Chunk_Render_Data* _render = _data.second;
 

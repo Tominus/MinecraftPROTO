@@ -2,6 +2,7 @@
 #include "GlobalDefine.h"
 
 #include <vector>
+#include <mutex>
 
 class Thread_Obj;
 
@@ -28,6 +29,7 @@ public:
 
 	void SetMaxThread(const unsigned int& _quantity);
 
+	inline bool GetHasAllThreadFinished() const { return invalidThreadObjs.size() == 0; }
 
 private:
 	void Initialize();
@@ -52,4 +54,6 @@ private:
 
 	std::vector<Thread_Obj*> validThreadObjs;
 	std::vector<Thread_Obj*> invalidThreadObjs;
+
+	std::mutex mutex_InvalidThreadObjs;
 };

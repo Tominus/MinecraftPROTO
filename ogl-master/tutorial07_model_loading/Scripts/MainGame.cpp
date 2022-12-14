@@ -1,16 +1,18 @@
 #include "MainGame.h"
 #include "World.h"
-#include <common/controls.hpp>
 #include "Thread_Manager.h"
+#include <common/controls.hpp>
 
 MainGame::MainGame()
 {
-
+	window = nullptr;
+	threadManager = nullptr;
 }
 
 MainGame::MainGame(GLFWwindow* _window)
 {
 	window = _window;
+	threadManager = nullptr;
 }
 
 MainGame::~MainGame()
@@ -21,8 +23,8 @@ MainGame::~MainGame()
 void MainGame::GameLoop()
 {
 	//--- Pre Init
-	Thread_Manager* _threadManager = &Thread_Manager::Instance();
-	_threadManager->Initialize();
+	threadManager = &Thread_Manager::Instance();
+	threadManager->Initialize();
 
 
 	//--- Init
@@ -49,4 +51,9 @@ void MainGame::GameLoop()
 		glfwPollEvents();
 
 	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
+
+	//---Exit
+	do {
+
+	} while (threadManager->GetHasAllThreadFinished() == false);
 }

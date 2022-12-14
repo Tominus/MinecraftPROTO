@@ -21,6 +21,22 @@
 * 
 */
 
+/* Store Chunk in there position instead of in a array
+*
+*/
+
+/* Mutex on chunkWaitingForCGgen && invalidThreadObjs
+*
+*/
+
+/* Check verticesGlobalSize || globalVertexs NULL
+*
+*/
+
+/* no thread faster than thread
+*
+*/
+
 /* Update Render every frame.
 * Don't Render if it's a server.
 * Every other thing (exept Connection Behaviour) have to be in 20 ticks rate.

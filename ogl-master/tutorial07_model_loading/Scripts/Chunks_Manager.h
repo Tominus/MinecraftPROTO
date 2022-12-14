@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <mutex>
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -40,4 +41,6 @@ private:
 	//
 	std::vector<Chunk*> chunkWaitingForCGgen;
 	//
+
+	std::mutex mutex_chunkWaitingForCGgen;
 };

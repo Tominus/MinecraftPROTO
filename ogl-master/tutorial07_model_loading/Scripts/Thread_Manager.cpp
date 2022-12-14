@@ -74,6 +74,7 @@ void Thread_Manager::InterruptThreadObjs()
 
 void Thread_Manager::DetachInvalidThread(Thread_Obj* _thread)
 {
+	mutex_InvalidThreadObjs.lock();
 	const size_t& _max = invalidThreadObjs.size();
 
 	for (size_t i(0); i < _max; ++i)
@@ -81,13 +82,17 @@ void Thread_Manager::DetachInvalidThread(Thread_Obj* _thread)
 		Thread_Obj* _invalidThread = invalidThreadObjs[i];
 		if (_invalidThread == _thread)
 		{
-			_thread->thread.detach();
+			if (_thread->thread.joinable())
+				_thread->thread.join();
+			//_thread->thread.detach();
 			invalidThreadObjs.erase(invalidThreadObjs.begin() + i);
 			validThreadObjs.push_back(_thread);
+			mutex_InvalidThreadObjs.unlock();
 			return;
 		}
 	}
-	
+
+	mutex_InvalidThreadObjs.unlock();
 	printf("Thread_Manager::WaitForEndOfThread -> Missing thread !!!");	
 }
 
@@ -108,8 +113,6 @@ Thread_Obj* Thread_Manager::GetValidThreadObj()
 		validThreadObjs.pop_back();
 		invalidThreadObjs.push_back(_tmpThread);
 	}
-	//else
-		//printf("Thread_Manager::GetThreadObj -> Not enought valid thread");
 
 	return _tmpThread;
 }

@@ -21,7 +21,7 @@ int main( void )
 {
 	srand(time(NULL));
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(192);
+	//_CrtSetBreakAlloc(515);
 	
 	if( !glfwInit() )
 	{

@@ -5,18 +5,19 @@
 
 Thread_Obj::Thread_Obj()
 {
-	//thread = new std::thread();
+	chunksManager = nullptr;
 }
 
 Thread_Obj::~Thread_Obj()
 {
-	//delete thread;
+	
 }
 
 void Thread_Obj::TEST(Chunks_Manager* _chunkmanager, const glm::vec3& _loc)
 {
 	chunksManager = _chunkmanager;
 	thread = std::thread(&Thread_Obj::MIAOU, this, _loc);
+	thread.detach();
 }
 
 void Thread_Obj::MIAOU(const glm::vec3& _loc)
