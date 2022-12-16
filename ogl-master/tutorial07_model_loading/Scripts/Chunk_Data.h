@@ -14,5 +14,6 @@ private:
 	~Chunk_Data();
 
 private:
-	std::vector<std::vector<std::vector<Block*>>> blocks;
+	//std::vector<std::vector<std::vector<Block*>>> blocks;
+	Block**** blocks;
 };

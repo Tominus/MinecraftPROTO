@@ -2,7 +2,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <map>
-
+#include <mutex>
 
 class Chunk_Data;
 class Chunk_Render;
@@ -11,7 +11,7 @@ class World;
 class TextureLoader;
 class Blocks_Global_Shapes;
 
-struct Chunk_Render_Data; //??? WORK?
+struct SChunk_Render_Data;
 
 class Chunk_Render_Generator
 {
@@ -23,9 +23,9 @@ private:
 	~Chunk_Render_Generator();
 
 	void GenerateNewChunkRender(Chunk_Render* _chunkRender, Chunk_Data* _chunkData);
-	void GenerateChunkCGRender(std::map<GLuint, Chunk_Render_Data*>& _currentRenderDatas);
+	void GenerateChunkCGRender(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas);
 
-	Chunk_Render_Data* GetChunkRenderData(std::map<GLuint, Chunk_Render_Data*>& _currentRenderDatas, const GLuint& _textureID);
+	SChunk_Render_Data* GetChunkRenderData(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas, const GLuint& _textureID);
 
 private:
 	Chunks_Manager* chunksManager;

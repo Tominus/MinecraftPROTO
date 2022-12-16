@@ -5,12 +5,13 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
+#include <stdio.h>//
+#include <functional>//
+
 class Chunk;
 class Chunk_Data_Generator;
 class Chunk_Render_Generator;
 
-#include <stdio.h>//
-#include <functional>//
 class Chunks_Manager
 {
 	friend class World;
@@ -20,11 +21,15 @@ private:
 	~Chunks_Manager();
 public://
 	void AddChunk(const glm::vec3& _position);
-	void UpdateChunksManager() const;
 
-	std::function<void()> onUpdate;//
-	void CheckForNewChunk();//
+private:
+	void UpdateChunksManager() const;
+	void TickChunksManager() const;
+
+	void CheckGenerateNewChunkRender();
 	void UpdateRender();
+
+	void CheckRenderDistance();
 
 public:
 	Chunk* GetChunkAtPosition(const glm::vec3& _position) const;
@@ -38,9 +43,12 @@ private:
 	Chunk_Data_Generator* chunkDataGenerator;
 	Chunk_Render_Generator* chunkRenderGenerator;
 
-	//
 	std::vector<Chunk*> chunkWaitingForCGgen;
-	//
+
+	std::function<void()> onUpdate;
+	std::function<void()> onTick;
 
 	std::mutex mutex_chunkWaitingForCGgen;
+
+	int renderDistance;
 };

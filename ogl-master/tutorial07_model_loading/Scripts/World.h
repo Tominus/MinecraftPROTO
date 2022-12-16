@@ -2,6 +2,9 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
+#include <chrono>
+#include <ctime>
+
 class TextureLoader;
 class Chunks_Manager;
 class Blocks_Global_Shapes;
@@ -20,6 +23,7 @@ private:
 
 	void Start();
 	void Update();
+	void Tick();
 
 	void Generate(const glm::vec3& _location, Thread_Obj* _thread);
 
@@ -43,6 +47,11 @@ private:
 	GLuint programID;
 	GLuint matrixID;
 	GLuint vertexArrayID;
+
+	float gameTime;
+	float tickTime;
+	float fpsTime;
+	float deltaTime;
 
 	glm::vec3 pos;//
 

@@ -41,7 +41,7 @@ void MainGame::GameLoop()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		computeMatricesFromInputs();
-		const glm::mat4& MVP = getProjectionMatrix() * getViewMatrix() * glm::mat4(1.0);
+		const glm::mat4& MVP = getProjectionMatrix() * getViewMatrix() * glm::mat4(1.0f);
 		glUniformMatrix4fv(_matrixID, 1, GL_FALSE, &MVP[0][0]);
 
 		//--- Update

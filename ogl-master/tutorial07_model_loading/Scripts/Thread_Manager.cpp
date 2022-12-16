@@ -6,6 +6,7 @@
 Thread_Manager::~Thread_Manager()
 {
 	InterruptThreadObjs();
+	
 	for each (Thread_Obj* _threadObj in threadObjs)
 	{
 		delete _threadObj;
@@ -21,7 +22,7 @@ void Thread_Manager::Initialize()
 
 void Thread_Manager::InitializeThreads()
 {
-	for (size_t i(0); i < currentThreadQuantityUsed; i++)
+	for (size_t i(0); i < currentThreadQuantityUsed; ++i)
 	{
 		Thread_Obj* _threadObj = new Thread_Obj();
 
@@ -105,6 +106,7 @@ Thread_Obj* Thread_Manager::GetValidThreadObj()
 {
 	Thread_Obj* _tmpThread(nullptr);
 
+	mutex_InvalidThreadObjs.lock();
 	const size_t& _max = validThreadObjs.size();
 
 	if (_max > 0)
@@ -113,6 +115,7 @@ Thread_Obj* Thread_Manager::GetValidThreadObj()
 		validThreadObjs.pop_back();
 		invalidThreadObjs.push_back(_tmpThread);
 	}
+	mutex_InvalidThreadObjs.unlock();
 
 	return _tmpThread;
 }

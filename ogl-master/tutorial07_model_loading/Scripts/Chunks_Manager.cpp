@@ -4,16 +4,26 @@
 #include "Chunk.h"
 #include "Chunk_Data_Generator.h"
 #include "Chunk_Render_Generator.h"
+#include <common/controls.hpp>
+#include "Thread_Manager.h"
+#include "Thread_Obj.h"
 
 Chunks_Manager::Chunks_Manager()
 {
 	chunkDataGenerator = new Chunk_Data_Generator();
 	chunkRenderGenerator = new Chunk_Render_Generator(this);
 
+	renderDistance = 16;
+
 	onUpdate = [this]()
 	{
-		CheckForNewChunk();
 		UpdateRender();
+	};
+
+	onTick = [this]()
+	{
+		CheckGenerateNewChunkRender();
+		CheckRenderDistance();
 	};
 }
 
@@ -37,8 +47,9 @@ Chunks_Manager::~Chunks_Manager()
 
 void Chunks_Manager::AddChunk(const glm::vec3& _position)
 {
-	mutex_chunkWaitingForCGgen.lock();
 	Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, _position);
+	
+	mutex_chunkWaitingForCGgen.lock();
 	chunkWaitingForCGgen.push_back(_chunk);
 	mutex_chunkWaitingForCGgen.unlock();
 }
@@ -60,7 +71,12 @@ void Chunks_Manager::UpdateChunksManager() const
 	std::invoke(onUpdate);
 }
 
-void Chunks_Manager::CheckForNewChunk()
+void Chunks_Manager::TickChunksManager() const
+{
+	std::invoke(onTick);
+}
+
+void Chunks_Manager::CheckGenerateNewChunkRender()
 {
 	mutex_chunkWaitingForCGgen.lock();
 	unsigned int _size = chunkWaitingForCGgen.size();
@@ -86,12 +102,75 @@ void Chunks_Manager::UpdateRender()
 		worldChunks[i]->Render();
 	}
 	
-	if (_max > 10)
+	/*if (_max > 10)
 	{
-		for (size_t i = 0; i < 1; i++)
+		for (size_t i = 0; i < 1; ++i)
 		{
 			delete worldChunks[i];
 		}
 		worldChunks.erase(worldChunks.begin(), worldChunks.begin() + 1);
+	}*/
+}
+
+void Chunks_Manager::CheckRenderDistance()
+{
+	const glm::vec3& _playerPosition = getPosition();
+	glm::vec3 _playerPositionChunkRelative(int(_playerPosition.x / 16.0f), 0, int(_playerPosition.z / 16.0f));
+
+	std::vector<Chunk*> inRenderDistanceChunks;
+
+	glm::vec3 _offset;
+	for (int x = -renderDistance; x < renderDistance; ++x)
+	{
+		_offset.x = x;
+		for (int z = -renderDistance; z < renderDistance; ++z)
+		{
+			_offset.z = z;
+
+			const glm::vec3& _offsettedPlayerRelativePosition = _offset + _playerPositionChunkRelative;
+			if (Chunk* _chunk = GetChunkAtPosition(_offsettedPlayerRelativePosition))
+			{
+				inRenderDistanceChunks.push_back(_chunk);
+			}
+			else
+			{
+				Thread_Manager* _threadManager = &Thread_Manager::Instance();
+				if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+					_thread->TEST(this, _offsettedPlayerRelativePosition);
+			}
+		}
+	}
+
+	size_t _max = worldChunks.size();
+	const size_t& _max2 = inRenderDistanceChunks.size();
+	for (size_t i = 0; i < _max; ++i)
+	{
+		Chunk*& _worldChunk = worldChunks[i];
+
+		bool _isInRange = false;
+		for (size_t j = 0; j < _max2; ++j)
+		{
+			if (_worldChunk == inRenderDistanceChunks[j])
+			{
+				_isInRange = true;
+				break;
+			}
+		}
+
+		if (!_isInRange)
+		{
+			delete _worldChunk;
+			_worldChunk = nullptr;
+		}
+	}
+	
+	for (size_t i = 0; i < _max; ++i)
+	{
+		if (!worldChunks[i])
+		{
+			worldChunks.erase(worldChunks.begin() + i);
+			i--;
+			_max--;
+		}
 	}
 }

@@ -8,6 +8,7 @@
 class Blocks_Global_Shapes
 {
 	friend class World;
+	friend class Chunk_Render_Generator;//
 
 private:
 	Blocks_Global_Shapes();
@@ -16,8 +17,8 @@ private:
 	void GenerateBlocksShapeDatas();
 
 public:
-	const Block_Shape_Data* GetBlockShapeData(const Block_Shapes_Type& _blockShapesType) const;
+	const SBlock_Shape_Data* GetBlockShapeData(const EBlock_Shapes_Type& _blockShapesType) const;
 
 private:
-	std::map<Block_Shapes_Type, Block_Shape_Data*> blocksShapes;
+	std::map<EBlock_Shapes_Type, SBlock_Shape_Data*> blocksShapes;
 };

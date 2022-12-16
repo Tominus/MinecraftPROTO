@@ -6,12 +6,22 @@
 
 /*Rendu pour chaque block. Peut être nullptr.
 Permet uniquement de retrouver le rendu d'un block en particulier.*/
-struct Chunk_Render_Shapes
+struct SChunk_Render_Shapes
 {
-	const std::vector<glm::vec3>* vertexs;
-	const std::vector<glm::vec2>* uvs;
+	//const std::vector<glm::vec3>* vertexs;
+	//const std::vector<glm::vec2>* uvs;
 
-	Chunk_Render_Shapes(const std::vector<glm::vec3>* _vertexs, const std::vector<glm::vec2>* _uvs)
+	/*Chunk_Render_Shapes(const std::vector<glm::vec3>* _vertexs, const std::vector<glm::vec2>* _uvs)
+	{
+		vertexs = _vertexs;
+		uvs = _uvs;
+	}*/
+
+	const glm::vec3* vertexs = nullptr;
+	const glm::vec2* uvs = nullptr;
+
+	SChunk_Render_Shapes() = delete;
+	SChunk_Render_Shapes(const glm::vec3 _vertexs[], const glm::vec2 _uvs[])
 	{
 		vertexs = _vertexs;
 		uvs = _uvs;
@@ -19,9 +29,9 @@ struct Chunk_Render_Shapes
 };
 
 /*Stock pour une texture tout les blocks qu'il va devoir rendre.*/
-struct Chunk_Render_Data
+struct SChunk_Render_Data
 {
-	std::vector<const Chunk_Render_Shapes*> renderBuffer;
+	std::vector<const SChunk_Render_Shapes*> renderBuffer;
 	unsigned int verticesGlobalSize;
 
 	GLuint vertexsBuffer;
@@ -30,6 +40,10 @@ struct Chunk_Render_Data
 	//Used for the graphics generation
 	std::vector<glm::vec3> globalVertexs;
 	std::vector<glm::vec2> globalUVs;
+
+	//const Chunk_Render_Shapes* renderBuffer = nullptr;
+	//glm::vec3* globalVertexs = nullptr;
+	//glm::vec2* globalUVs = nullptr;
 };
 
 class Chunk_Render
@@ -59,8 +73,9 @@ private:
 	GLuint matrixID;
 	
 	/*Stock les rendu dans leur world position.*/
-	std::vector<std::vector<std::vector<Chunk_Render_Shapes*>>> allBlockShapes;
+	//std::vector<std::vector<std::vector<Chunk_Render_Shapes*>>> allBlockShapes;
+	SChunk_Render_Shapes**** allBlockShapes;
 
 	/*Stock tout les datas à rendre. textures -> */
-	std::map<GLuint, Chunk_Render_Data*> renderDatas;
+	std::map<GLuint, SChunk_Render_Data*> renderDatas;
 };

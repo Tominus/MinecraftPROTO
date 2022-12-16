@@ -7,13 +7,13 @@ class Block
 	friend class Chunk_Data_Generator;
 
 private:
-	Block(const Block_Type& _blockType);
+	Block(const EBlock_Type& _blockType);
 	~Block();
 
 public:
-	const Block_Type& GetBlockType() const;
+	const EBlock_Type& GetBlockType() const;
 
 private:
-	Block_Type blockType;
+	EBlock_Type blockType;
 
 };

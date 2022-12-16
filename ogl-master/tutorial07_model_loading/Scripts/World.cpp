@@ -11,7 +11,7 @@
 
 World::~World()
 {
-	//Detach every thread before deleting others
+	//Waiting detach every thread before deleting others
 	delete chunksManager;
 
 	delete textureLoader;
@@ -41,40 +41,33 @@ void World::InitWorld()
 
 void World::Start()
 {
-	Thread_Manager* _threadManager = &Thread_Manager::Instance();
-	Thread_Obj* _thread = _threadManager->GetValidThreadObj();
-	if (_thread)
-		_thread->TEST(chunksManager, glm::vec3(0, 0, 0));
+	
 }
 
 void World::Update()
 {
-	chunksManager->UpdateChunksManager();
+	const float& _clock = std::clock() / 1000.0f;
+	
+	deltaTime = _clock - gameTime;
+	tickTime += deltaTime;
+	fpsTime += deltaTime;
+	gameTime = _clock;
 
-	Thread_Manager* _threadManager = &Thread_Manager::Instance();
-	Thread_Obj* _thread = _threadManager->GetValidThreadObj();
-	if (_thread)
+	if (tickTime > Tick_Time)
 	{
-		if (pos.x < pos.z)
-		{
-			++pos.x;
-			pos.z = 0;
-		}
-		else
-		{
-			++pos.z;
-		}
-		_thread->TEST(chunksManager, pos);
-		/*_thread->AddThread([&, this](const glm::vec3& _location, Thread_Obj* _thread)
-			{
-				Generate(_location, _thread);
-			}, pos, _thread);*/
-		/*_thread->AddThread_OneParam(
-			[&, this](int _uwu)
-			{
-				ToDelete();
-			}, 5);*/
+		tickTime -= Tick_Time;
+		Tick();
 	}
+	if (fpsTime > Fps_Time)
+	{
+		fpsTime -= 0.f;
+		chunksManager->UpdateChunksManager();
+	}
+}
+
+void World::Tick()
+{
+	chunksManager->TickChunksManager();
 }
 
 void World::Generate(const glm::vec3& _location, Thread_Obj* _thread)
