@@ -20,13 +20,13 @@ GLFWwindow* window;
 int main( void )
 {
 	srand(time(NULL));
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_CrtSetBreakAlloc(515);
 	
 	if( !glfwInit() )
 	{
 		fprintf( stderr, "Failed to initialize GLFW\n" );
-		getchar();
+		//getchar();
 		return -1;
 	}
 
@@ -39,7 +39,7 @@ int main( void )
 	window = glfwCreateWindow( 1024, 768, "Minecraft PROTO", NULL, NULL);
 	if( window == NULL ){
 		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
-		getchar();
+		//getchar();
 		glfwTerminate();
 		return -1;
 	}
@@ -48,7 +48,7 @@ int main( void )
 	glewExperimental = true;
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW\n");
-		getchar();
+		//getchar();
 		glfwTerminate();
 		return -1;
 	}

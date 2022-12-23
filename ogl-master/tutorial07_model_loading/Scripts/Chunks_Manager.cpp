@@ -13,7 +13,8 @@ Chunks_Manager::Chunks_Manager()
 	chunkDataGenerator = new Chunk_Data_Generator();
 	chunkRenderGenerator = new Chunk_Render_Generator(this);
 
-	renderDistance = 16;
+	renderDistance = Render_Distance_Current;
+	renderMaxDistance = renderDistance - 1;
 
 	onUpdate = [this]()
 	{
@@ -101,36 +102,31 @@ void Chunks_Manager::UpdateRender()
 	{
 		worldChunks[i]->Render();
 	}
-	
-	/*if (_max > 10)
-	{
-		for (size_t i = 0; i < 1; ++i)
-		{
-			delete worldChunks[i];
-		}
-		worldChunks.erase(worldChunks.begin(), worldChunks.begin() + 1);
-	}*/
 }
 
 void Chunks_Manager::CheckRenderDistance()
 {
 	const glm::vec3& _playerPosition = getPosition();
-	glm::vec3 _playerPositionChunkRelative(int(_playerPosition.x / 16.0f), 0, int(_playerPosition.z / 16.0f));
+	/*glm::vec3 _playerPositionChunkRelative(
+		round(_playerPosition.x / 16.f) - 0.5f,
+		0.f,
+		round(_playerPosition.z / 16.f) - 0.5f);*/
+	glm::vec3 _playerPositionChunkRelative(round(_playerPosition.x / 16.f),	0.f, round(_playerPosition.z / 16.f));
 
-	std::vector<Chunk*> inRenderDistanceChunks;
+	std::vector<Chunk*> _inRenderDistanceChunks;
 
 	glm::vec3 _offset;
-	for (int x = -renderDistance; x < renderDistance; ++x)
+	for (int x = -renderMaxDistance; x < renderDistance; ++x)
 	{
 		_offset.x = x;
-		for (int z = -renderDistance; z < renderDistance; ++z)
+		for (int z = -renderMaxDistance; z < renderDistance; ++z)
 		{
 			_offset.z = z;
 
 			const glm::vec3& _offsettedPlayerRelativePosition = _offset + _playerPositionChunkRelative;
 			if (Chunk* _chunk = GetChunkAtPosition(_offsettedPlayerRelativePosition))
 			{
-				inRenderDistanceChunks.push_back(_chunk);
+				_inRenderDistanceChunks.push_back(_chunk);
 			}
 			else
 			{
@@ -142,7 +138,7 @@ void Chunks_Manager::CheckRenderDistance()
 	}
 
 	size_t _max = worldChunks.size();
-	const size_t& _max2 = inRenderDistanceChunks.size();
+	const size_t& _max2 = _inRenderDistanceChunks.size();
 	for (size_t i = 0; i < _max; ++i)
 	{
 		Chunk*& _worldChunk = worldChunks[i];
@@ -150,7 +146,7 @@ void Chunks_Manager::CheckRenderDistance()
 		bool _isInRange = false;
 		for (size_t j = 0; j < _max2; ++j)
 		{
-			if (_worldChunk == inRenderDistanceChunks[j])
+			if (_worldChunk == _inRenderDistanceChunks[j])
 			{
 				_isInRange = true;
 				break;

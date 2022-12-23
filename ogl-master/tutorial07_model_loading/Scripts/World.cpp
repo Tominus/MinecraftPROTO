@@ -3,6 +3,7 @@
 #include "GlobalDefine.h"
 #include "TextureLoader.h"
 #include "Chunks_Manager.h"
+#include "Debug_World.h"
 #include "Blocks_Global_Shapes.h"
 #include "Thread_Manager.h"
 #include "Thread_Obj.h"
@@ -12,15 +13,16 @@
 World::~World()
 {
 	//Waiting detach every thread before deleting others
+	delete debugWorld;
 	delete chunksManager;
-
 	delete textureLoader;
 	delete blocksGlobalShapes;
+
 	glDeleteProgram(programID);
 	glDeleteVertexArrays(1, &vertexArrayID);
 }
 
-void World::InitWorld()
+void World::InitWorld(GLFWwindow* _window)
 {
 	glGenVertexArrays(1, &vertexArrayID);
 	glBindVertexArray(vertexArrayID);
@@ -29,6 +31,8 @@ void World::InitWorld()
 	matrixID = glGetUniformLocation(programID, "MVP");
 	glUseProgram(programID);
 
+	debugWorld = new Debug_World(_window);
+	debugWorld->InitDebug(matrixID);
 
 	textureLoader = new TextureLoader();
 	textureLoader->LoadTextures();
@@ -60,8 +64,9 @@ void World::Update()
 	}
 	if (fpsTime > Fps_Time)
 	{
-		fpsTime -= 0.f;
+		fpsTime -= Fps_Time;
 		chunksManager->UpdateChunksManager();
+		debugWorld->UpdateDebug();
 	}
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glfw3.h>
 
 #include <chrono>
 #include <ctime>
@@ -8,6 +9,7 @@
 class TextureLoader;
 class Chunks_Manager;
 class Blocks_Global_Shapes;
+class Debug_World;
 
 class Thread_Obj;//
 
@@ -19,7 +21,7 @@ private:
 	World() {};
 	~World();
 
-	void InitWorld();
+	void InitWorld(GLFWwindow* _window);
 
 	void Start();
 	void Update();
@@ -43,6 +45,7 @@ private:
 	TextureLoader* textureLoader;
 	Chunks_Manager* chunksManager;
 	Blocks_Global_Shapes* blocksGlobalShapes;
+	Debug_World* debugWorld;
 
 	GLuint programID;
 	GLuint matrixID;
@@ -52,14 +55,4 @@ private:
 	float tickTime;
 	float fpsTime;
 	float deltaTime;
-
-	glm::vec3 pos;//
-
-	//Init WorldClass
-	//Load datas
-	
-	// In Game :
-	//Awake
-	//Start
-	//Update
 };

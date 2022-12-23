@@ -29,7 +29,7 @@ void MainGame::GameLoop()
 
 	//--- Init
 	World* _world = &World::Instance();
-	_world->InitWorld();
+	_world->InitWorld(window);
 
 
 	//--- Start

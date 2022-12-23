@@ -51,4 +51,5 @@ private:
 	std::mutex mutex_chunkWaitingForCGgen;
 
 	int renderDistance;
+	int renderMaxDistance;
 };
