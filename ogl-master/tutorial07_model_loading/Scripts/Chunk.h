@@ -9,8 +9,10 @@ class Chunk_Render_Generator;
 
 class Chunk
 {
+	friend class Chunk_Data;
 	friend class Chunks_Manager;
 	friend class Chunk_Render;
+	friend class Chunk_Data_Generator;
 
 private:
 	Chunk(Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator, const glm::vec3& _position);
@@ -22,16 +24,10 @@ private:
 
 public:
 	/*Return the position of the chunk.*/
-	inline const glm::vec3& GetChunkPosition() const
-	{
-		return chunkPosition;
-	}
+	inline const glm::vec3& GetChunkPosition() const { return chunkPosition; }
 
 	/*Return the chunkPosition * 16.f to have his position in the world.*/
-	inline const glm::vec3& GetWorldPosition() const
-	{
-		return worldPosition;
-	}
+	inline const glm::vec3& GetWorldPosition() const { return worldPosition; }
 
 private:
 	Chunk_Data* chunkData;

@@ -19,6 +19,7 @@ class Chunk_Render_Generator
 	friend class Chunks_Manager;
 
 private:
+	Chunk_Render_Generator() = delete;
 	Chunk_Render_Generator(Chunks_Manager* _chunksManager);
 	~Chunk_Render_Generator();
 

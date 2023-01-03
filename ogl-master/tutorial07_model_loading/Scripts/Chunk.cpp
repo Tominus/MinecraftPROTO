@@ -14,9 +14,8 @@ Chunk::Chunk(Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* 
 	chunkDataGenerator = _chunkDataGenerator;
 	chunkRenderGenerator = _chunkRenderGenerator;
 
-	chunkData = new Chunk_Data();
+	chunkData = new Chunk_Data(this);
 	chunkDataGenerator->GenerateNewChunkData(chunkData);
-
 	chunkRender = new Chunk_Render(this);
 	chunkRenderGenerator->GenerateNewChunkRender(chunkRender, chunkData);
 }

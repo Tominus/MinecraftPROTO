@@ -27,8 +27,6 @@ Chunk_Render_Generator::~Chunk_Render_Generator()
 
 void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, Chunk_Data* _chunkData)
 {
-	std::mutex _m;
-	//_m.lock();
 	const glm::vec3& _chunkPosition = _chunkRender->ownerChunk->GetChunkPosition();
 	Block****& _blocksData = _chunkData->blocks;
 
@@ -104,7 +102,6 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 			}
 		}
 	}
-	//_m.unlock();
 }
 
 void Chunk_Render_Generator::GenerateChunkCGRender(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas)
@@ -115,9 +112,6 @@ void Chunk_Render_Generator::GenerateChunkCGRender(std::map<GLuint, SChunk_Rende
 		const unsigned& _verticesGlobalSize = _render->verticesGlobalSize;
 		GLuint& _vertexsBuffer = _render->vertexsBuffer;
 		GLuint& _uvsBuffer = _render->uvsBuffer;
-
-		//glm::vec3*& _globalVertexs = _render->globalVertexs;
-		//glm::vec2*& _globalUVs = _render->globalUVs;
 
 		std::vector<glm::vec3>& _globalVertexs = _render->globalVertexs;
 		std::vector<glm::vec2>& _globalUVs = _render->globalUVs;
@@ -132,9 +126,6 @@ void Chunk_Render_Generator::GenerateChunkCGRender(std::map<GLuint, SChunk_Rende
 
 		_globalVertexs.clear();
 		_globalUVs.clear();
-		
-		//delete[] _globalVertexs;
-		//delete[] _globalUVs;
 	}
 }
 

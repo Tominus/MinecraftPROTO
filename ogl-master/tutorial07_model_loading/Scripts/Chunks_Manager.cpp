@@ -10,7 +10,7 @@
 
 Chunks_Manager::Chunks_Manager()
 {
-	chunkDataGenerator = new Chunk_Data_Generator();
+	chunkDataGenerator = new Chunk_Data_Generator(this);
 	chunkRenderGenerator = new Chunk_Render_Generator(this);
 
 	renderDistance = Render_Distance_Current;
@@ -26,6 +26,106 @@ Chunks_Manager::Chunks_Manager()
 		CheckGenerateNewChunkRender();
 		CheckRenderDistance();
 	};
+
+
+	/*Thread_Manager* _threadManager = &Thread_Manager::Instance();
+	{
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3());
+		//d
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(0, -1, 0));
+		//u
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(0, 1, 0));
+		//l
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(-1, 0, 0));
+		//r
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(1, 0, 0));
+		//b
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(0, 0, -1));
+		//f
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(0, 0, 1));
+	}
+
+	{
+		//l
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(1, 0, 1));
+		//r
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(-1, 0, -1));
+		//b
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(1, 0, -1));
+		//f
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(-1, 0, 1));
+	}
+
+	{
+		//l
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(1, -1, 1));
+		//r
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(-1, -1, -1));
+		//b
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(1, -1, -1));
+		//f
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(-1, -1, 1));
+	}
+
+	{
+		//l
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(1, 1, 1));
+		//r
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(-1, 1, -1));
+		//b
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(1, 1, -1));
+		//f
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(-1, 1, 1));
+	}
+
+	{
+		//ld
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(-1, -1, 0));
+		//rd
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(1, -1, 0));
+		//bd
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(0, -1, -1));
+		//fd
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(0, -1, 1));
+	}
+
+	{
+		//lu
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(-1, 1, 0));
+		//ru
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(1, 1, 0));
+		//bu
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(0, 1, -1));
+		//fu
+		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
+			_thread->TEST(this, glm::vec3(0, 1, 1));
+	}*/
 }
 
 Chunks_Manager::~Chunks_Manager()
@@ -49,21 +149,25 @@ Chunks_Manager::~Chunks_Manager()
 void Chunks_Manager::AddChunk(const glm::vec3& _position)
 {
 	Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, _position);
-	
-	mutex_chunkWaitingForCGgen.lock();
+	mutex.lock();
 	chunkWaitingForCGgen.push_back(_chunk);
-	mutex_chunkWaitingForCGgen.unlock();
+	mutex.unlock();
 }
 
 Chunk* Chunks_Manager::GetChunkAtPosition(const glm::vec3& _position) const
 {
+	mutex2.lock();
 	const size_t& _max = worldChunks.size();
 	for (size_t i = 0; i < _max; ++i)
 	{
 		Chunk* _chunk = worldChunks[i];
 		if (_position == _chunk->chunkPosition)
+		{
+			mutex2.unlock();
 			return _chunk;
+		}
 	}
+	mutex2.unlock();
 	return nullptr;
 }
 
@@ -79,8 +183,8 @@ void Chunks_Manager::TickChunksManager() const
 
 void Chunks_Manager::CheckGenerateNewChunkRender()
 {
-	mutex_chunkWaitingForCGgen.lock();
-	unsigned int _size = chunkWaitingForCGgen.size();
+	mutex.lock();
+	size_t _size (chunkWaitingForCGgen.size());
 	while (_size > 0)
 	{
 		Chunk* _chunk = chunkWaitingForCGgen[0];
@@ -91,27 +195,27 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 
 		worldChunks.push_back(_chunk);
 	}
-	mutex_chunkWaitingForCGgen.unlock();
+	mutex.unlock();
 }
 
 void Chunks_Manager::UpdateRender()
 {
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	
 	const size_t& _max = worldChunks.size();
 
 	for (size_t i(0); i < _max; ++i)
-	{
 		worldChunks[i]->Render();
-	}
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 }
 
 void Chunks_Manager::CheckRenderDistance()
 {
-	const glm::vec3& _playerPosition = getPosition();
-	/*glm::vec3 _playerPositionChunkRelative(
-		round(_playerPosition.x / 16.f) - 0.5f,
-		0.f,
-		round(_playerPosition.z / 16.f) - 0.5f);*/
-	glm::vec3 _playerPositionChunkRelative(round(_playerPosition.x / 16.f),	0.f, round(_playerPosition.z / 16.f));
+	const glm::vec3& _playerPosition = getPosition() - glm::vec3(8, 8, 8);
+	const glm::vec3 _playerPositionChunkRelative(round(_playerPosition.x / 16.f), 0.f, round(_playerPosition.z / 16.f));
 
 	std::vector<Chunk*> _inRenderDistanceChunks;
 

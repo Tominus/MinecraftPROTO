@@ -50,7 +50,7 @@ void World::Start()
 
 void World::Update()
 {
-	const float& _clock = std::clock() / 1000.0f;
+	const float& _clock = std::clock() / 1000.f;
 	
 	deltaTime = _clock - gameTime;
 	tickTime += deltaTime;

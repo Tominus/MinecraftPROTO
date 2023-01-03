@@ -34,7 +34,7 @@ float verticalAngle = -0.5f;
 // Initial Field of View
 float initialFoV = 45.0f;
 
-float speed = 6.0f; // 3 units / second
+float speed = 12.0f; // 3 units / second
 float mouseSpeed = 0.005f;
 
 
@@ -91,21 +91,27 @@ void computeMatricesFromInputs(){
 	glm::vec3 up = glm::cross( right, direction );
 
 	// Move forward
-	if (glfwGetKey( window, GLFW_KEY_W ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_W ) == GLFW_PRESS)
 		position += direction * deltaTime * speed;
-	}
+
 	// Move backward
-	if (glfwGetKey( window, GLFW_KEY_S ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_S ) == GLFW_PRESS)
 		position -= direction * deltaTime * speed;
-	}
+
 	// Strafe right
-	if (glfwGetKey( window, GLFW_KEY_D ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_D ) == GLFW_PRESS)
 		position += right * deltaTime * speed;
-	}
+
 	// Strafe left
-	if (glfwGetKey( window, GLFW_KEY_A ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_A ) == GLFW_PRESS)
 		position -= right * deltaTime * speed;
-	}
+
+
+	if (glfwGetKey( window, GLFW_KEY_KP_ADD ) == GLFW_PRESS)
+		speed += 3.f;
+	if (glfwGetKey( window, GLFW_KEY_KP_SUBTRACT ) == GLFW_PRESS)
+		speed -= 3.f;
+
 	// Go up
 	if (glfwGetKey( window, GLFW_KEY_SPACE ) == GLFW_PRESS){
 		position += glm::vec3(0, 1.0f, 0) * deltaTime * speed;

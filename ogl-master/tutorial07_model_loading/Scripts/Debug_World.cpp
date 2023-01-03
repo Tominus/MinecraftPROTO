@@ -76,31 +76,30 @@ void Debug_World::UpdateDebug()
 
 void Debug_World::Debug_DrawChunk()
 {
-	if (glfwGetKey(window, GLFW_KEY_F3) && glfwGetKey(window, GLFW_KEY_G))
+	if (glfwGetKey(window, GLFW_KEY_G) && glfwGetKey(window, GLFW_KEY_F3))
 		bDebugDrawChunk = !bDebugDrawChunk;
 
-	//if (!bDebugDrawChunk)return;
-	const glm::vec3& _playerPosition = getPosition();
-	/*const float& _xPos = round(_playerPosition.x / 16.f) - 0.5f;
-	const float& _yPos = round(_playerPosition.y / 16.f) - 0.5f;
-	const float& _zPos = round(_playerPosition.z / 16.f) - 0.5f;*/
+	if (!bDebugDrawChunk)return;
+
+	const glm::vec3& _playerPosition = getPosition() - glm::vec3(8, 8, 8);
 	const float& _xPos = round(_playerPosition.x / 16.f);
 	const float& _yPos = round(_playerPosition.y / 16.f);
 	const float& _zPos = round(_playerPosition.z / 16.f);
 	
-	glm::vec3 _playerPositionChunkRelative(_xPos * 16.f, _yPos * 16.f, _zPos * 16.f);
+	const glm::vec3 _playerPositionChunkRelative(_xPos * 16.f, _yPos * 16.f, _zPos * 16.f);
 
-	glEnableVertexAttribArray(0);
+
 	glm::vec3 _offset;
-	/*for (int x = -1; x < 2; ++x)
+	glEnableVertexAttribArray(0);
+	for (float x = -16.f; x < 32.f; x += 16.f)
 	{
-		_offset.x = x * 16.f;
-		for (int y = -1; y < 2; ++y)
+		_offset.x = x;
+		for (float y = -16.f; y < 32.f; y += 16.f)
 		{
-			_offset.y = y * 16.f;
-			for (int z = -1; z < 2; ++z)
+			_offset.y = y;
+			for (float z = -16.f; z < 32.f; z += 16.f)
 			{
-				_offset.z = z * 16.f;
+				_offset.z = z;
 				const glm::mat4& _MVP = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), _playerPositionChunkRelative + _offset) * glm::mat4(1.0f);
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &_MVP[0][0]);
 
@@ -110,25 +109,6 @@ void Debug_World::Debug_DrawChunk()
 				glDrawArrays(GL_LINES, 0, vertexsSizeDrawChunk);
 			}
 		}
-	}*/
-
-	const glm::mat4& _MVP = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), _playerPositionChunkRelative + _offset) * glm::mat4(1.0f);
-	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &_MVP[0][0]);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexsBufferDrawChunk);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glDrawArrays(GL_LINES, 0, vertexsSizeDrawChunk);
-
-
-
-	const glm::mat4& _zero = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), glm::vec3()) * glm::mat4(1.0f);
-	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &_zero[0][0]);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexsBufferDrawChunk);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glDrawArrays(GL_LINES, 0, vertexsSizeDrawChunk);
-
+	}
 	glDisableVertexAttribArray(0);
 }

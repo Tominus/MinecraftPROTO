@@ -48,7 +48,8 @@ private:
 	std::function<void()> onUpdate;
 	std::function<void()> onTick;
 
-	std::mutex mutex_chunkWaitingForCGgen;
+	mutable std::mutex mutex;
+	mutable std::mutex mutex2;
 
 	int renderDistance;
 	int renderMaxDistance;

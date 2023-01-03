@@ -17,24 +17,27 @@
 * ...
 */
 
+/* Add To chunk other side chunk during rendering
+* avoid searching them when destroying block near them
+*/
+
 /* Render Separatly each face of the block
 * 
 */
 
 /* Store Chunk in there position instead of in a array
-*
-*/
-
-/* Mutex on chunkWaitingForCGgen && invalidThreadObjs
-*
-*/
-
-/* Check verticesGlobalSize || globalVertexs NULL
-*
-*/
-
-/* no thread faster than thread
-*
+* Impossible cause negative value exist
+* !!!!!!!!!!!!!! Will not work !!!!!!!!!!!!!!
+* soluce :
+* int negativeOffsetX
+* //int negativeOffsetY doesn't exist cause world height is predetermined
+* int negativeOffsetZ
+* Triple vect
+* 
+* if we have a new chunk with negative value
+* we increment the correspondant offset
+* and we redo the Triple vect.
+* !!!!!!!!!!!!!! Will not work !!!!!!!!!!!!!!
 */
 
 /* Update Render every frame.

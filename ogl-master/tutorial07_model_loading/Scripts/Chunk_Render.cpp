@@ -9,6 +9,8 @@
 
 Chunk_Render::Chunk_Render(Chunk* _currentChunk)
 {
+	matrixID = 0;
+	allBlockShapes = nullptr;
 	ownerChunk = _currentChunk;
 	ownerChunkPosition = ownerChunk->worldPosition;
 }
@@ -21,9 +23,6 @@ Chunk_Render::~Chunk_Render()
 		glDeleteBuffers(1, &_renderBuffer->vertexsBuffer);
 		glDeleteBuffers(1, &_renderBuffer->uvsBuffer);
 		delete _renderBuffer;
-		//delete[] _renderBuffer;
-		//delete[] _renderBuffer->globalVertexs;
-		//delete[] _renderBuffer->globalUVs;
 	}
 
 	for (size_t x = 0; x < Chunk_Size; ++x)
@@ -54,19 +53,14 @@ void Chunk_Render::Render()
 
 		const glm::mat4& _MVP = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), ownerChunkPosition) * glm::mat4(1.0f);
 		glUniformMatrix4fv(matrixID, 1, GL_FALSE, &_MVP[0][0]);
-
-		glEnableVertexAttribArray(0);
+		
 		glBindBuffer(GL_ARRAY_BUFFER, _chunkRenderData->vertexsBuffer);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, _chunkRenderData->uvsBuffer);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 		glDrawArrays(GL_TRIANGLES, 0, _chunkRenderData->verticesGlobalSize);
-
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
 	}
 }
 
