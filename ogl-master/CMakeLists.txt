@@ -80,6 +80,8 @@ add_executable(tutorial07_model_loading
 	tutorial07_model_loading/Scripts/Chunk_Render_Generator.h
 	tutorial07_model_loading/Scripts/Chunks_Manager.cpp
 	tutorial07_model_loading/Scripts/Chunks_Manager.h
+	tutorial07_model_loading/Scripts/Debug_World.cpp
+	tutorial07_model_loading/Scripts/Debug_World.h
 	tutorial07_model_loading/Scripts/GlobalDefine.h
 	tutorial07_model_loading/Scripts/lodepng.cpp
 	tutorial07_model_loading/Scripts/lodepng.h

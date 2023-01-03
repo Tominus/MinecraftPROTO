@@ -3,7 +3,7 @@
 #define Chunk_Size 16
 #define Chunk_Max_Size 15
 
-#define Thread_Used_Qty 8
+#define Thread_Used_Qty 16
 
 #define Max_FPS 60
 #define Tick_Time 0.05f
