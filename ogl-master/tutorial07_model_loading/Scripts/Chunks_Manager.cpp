@@ -26,8 +26,8 @@ Chunks_Manager::Chunks_Manager()
 	onTick = [this]()
 	{
 		CheckGenerateNewChunkRender();
-		CheckGenerateChunkPosition();
-		CheckRenderDistance();
+		//CheckGenerateChunkPosition();
+		//CheckRenderDistance();
 	};
 
 
@@ -129,6 +129,39 @@ Chunks_Manager::Chunks_Manager()
 		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
 			_thread->TEST(this, glm::vec3(0, 1, 1));
 	}*/
+
+	AddChunk(glm::vec3());
+	/*AddChunk(glm::vec3(0, -1, 0));
+	AddChunk(glm::vec3(0, 1, 0));
+	AddChunk(glm::vec3(-1, 0, 0));
+	AddChunk(glm::vec3(1, 0, 0));
+	AddChunk(glm::vec3(0, 0, -1));
+	AddChunk(glm::vec3(0, 0, 1));
+
+	AddChunk(glm::vec3(1, 0, 1));
+	AddChunk(glm::vec3(-1, 0, -1));
+	AddChunk(glm::vec3(1, 0, -1));
+	AddChunk(glm::vec3(-1, 0, 1));
+
+	AddChunk(glm::vec3(1, -1, 1));
+	AddChunk(glm::vec3(-1, -1, -1));
+	AddChunk(glm::vec3(1, -1, -1));
+	AddChunk(glm::vec3(-1, -1, 1));
+
+	AddChunk(glm::vec3(1, 1, 1));
+	AddChunk(glm::vec3(-1, 1, -1));
+	AddChunk(glm::vec3(1, 1, -1));
+	AddChunk(glm::vec3(-1, 1, 1));
+
+	AddChunk(glm::vec3(1, -1, 0));
+	AddChunk(glm::vec3(-1, -1, 0));
+	AddChunk(glm::vec3(0, -1, -1));
+	AddChunk(glm::vec3(0, -1, 1));
+
+	AddChunk(glm::vec3(-1, 1, 0));
+	AddChunk(glm::vec3(1, 1, 0));
+	AddChunk(glm::vec3(0, 1, -1));
+	AddChunk(glm::vec3(0, 1, 1));*/
 }
 
 Chunks_Manager::~Chunks_Manager()
@@ -157,7 +190,9 @@ void Chunks_Manager::AddChunk(const glm::vec3& _position)
 {
 	Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, _position);
 	mutex.lock();
-	chunkWaitingForCGgen.push_back(_chunk);
+	_chunk->GenerateCGRender();
+	worldChunks.push_back(_chunk);
+	//chunkWaitingForCGgen.push_back(_chunk);
 	chunkPositionFinishGeneration.push_back(_position);
 	mutex.unlock();
 }
@@ -167,8 +202,8 @@ void Chunks_Manager::AddStartingWorldBaseChunk()
 	const glm::vec3& _playerPosition = getPosition() - glm::vec3(8, 8, 8);
 	const glm::vec3 _playerPositionChunkRelative(round(_playerPosition.x / 16.f), 0.f, round(_playerPosition.z / 16.f));
 
-	chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
-	AddChunk(_playerPositionChunkRelative);
+	//chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
+	//AddChunk(_playerPositionChunkRelative);
 }
 
 void Chunks_Manager::UpdateChunksManager() const
