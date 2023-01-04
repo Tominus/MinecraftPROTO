@@ -12,7 +12,6 @@
 
 World::~World()
 {
-	//Waiting detach every thread before deleting others
 	delete debugWorld;
 	delete chunksManager;
 	delete textureLoader;
@@ -45,7 +44,7 @@ void World::InitWorld(GLFWwindow* _window)
 
 void World::Start()
 {
-	
+	chunksManager->AddStartingWorldBaseChunk();
 }
 
 void World::Update()
@@ -62,9 +61,9 @@ void World::Update()
 		tickTime -= Tick_Time;
 		Tick();
 	}
-	if (fpsTime > Fps_Time)
+	//if (fpsTime > Fps_Time)
 	{
-		fpsTime -= Fps_Time;
+	//	fpsTime -= Fps_Time;
 		chunksManager->UpdateChunksManager();
 		debugWorld->UpdateDebug();
 	}
@@ -73,9 +72,4 @@ void World::Update()
 void World::Tick()
 {
 	chunksManager->TickChunksManager();
-}
-
-void World::Generate(const glm::vec3& _location, Thread_Obj* _thread)
-{
-	chunksManager->AddChunk(_location);
 }

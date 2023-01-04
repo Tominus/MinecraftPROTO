@@ -1,4 +1,5 @@
 #pragma once
+#include <mutex>
 
 class Chunk_Data;
 class Chunks_Manager;
@@ -19,6 +20,8 @@ private:
 
 private:
 	//maybe the generator seed and a ?Terrain_Generator
+	mutable std::mutex mutex;
+
 	unsigned randMax;
 	Chunks_Manager* chunksManager;
 };

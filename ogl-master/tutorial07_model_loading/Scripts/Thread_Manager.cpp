@@ -51,7 +51,7 @@ void Thread_Manager::Internal_SetMaxThread(unsigned int _quantity)
 	}
 
 	//currentThreadQuantityUsed = _quantity;
-	currentThreadQuantityUsed = 16;
+	currentThreadQuantityUsed = 16*16;
 }
 
 void Thread_Manager::ResetThreadObjs()

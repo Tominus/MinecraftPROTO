@@ -24,7 +24,7 @@ Chunk_Data_Generator::~Chunk_Data_Generator()
 
 void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data* _chunkData) const
 {
-	//SetSideChunks(_chunkData); // not thread safe
+	SetSideChunks(_chunkData);
 
 	std::random_device _rd;
 	std::mt19937 _gen(_rd());
@@ -54,9 +54,9 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data* _chunkData) const
 
 void Chunk_Data_Generator::SetSideChunks(Chunk_Data* _chunkData) const
 {
+	mutex.lock();
 	Chunk* _ownerChunk = _chunkData->ownerChunk;
 	const glm::vec3& _ownerChunkPosition = _ownerChunk->GetChunkPosition();
-
 	if (Chunk* _downChunk = chunksManager->GetChunkAtPosition(_ownerChunkPosition + glm::vec3(0, -1, 0)))
 	{
 		_downChunk->chunkData->upChunk = _ownerChunk;
@@ -89,4 +89,5 @@ void Chunk_Data_Generator::SetSideChunks(Chunk_Data* _chunkData) const
 		_frontChunk->chunkData->backChunk = _ownerChunk;
 		_chunkData->frontChunk = _frontChunk;
 	}
+	mutex.unlock();
 }

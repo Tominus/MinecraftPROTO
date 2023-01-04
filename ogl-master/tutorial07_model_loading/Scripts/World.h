@@ -11,8 +11,6 @@ class Chunks_Manager;
 class Blocks_Global_Shapes;
 class Debug_World;
 
-class Thread_Obj;//
-
 class World
 {
 	friend class MainGame;
@@ -26,8 +24,6 @@ private:
 	void Start();
 	void Update();
 	void Tick();
-
-	void Generate(const glm::vec3& _location, Thread_Obj* _thread);
 
 public:
 	inline static World& Instance()
