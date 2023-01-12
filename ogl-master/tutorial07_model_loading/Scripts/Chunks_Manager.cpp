@@ -9,6 +9,13 @@
 #include "Thread_Manager.h"
 #include "Thread_Obj.h"
 
+#include <Windows.h>
+
+typedef struct TEST
+{
+	glm::vec3 position;
+} *PTEST;
+
 Chunks_Manager::Chunks_Manager()
 {
 	chunkDataGenerator = new Chunk_Data_Generator(this);
@@ -29,6 +36,12 @@ Chunks_Manager::Chunks_Manager()
 		//CheckGenerateChunkPosition();
 		//CheckRenderDistance();
 	};
+
+	glm::vec3* _test = new glm::vec3();
+	LPDWORD _currentThreadID;
+	HANDLE _currentThread = CreateThread(NULL, 0, AddChunkTEST, _test, 0, _currentThreadID);
+
+
 
 
 	/*Thread_Manager* _threadManager = &Thread_Manager::Instance();
@@ -129,8 +142,7 @@ Chunks_Manager::Chunks_Manager()
 		if (Thread_Obj* _thread = _threadManager->GetValidThreadObj())
 			_thread->TEST(this, glm::vec3(0, 1, 1));
 	}*/
-
-	AddChunk(glm::vec3());
+	//AddChunk(glm::vec3());
 	/*AddChunk(glm::vec3(0, -1, 0));
 	AddChunk(glm::vec3(0, 1, 0));
 	AddChunk(glm::vec3(-1, 0, 0));

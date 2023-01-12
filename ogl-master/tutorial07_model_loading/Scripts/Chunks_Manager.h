@@ -7,6 +7,7 @@
 
 #include <stdio.h>//
 #include <functional>//
+#include <Windows.h>
 
 class Chunk;
 class Thread_Manager;
@@ -22,6 +23,17 @@ private:
 	~Chunks_Manager();
 public://
 	void AddChunk(const glm::vec3& _position);
+	DWORD inline WINAPI AddChunkTEST(LPVOID _params)
+	{
+		Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, (glm::vec3&&)_params);
+		mutex.lock();
+		//_chunk->GenerateCGRender();
+		worldChunks.push_back(_chunk);
+		chunkWaitingForCGgen.push_back(_chunk);
+		chunkPositionFinishGeneration.push_back((glm::vec3&&)_params);
+		mutex.unlock();
+		return 0;
+	}
 
 private:
 	void AddStartingWorldBaseChunk();
