@@ -10,11 +10,8 @@
 #include "Thread_Obj.h"
 
 #include <Windows.h>
+#include <stdio.h>
 
-typedef struct TEST
-{
-	glm::vec3 position;
-} *PTEST;
 
 Chunks_Manager::Chunks_Manager()
 {
@@ -37,11 +34,9 @@ Chunks_Manager::Chunks_Manager()
 		//CheckRenderDistance();
 	};
 
-	glm::vec3* _test = new glm::vec3();
-	LPDWORD _currentThreadID;
-	HANDLE _currentThread = CreateThread(NULL, 0, AddChunkTEST, _test, 0, _currentThreadID);
+	
 
-
+	TestThradWin();
 
 
 	/*Thread_Manager* _threadManager = &Thread_Manager::Instance();
@@ -178,7 +173,9 @@ Chunks_Manager::Chunks_Manager()
 
 Chunks_Manager::~Chunks_Manager()
 {
-	mutex.lock();
+	mutex = CreateMutexA(0, false, 0);
+
+	//mutex.lock();
 	const size_t& _max = worldChunks.size();
 	for (size_t i = 0; i < _max; ++i)
 	{
@@ -186,7 +183,10 @@ Chunks_Manager::~Chunks_Manager()
 		delete _chunk;
 		_chunk = nullptr;
 	}
-	mutex.unlock();
+	//mutex.unlock();
+	ReleaseMutex(mutex);
+
+	CloseHandle(mutex);
 
 	const size_t& _max2 = chunkWaitingForCGgen.size();
 	for (size_t i = 0; i < _max2; ++i)
@@ -201,12 +201,14 @@ Chunks_Manager::~Chunks_Manager()
 void Chunks_Manager::AddChunk(const glm::vec3& _position)
 {
 	Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, _position);
-	mutex.lock();
+	//mutex.lock();
+	mutex = CreateMutexA(0, false, 0);
 	_chunk->GenerateCGRender();
 	worldChunks.push_back(_chunk);
 	//chunkWaitingForCGgen.push_back(_chunk);
 	chunkPositionFinishGeneration.push_back(_position);
-	mutex.unlock();
+	//mutex.unlock();
+	ReleaseMutex(mutex);
 }
 
 void Chunks_Manager::AddStartingWorldBaseChunk()
@@ -244,7 +246,8 @@ void Chunks_Manager::UpdateRender()
 
 void Chunks_Manager::CheckGenerateNewChunkRender()
 {
-	mutex.lock();
+	//mutex.lock();
+	mutex = CreateMutexA(0, false, 0);
 	size_t _size (chunkWaitingForCGgen.size());
 	while (_size > 0)
 	{
@@ -256,12 +259,14 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 
 		worldChunks.push_back(_chunk);
 	}
-	mutex.unlock();
+	//mutex.unlock();
+	ReleaseMutex(mutex);
 }
 
 void Chunks_Manager::CheckGenerateChunkPosition()
 {
-	mutex.lock();
+	//mutex.lock();
+	mutex = CreateMutexA(0, false, 0);
 	size_t _size(chunkPositionFinishGeneration.size());
 	size_t _index (0);
 
@@ -280,7 +285,8 @@ void Chunks_Manager::CheckGenerateChunkPosition()
 		chunkPositionFinishGeneration.erase(chunkPositionFinishGeneration.begin());
 		--_size;
 	}
-	mutex.unlock();
+	//mutex.unlock();
+	ReleaseMutex(mutex);
 }
 
 void Chunks_Manager::CheckRenderDistance()
@@ -339,7 +345,8 @@ void Chunks_Manager::CheckRenderDistance()
 			}
 		}
 	}
-	mutex.lock();
+	//mutex.lock();
+	mutex = CreateMutexA(0, false, 0);
 	const size_t& _max2 = _inRenderDistanceChunks.size();
 	for (size_t i = 0; i < _worldChunkSize; ++i)
 	{
@@ -371,23 +378,27 @@ void Chunks_Manager::CheckRenderDistance()
 			_worldChunkSize--;
 		}
 	}
-	mutex.unlock();
+	//mutex.unlock();
+	ReleaseMutex(mutex);
 }
 
 Chunk* Chunks_Manager::GetChunkAtPosition(const glm::vec3& _position) const
 {
-	mutex.lock();
+	//mutex.lock();
+	mutex = CreateMutexA(0, false, 0);
 	const size_t& _max = worldChunks.size();
 	for (size_t i = 0; i < _max; ++i)
 	{
 		Chunk* _chunk = worldChunks[i];
 		if (_position == _chunk->chunkPosition)
 		{
-			mutex.unlock();
+			//mutex.unlock();
+			ReleaseMutex(mutex);
 			return _chunk;
 		}
 	}
-	mutex.unlock();
+	//mutex.unlock();
+	ReleaseMutex(mutex);
 	return nullptr;
 }
 

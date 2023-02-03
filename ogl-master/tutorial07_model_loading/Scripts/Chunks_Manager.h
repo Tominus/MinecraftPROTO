@@ -8,6 +8,9 @@
 #include <stdio.h>//
 #include <functional>//
 #include <Windows.h>
+#include <stdio.h>
+
+#include "Chunk.h"//TODO delete
 
 class Chunk;
 class Thread_Manager;
@@ -23,17 +26,40 @@ private:
 	~Chunks_Manager();
 public://
 	void AddChunk(const glm::vec3& _position);
-	DWORD inline WINAPI AddChunkTEST(LPVOID _params)
+
+
+
+	DWORD WINAPI AddChunkTEST(void* _params)
 	{
+		const glm::vec3 _position = (glm::vec3&&)_params;
 		Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, (glm::vec3&&)_params);
-		mutex.lock();
+		//mutex.lock();
+		mutex = CreateMutexA(0, false, 0);
 		//_chunk->GenerateCGRender();
 		worldChunks.push_back(_chunk);
 		chunkWaitingForCGgen.push_back(_chunk);
 		chunkPositionFinishGeneration.push_back((glm::vec3&&)_params);
-		mutex.unlock();
+		//mutex.unlock();
+		ReleaseMutex(mutex);
 		return 0;
 	}
+
+	void TestThradWin()
+	{
+		LPDWORD _currentThreadID = nullptr;
+		HANDLE _currentThread = CreateThread(0, 0, (unsigned long(__stdcall*)(void*))runProcess, (void*)this, 0, _currentThreadID);
+
+	}
+
+	static int runProcess(void* pThis)
+	{
+		glm::vec3* _test = new glm::vec3(0.f, 0.f, 0.f);
+
+		return ((Chunks_Manager*)(pThis))->AddChunkTEST(_test);
+	}
+
+
+	//LPTHREAD_START_ROUTINE
 
 private:
 	void AddStartingWorldBaseChunk();
@@ -69,7 +95,8 @@ private:
 	std::function<void()> onUpdate;
 	std::function<void()> onTick;
 
-	mutable std::mutex mutex;
+	//mutable std::mutex mutex;
+	mutable HANDLE mutex;
 
 	int renderDistance;
 	int renderMaxDistance;
