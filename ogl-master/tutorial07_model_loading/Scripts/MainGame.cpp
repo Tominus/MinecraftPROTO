@@ -24,7 +24,7 @@ void MainGame::GameLoop()
 {
 	//--- Pre Init
 	threadManager = &Thread_Manager::Instance();
-	threadManager->Initialize();
+	//threadManager->Initialize();
 
 
 	//--- Init
@@ -55,5 +55,5 @@ void MainGame::GameLoop()
 	//---Exit
 	do {
 
-	} while (threadManager->GetHasAllThreadFinished() == false);
+	} while (threadManager->GetAllThreadFinished() == false);
 }

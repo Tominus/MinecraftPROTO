@@ -2,9 +2,9 @@
 #include "GlobalDefine.h"
 
 #include <vector>
-#include <mutex>
+#include <Windows.h>
 
-class Thread_Obj;
+#include "Thread_Obj.h"
 
 /**
 * The Manager of thread.
@@ -17,7 +17,7 @@ class Thread_Manager
 	friend class MainGame;
 
 private:
-	Thread_Manager() {};
+	Thread_Manager();
 	~Thread_Manager();
 
 public:
@@ -27,33 +27,33 @@ public:
 		return instance;
 	}
 
-	void SetMaxThread(const unsigned int& _quantity);
+	bool GetAllThreadFinished() const { return allCurrentThread.size() == 0; }
 
-	inline bool GetHasAllThreadFinished() const { return invalidThreadObjs.size() == 0; }
+	template<typename ... Params>
+	inline Thread* CreateThread(const bool& _autoActivate, void(*_method), Params... _paramsWithoutThread)
+	{
+		Thread* _thread = new Thread();
+		_thread->CreateThreadFunction(_method, _thread, _paramsWithoutThread...);
+
+		_thread->OnFinished.AddDynamic(this, &Thread_Manager::DeleteFinishedThread);
+
+		if (_autoActivate)
+			_thread->Execute();
+
+		WaitForSingleObject(mutex, INFINITE);
+
+		allCurrentThread.push_back(_thread);
+
+		ReleaseMutex(mutex);
+
+		return _thread;
+	}
 
 private:
-	void Initialize();
-	void InitializeThreads();
-
-	void Internal_SetMaxThread(unsigned int _quantity);
-	void ResetThreadObjs();//TODO
-	void InterruptThreadObjs();
-
-	void DetachInvalidThread(Thread_Obj* _thread);
-
-public:
-	void SetThreadBehaviorFinished(Thread_Obj* _thread);
-
-	Thread_Obj* GetValidThreadObj();
+	void DeleteFinishedThread(Thread* _thread);
 
 private:
-	unsigned int maxSystemThread;
-	unsigned int currentThreadQuantityUsed;
+	HANDLE mutex;
 
-	std::vector<Thread_Obj*> threadObjs;
-
-	std::vector<Thread_Obj*> validThreadObjs;
-	std::vector<Thread_Obj*> invalidThreadObjs;
-
-	std::mutex mutex_InvalidThreadObjs;
+	std::vector<Thread*> allCurrentThread;
 };

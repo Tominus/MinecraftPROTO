@@ -58,6 +58,7 @@ add_definitions(
 add_executable(tutorial07_model_loading
 	tutorial07_model_loading/Scripts/main.cpp
 	
+	tutorial07_model_loading/Scripts/Action.h
 	tutorial07_model_loading/Scripts/Block.cpp
 	tutorial07_model_loading/Scripts/Block.h
 	tutorial07_model_loading/Scripts/Block_Render.cpp	

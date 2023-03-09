@@ -2,7 +2,6 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <map>
-#include <mutex>
 
 class Chunk_Data;
 class Chunk_Render;

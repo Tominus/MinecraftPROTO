@@ -13,7 +13,6 @@ struct MemberDelegate : public IDelegate<Res, Params...>
 {
 private:
     typedef Res(Class::* Function)(Params...);
-    //typedef decltype(nullptr) nullptrT;
     Function function = nullptr;
     Class* owner = nullptr;
 

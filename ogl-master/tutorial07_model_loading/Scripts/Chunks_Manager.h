@@ -1,18 +1,16 @@
 #pragma once
 #include <vector>
-#include <mutex>
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include <stdio.h>//
-#include <functional>//
 #include <Windows.h>
-#include <stdio.h>
 
-#include "Chunk.h"//TODO delete
+#include "GlobalDefine.h"
+#include "Action.h"
 
 class Chunk;
+class Thread;
 class Thread_Manager;
 class Chunk_Data_Generator;
 class Chunk_Render_Generator;
@@ -24,22 +22,14 @@ class Chunks_Manager
 private:
 	Chunks_Manager();
 	~Chunks_Manager();
-public://
-	void AddChunk(const glm::vec3& _position);
 
-
-
-	DWORD WINAPI AddChunkTEST(void* _params)
+	/*DWORD WINAPI AddChunkTEST(const glm::vec3& _position)
 	{
-		const glm::vec3 _position = (glm::vec3&&)_params;
-		Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, (glm::vec3&&)_params);
-		//mutex.lock();
-		mutex = CreateMutexA(0, false, 0);
-		//_chunk->GenerateCGRender();
-		worldChunks.push_back(_chunk);
+		Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, _position);
+
+		WaitForSingleObject(mutex, INFINITE);
 		chunkWaitingForCGgen.push_back(_chunk);
-		chunkPositionFinishGeneration.push_back((glm::vec3&&)_params);
-		//mutex.unlock();
+		chunkPositionFinishGeneration.push_back(_position);
 		ReleaseMutex(mutex);
 		return 0;
 	}
@@ -47,21 +37,18 @@ public://
 	void TestThradWin()
 	{
 		LPDWORD _currentThreadID = nullptr;
-		HANDLE _currentThread = CreateThread(0, 0, (unsigned long(__stdcall*)(void*))runProcess, (void*)this, 0, _currentThreadID);
+		HANDLE _currentThread = CreateThread(0, 0, (Thread_Func) runProcess, (void*)this, 0, _currentThreadID);
 
 	}
 
-	static int runProcess(void* pThis)
+	inline static int runProcess(void* pThis)
 	{
-		glm::vec3* _test = new glm::vec3(0.f, 0.f, 0.f);
-
-		return ((Chunks_Manager*)(pThis))->AddChunkTEST(_test);
-	}
-
-
-	//LPTHREAD_START_ROUTINE
+		return ((Chunks_Manager*)(pThis))->AddChunkTEST(glm::vec3());
+	}*/
 
 private:
+	static void WINAPI AddChunk(Thread* _thisThread, void* _pthis, const glm::vec3& _position);
+
 	void AddStartingWorldBaseChunk();
 
 	void UpdateChunksManager() const;
@@ -92,10 +79,9 @@ private:
 	std::vector<glm::vec3> chunkPositionBeingGenerated;
 	std::vector<glm::vec3> chunkPositionFinishGeneration;
 
-	std::function<void()> onUpdate;
-	std::function<void()> onTick;
+	Action<> onUpdate;
+	Action<> onTick;
 
-	//mutable std::mutex mutex;
 	mutable HANDLE mutex;
 
 	int renderDistance;
