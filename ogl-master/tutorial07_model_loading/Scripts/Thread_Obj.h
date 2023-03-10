@@ -12,18 +12,20 @@ private:
 
 public:
 	void Execute();
-	
-private:
-	template<typename ... Params>
-	inline void CreateThreadFunction(void(*_method), Params... _params) 
+
+	template<typename Func, typename Params>
+	inline void CreateThreadFunction(const bool& _autoActivate, Func _method, Params _params)
 	{
-		currentThread = CreateThread(0, 0, (Thread_Func)_method, _params..., CREATE_SUSPENDED, currentThreadID);
+		bIsExecuted = _autoActivate;
+		currentThread = CreateThread(0, 0, (Thread_Func)_method, _params, (_autoActivate ? 0 : CREATE_SUSPENDED), currentThreadID);
 	}
+
 
 public:
 	Action<Thread*> OnFinished;
 
 private:
+	bool bIsExecuted;
 	LPDWORD currentThreadID;
 	HANDLE currentThread;
 	

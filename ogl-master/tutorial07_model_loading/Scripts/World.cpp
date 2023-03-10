@@ -44,7 +44,7 @@ void World::InitWorld(GLFWwindow* _window)
 
 void World::Start()
 {
-	chunksManager->AddStartingWorldBaseChunk();
+	//chunksManager->AddStartingWorldBaseChunk();
 }
 
 void World::Update()

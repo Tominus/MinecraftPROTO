@@ -27,8 +27,8 @@ Chunks_Manager::Chunks_Manager()
 	onUpdate.AddDynamic(this, &Chunks_Manager::UpdateRender);
 
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateNewChunkRender);
-	//onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateChunkPosition);
-	//onTick.AddDynamic(this, &Chunks_Manager::CheckRenderDistance);
+	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateChunkPosition);
+	onTick.AddDynamic(this, &Chunks_Manager::CheckRenderDistance);
 
 	/*Thread_Manager* _threadManager = &Thread_Manager::Instance();
 	{
@@ -177,6 +177,12 @@ Chunks_Manager::~Chunks_Manager()
 
 	CloseHandle(mutex);
 
+	onUpdate.RemoveDynamic(this, &Chunks_Manager::UpdateRender);
+
+	onTick.RemoveDynamic(this, &Chunks_Manager::CheckGenerateNewChunkRender);
+	onTick.RemoveDynamic(this, &Chunks_Manager::CheckGenerateChunkPosition);
+	onTick.RemoveDynamic(this, &Chunks_Manager::CheckRenderDistance);
+
 	const size_t& _max2 = chunkWaitingForCGgen.size();
 	for (size_t i = 0; i < _max2; ++i)
 	{
@@ -187,18 +193,24 @@ Chunks_Manager::~Chunks_Manager()
 	delete chunkRenderGenerator;
 }
 
-void Chunks_Manager::AddChunk(Thread* _thisThread, void* _pthis, const glm::vec3& _position)
-{
-	Chunks_Manager* _me = ((Chunks_Manager*)(_pthis));
-	
-	Chunk* _chunk = new Chunk(_me->chunkDataGenerator, _me->chunkRenderGenerator, _position);
+void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
+{	
+	const glm::vec3& _position = *_data->position;
+	Chunks_Manager* _pthis = _data->thisPtr;
+	Thread* _thisThread = _data->thisThread;
 
-	WaitForSingleObject(_me->mutex, INFINITE);
-	_me->chunkWaitingForCGgen.push_back(_chunk);
-	_me->chunkPositionFinishGeneration.push_back(_position);
-	ReleaseMutex(_me->mutex);
+
+	Chunk* _chunk = new Chunk(_pthis->chunkDataGenerator, _pthis->chunkRenderGenerator, _position);
+
+	WaitForSingleObject(_pthis->mutex, INFINITE);
+	_pthis->chunkWaitingForCGgen.push_back(_chunk);
+	_pthis->chunkPositionFinishGeneration.push_back(_position);
+	ReleaseMutex(_pthis->mutex);
 
 	_thisThread->OnFinished.Invoke(_thisThread);
+
+	delete _data->position;
+	delete _data;
 }
 
 void Chunks_Manager::AddStartingWorldBaseChunk()
@@ -295,9 +307,13 @@ void Chunks_Manager::CheckRenderDistance()
 	{
 		if (chunkPositionBeingGenerated.size() == 0 || chunkPositionFinishGeneration.size() == 0)
 		{
-			if (Thread* _thread = threadManager->CreateThread(true, AddChunk, this, _playerPositionChunkRelative))
+			if (Thread* _thread = threadManager->CreateThread())
 			{
-				//_thread->TEST(this, _playerPositionChunkRelative);
+				SThread_AddChunk_Ptr _data = new SThread_AddChunk();
+				_data->thisThread = _thread;
+				_data->thisPtr = this;
+				_data->position = new glm::vec3(_playerPositionChunkRelative);
+				_thread->CreateThreadFunction(true, AddChunk, _data);
 				chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
 			}
 		}
@@ -329,9 +345,13 @@ void Chunks_Manager::CheckRenderDistance()
 						|| GetChunkAtPosition(_offsettedPlayerRelativePosition + glm::vec3(0, 0, -1))
 						|| GetChunkAtPosition(_offsettedPlayerRelativePosition + glm::vec3(0, 0, 1)))
 					{
-						if (Thread* _thread = threadManager->CreateThread(true, AddChunk, this, _offsettedPlayerRelativePosition))
+						if (Thread* _thread = threadManager->CreateThread())
 						{
-							//_thread->TEST(this, _offsettedPlayerRelativePosition);
+							SThread_AddChunk_Ptr _data = new SThread_AddChunk();
+							_data->thisThread = _thread;
+							_data->thisPtr = this;
+							_data->position = new glm::vec3(_offsettedPlayerRelativePosition);
+							_thread->CreateThreadFunction(true, AddChunk, _data);
 							chunkPositionBeingGenerated.push_back(_offsettedPlayerRelativePosition);
 						}
 					}

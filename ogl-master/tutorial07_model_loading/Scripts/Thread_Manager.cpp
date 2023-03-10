@@ -30,6 +30,8 @@ void Thread_Manager::DeleteFinishedThread(Thread* _thread)
 	if (i == _max)
 		throw std::exception("Thread_Manager::DeleteFinishedThread -> Thread not found");
 
+	_thread->OnFinished.RemoveDynamic(this, &Thread_Manager::DeleteFinishedThread);
+
 	ReleaseMutex(mutex);
 
 	delete _thread;

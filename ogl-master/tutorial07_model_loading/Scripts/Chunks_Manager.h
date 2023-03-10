@@ -9,11 +9,19 @@
 #include "GlobalDefine.h"
 #include "Action.h"
 
+class Chunks_Manager;
 class Chunk;
 class Thread;
 class Thread_Manager;
 class Chunk_Data_Generator;
 class Chunk_Render_Generator;
+
+typedef struct SThread_AddChunk
+{
+	Thread* thisThread;
+	Chunks_Manager* thisPtr;
+	const glm::vec3* position;
+} SThread_AddChunk, *SThread_AddChunk_Ptr;
 
 class Chunks_Manager
 {
@@ -47,8 +55,8 @@ private:
 	}*/
 
 private:
-	static void WINAPI AddChunk(Thread* _thisThread, void* _pthis, const glm::vec3& _position);
-
+	static void WINAPI AddChunk(SThread_AddChunk_Ptr _data);
+	
 	void AddStartingWorldBaseChunk();
 
 	void UpdateChunksManager() const;
