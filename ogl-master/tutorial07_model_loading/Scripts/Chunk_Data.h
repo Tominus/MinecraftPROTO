@@ -17,11 +17,11 @@ private:
 public:
 	inline Chunk* GetOwnerChunk() const { return ownerChunk; }
 
-	inline Chunk* GetDownChunk() const { return downChunk; }
-	inline Chunk* GetUpChunk() const { return upChunk; }
-	inline Chunk* GetLeftChunk() const { return leftChunk; }
+	inline Chunk* GetDownChunk()  const { return downChunk; }
+	inline Chunk* GetUpChunk()    const { return upChunk; }
+	inline Chunk* GetLeftChunk()  const { return leftChunk; }
 	inline Chunk* GetRightChunk() const { return rightChunk; }
-	inline Chunk* GetBackChunk() const { return backChunk; }
+	inline Chunk* GetBackChunk()  const { return backChunk; }
 	inline Chunk* GetFrontChunk() const { return frontChunk; }
 
 private:

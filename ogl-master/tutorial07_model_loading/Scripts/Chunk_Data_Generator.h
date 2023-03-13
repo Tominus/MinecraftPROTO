@@ -20,7 +20,7 @@ private:
 
 private:
 	//maybe the generator seed and a ?Terrain_Generator
-	mutable HANDLE mutex;
+	//mutable HANDLE mutex;
 
 	unsigned randMax;
 	Chunks_Manager* chunksManager;

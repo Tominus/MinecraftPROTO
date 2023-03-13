@@ -12,6 +12,18 @@ Thread_Manager::~Thread_Manager()
 	
 }
 
+Thread* Thread_Manager::CreateThread()
+{
+	Thread* _thread = new Thread();
+	_thread->OnFinished.AddDynamic(this, &Thread_Manager::DeleteFinishedThread);
+
+	WaitForSingleObject(mutex, INFINITE);
+	allCurrentThread.push_back(_thread);
+	ReleaseMutex(mutex);
+
+	return _thread;
+}
+
 void Thread_Manager::DeleteFinishedThread(Thread* _thread)
 {
 	WaitForSingleObject(mutex, INFINITE);

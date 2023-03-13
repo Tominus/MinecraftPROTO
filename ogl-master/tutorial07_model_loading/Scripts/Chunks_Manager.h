@@ -92,6 +92,7 @@ private:
 
 	mutable HANDLE mutex;
 
+	int renderDistanceIndex;
 	int renderDistance;
 	int renderMaxDistance;
 };

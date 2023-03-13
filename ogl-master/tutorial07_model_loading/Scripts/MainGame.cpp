@@ -55,5 +55,5 @@ void MainGame::GameLoop()
 	//---Exit
 	do {
 
-	} while (threadManager->GetAllThreadFinished() == false);
+	} while (threadManager->GetHasAllThreadFinished() == false);
 }

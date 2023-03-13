@@ -27,20 +27,9 @@ public:
 		return instance;
 	}
 
-	bool GetAllThreadFinished() const { return allCurrentThread.size() == 0; }
-
+	bool GetHasAllThreadFinished() const { return allCurrentThread.size() == 0; }
 	
-	Thread* CreateThread()
-	{
-		Thread* _thread = new Thread();
-		_thread->OnFinished.AddDynamic(this, &Thread_Manager::DeleteFinishedThread);
-
-		WaitForSingleObject(mutex, INFINITE);
-		allCurrentThread.push_back(_thread);
-		ReleaseMutex(mutex);
-
-		return _thread;
-	}
+	Thread* CreateThread();
 
 private:
 	void DeleteFinishedThread(Thread* _thread);

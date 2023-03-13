@@ -14,18 +14,18 @@
 Chunk_Data_Generator::Chunk_Data_Generator(Chunks_Manager* _chunksManager)
 {
 	chunksManager = _chunksManager;
-	mutex = CreateMutex(0, false, 0);
+	//mutex = CreateMutex(0, false, 0);
 	randMax = (unsigned)EBlock_Type::BLOCK_TYPE_MAX_NUMBER;
 }
 
 Chunk_Data_Generator::~Chunk_Data_Generator()
 {
-	CloseHandle(mutex);
+	//CloseHandle(mutex);
 }
 
 void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data* _chunkData) const
 {
-	SetSideChunks(_chunkData);
+	//SetSideChunks(_chunkData);
 
 	std::random_device _rd;
 	std::mt19937 _gen(_rd());
@@ -55,7 +55,7 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data* _chunkData) const
 
 void Chunk_Data_Generator::SetSideChunks(Chunk_Data* _chunkData) const
 {
-	WaitForSingleObject(mutex, INFINITE);
+	//WaitForSingleObject(mutex, INFINITE);
 
 	Chunk* _ownerChunk = _chunkData->ownerChunk;
 	const glm::vec3& _ownerChunkPosition = _ownerChunk->GetChunkPosition();
@@ -93,5 +93,5 @@ void Chunk_Data_Generator::SetSideChunks(Chunk_Data* _chunkData) const
 		_chunkData->frontChunk = _frontChunk;
 	}
 
-	ReleaseMutex(mutex);
+	//ReleaseMutex(mutex);
 }
