@@ -45,6 +45,8 @@ void World::InitWorld(GLFWwindow* _window)
 void World::Start()
 {
 	chunksManager->AddStartingWorldBaseChunk();
+
+	tickTime = Tick_Time;//
 }
 
 void World::Update()

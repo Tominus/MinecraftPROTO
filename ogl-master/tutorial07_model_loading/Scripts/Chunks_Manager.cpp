@@ -19,7 +19,7 @@ Chunks_Manager::Chunks_Manager()
 	chunkRenderGenerator = new Chunk_Render_Generator(this);
 	threadManager = &Thread_Manager::Instance();
 
-	renderDistanceIndex = 0;
+	renderDistanceIndex = 1;
 	renderDistance = Render_Distance_Current;
 	renderMaxDistance = renderDistance - 1;
 
@@ -169,6 +169,11 @@ Chunks_Manager::~Chunks_Manager()
 
 	const size_t& _max = worldChunks.size();
 
+	if (_max > 9)
+	{
+		printf("why");
+	}
+
 	for (size_t i = 0; i < _max; ++i)
 	{
 		Chunk*& _chunk = worldChunks[i];
@@ -203,6 +208,7 @@ void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 
 	Chunk* _chunk = new Chunk(_thisPtr->chunkDataGenerator, _thisPtr->chunkRenderGenerator, _position);
 
+
 	WaitForSingleObject(_thisPtr->mutex, INFINITE);
 	_thisPtr->chunkWaitingForCGgen.push_back(_chunk);
 	_thisPtr->chunkPositionFinishGeneration.push_back(_position);
@@ -227,6 +233,8 @@ void Chunks_Manager::AddStartingWorldBaseChunk()
 	chunkWaitingForCGgen.push_back(_chunk);
 	chunkPositionFinishGeneration.push_back(_playerPositionChunkRelative);
 	ReleaseMutex(mutex);
+
+	renderDistanceIndex = 1;
 
 	CheckGenerateNewChunkRender();
 	CheckGenerateChunkPosition();
@@ -258,6 +266,8 @@ void Chunks_Manager::UpdateRender()
 
 void Chunks_Manager::CheckGenerateNewChunkRender()
 {
+	std::vector<Chunk*> _chunkToAdd;
+
 	WaitForSingleObject(mutex, INFINITE);
 
 	size_t _size (chunkWaitingForCGgen.size());
@@ -269,10 +279,24 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 		chunkWaitingForCGgen.erase(chunkWaitingForCGgen.begin());
 		--_size;
 
-		worldChunks.push_back(_chunk);
+		_chunkToAdd.push_back(_chunk);
 
-		chunkDataGenerator->SetSideChunks(_chunk->chunkData);
+		//chunkDataGenerator->SetSideChunks(_chunk->chunkData);
+
+		//worldChunks.push_back(_chunk);
 	}
+
+	const size_t& _max = _chunkToAdd.size();//
+	for (size_t i = 0; i < _max; ++i)//
+	{//
+		Chunk*& _chunk = _chunkToAdd[i];//
+		worldChunks.push_back(_chunk);//
+	}//
+	for (size_t i = 0; i < _max; ++i)//
+	{//
+		Chunk*& _chunk = _chunkToAdd[i];//
+		chunkDataGenerator->SetSideChunks(_chunk->chunkData);//
+	}//
 
 	ReleaseMutex(mutex);
 }
@@ -310,6 +334,81 @@ void Chunks_Manager::CheckRenderDistance()
 	size_t _worldChunkSize = worldChunks.size();
 	std::vector<Chunk*> _inRenderDistanceChunks;
 
+	if (CheckIfNoChunkLoaded(_worldChunkSize, _playerPositionChunkRelative))return;
+
+	/*const size_t& _renderIndex = pow((renderDistanceIndex * 2) - 1, 2);	//TODO calcultate for 3D
+	const size_t& _worldSlicedSize = (_worldChunkSize - 1) / 2;
+
+	if (_worldSlicedSize < _renderIndex)
+	{
+		// pas assez de chunk donc on doit en générer
+		if (_worldChunkSize == 1)
+			if (renderDistanceIndex < Render_Distance_Current)
+				++renderDistanceIndex;
+	}
+	else if (_worldSlicedSize > _renderIndex)
+	{
+		// trop de chunk donc on doit d'abord delete ceux hors range
+		--renderDistanceIndex;
+	}
+	else // (_worldSlicedSize == _renderIndex)
+	{
+		if (renderDistanceIndex < Render_Distance_Current)
+			++renderDistanceIndex;
+	}
+
+	const int& _renderMaxDistance = renderDistanceIndex + 1;*/
+	
+	glm::vec3 _offset;
+	for (int x = -renderMaxDistance; x < renderDistance; ++x)
+	{
+		_offset.x = x;
+
+		for (int z = -renderMaxDistance; z < renderDistance; ++z)
+		{
+			/*if (abs(x) + abs(z) > renderDistanceIndex - 1)
+			{
+				// out of distance
+				continue;
+			}*/
+
+			_offset.z = z;
+
+			const glm::vec3& _chunkCheckPosition = _offset + _playerPositionChunkRelative;
+
+			if (Chunk* _chunk = GetChunkAtPosition(_chunkCheckPosition))
+			{
+				_inRenderDistanceChunks.push_back(_chunk);
+			}
+			else if (!GetIsChunkAtPositionBeingGenerated(_chunkCheckPosition))
+			{
+				if (GetChunkAtPosition(_chunkCheckPosition + glm::vec3(0, -1, 0)) ||
+					GetChunkAtPosition(_chunkCheckPosition + glm::vec3(0, 1, 0))  ||
+					GetChunkAtPosition(_chunkCheckPosition + glm::vec3(-1, 0, 0)) ||
+					GetChunkAtPosition(_chunkCheckPosition + glm::vec3(1, 0, 0))  ||
+					GetChunkAtPosition(_chunkCheckPosition + glm::vec3(0, 0, -1)) ||
+					GetChunkAtPosition(_chunkCheckPosition + glm::vec3(0, 0, 1)))
+				{
+					if (Thread* _thread = threadManager->CreateThread())
+					{
+						SThread_AddChunk_Ptr _data = new SThread_AddChunk();
+						_data->thisThread = _thread;
+						_data->thisPtr = this;
+						_data->position = new glm::vec3(_chunkCheckPosition);
+						
+						_thread->CreateThreadFunction(true, AddChunk, _data);
+						chunkPositionBeingGenerated.push_back(_chunkCheckPosition);
+					}
+				}
+			}
+		}
+	}
+	
+	DeleteChunksOutOfRange(_inRenderDistanceChunks, _worldChunkSize);
+}
+
+bool Chunks_Manager::CheckIfNoChunkLoaded(const size_t& _worldChunkSize, const glm::vec3& _playerPositionChunkRelative)
+{
 	if (_worldChunkSize == 0)
 	{
 		if (chunkPositionBeingGenerated.size() == 0 || chunkPositionFinishGeneration.size() == 0)
@@ -325,53 +424,19 @@ void Chunks_Manager::CheckRenderDistance()
 				chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
 			}
 		}
-		return;
+		renderDistanceIndex = 1;
+		return true;
 	}
 
-	glm::vec3 _offset;
-	for (int x = -renderMaxDistance; x < renderDistance; ++x)
-	{
-		_offset.x = x;
-		for (int z = -renderMaxDistance; z < renderDistance; ++z)
-		{
-			_offset.z = z;
+	return false;
+}
 
-			const glm::vec3& _offsettedPlayerRelativePosition = _offset + _playerPositionChunkRelative;
-			
-			if (Chunk* _chunk = GetChunkAtPosition(_offsettedPlayerRelativePosition))
-			{
-				_inRenderDistanceChunks.push_back(_chunk);
-			}
-			else
-			{
-				if (!GetIsChunkAtPositionBeingGenerated(_offsettedPlayerRelativePosition))
-				{
-					if (GetChunkAtPosition(_offsettedPlayerRelativePosition + glm::vec3(0, -1, 0)) ||
-						GetChunkAtPosition(_offsettedPlayerRelativePosition + glm::vec3(0, 1, 0))  ||
-						GetChunkAtPosition(_offsettedPlayerRelativePosition + glm::vec3(-1, 0, 0)) ||
-						GetChunkAtPosition(_offsettedPlayerRelativePosition + glm::vec3(1, 0, 0))  ||
-						GetChunkAtPosition(_offsettedPlayerRelativePosition + glm::vec3(0, 0, -1)) ||
-						GetChunkAtPosition(_offsettedPlayerRelativePosition + glm::vec3(0, 0, 1)))
-					{
-						if (Thread* _thread = threadManager->CreateThread())
-						{
-							SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-							_data->thisThread = _thread;
-							_data->thisPtr = this;
-							_data->position = new glm::vec3(_offsettedPlayerRelativePosition);
-
-							_thread->CreateThreadFunction(true, AddChunk, _data);
-							chunkPositionBeingGenerated.push_back(_offsettedPlayerRelativePosition);
-						}
-					}
-				}
-			}
-		}
-	}
-
+void Chunks_Manager::DeleteChunksOutOfRange(std::vector<Chunk*>& _chunkInRange, size_t _worldChunkSize)
+{
 	WaitForSingleObject(mutex, INFINITE);
-	
-	const size_t& _max2 = _inRenderDistanceChunks.size();
+
+	//Delete chunk that are not in range of view
+	const size_t& _max2 = _chunkInRange.size();
 	for (size_t i = 0; i < _worldChunkSize; ++i)
 	{
 		Chunk*& _worldChunk = worldChunks[i];
@@ -379,7 +444,7 @@ void Chunks_Manager::CheckRenderDistance()
 		bool _isInRange = false;
 		for (size_t j = 0; j < _max2; ++j)
 		{
-			if (_worldChunk == _inRenderDistanceChunks[j])
+			if (_worldChunk == _chunkInRange[j])
 			{
 				_isInRange = true;
 				break;
@@ -392,7 +457,8 @@ void Chunks_Manager::CheckRenderDistance()
 			_worldChunk = nullptr;
 		}
 	}
-	
+
+	//Clear deleted chunk data
 	for (size_t i = 0; i < _worldChunkSize; ++i)
 	{
 		if (!worldChunks[i])

@@ -26,33 +26,11 @@ typedef struct SThread_AddChunk
 class Chunks_Manager
 {
 	friend class World;
+	friend class Chunk_Data_Generator;//debug
 
 private:
 	Chunks_Manager();
 	~Chunks_Manager();
-
-	/*DWORD WINAPI AddChunkTEST(const glm::vec3& _position)
-	{
-		Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, _position);
-
-		WaitForSingleObject(mutex, INFINITE);
-		chunkWaitingForCGgen.push_back(_chunk);
-		chunkPositionFinishGeneration.push_back(_position);
-		ReleaseMutex(mutex);
-		return 0;
-	}
-
-	void TestThradWin()
-	{
-		LPDWORD _currentThreadID = nullptr;
-		HANDLE _currentThread = CreateThread(0, 0, (Thread_Func) runProcess, (void*)this, 0, _currentThreadID);
-
-	}
-
-	inline static int runProcess(void* pThis)
-	{
-		return ((Chunks_Manager*)(pThis))->AddChunkTEST(glm::vec3());
-	}*/
 
 private:
 	static void WINAPI AddChunk(SThread_AddChunk_Ptr _data);
@@ -68,6 +46,9 @@ private:
 	void CheckGenerateChunkPosition();
 
 	void CheckRenderDistance();
+	bool CheckIfNoChunkLoaded(const size_t& _worldChunkSize, const glm::vec3& _playerPositionChunkRelative);
+
+	void DeleteChunksOutOfRange(std::vector<Chunk*>& _chunkInRange, size_t _worldChunkSize);
 
 public:
 	Chunk* GetChunkAtPosition(const glm::vec3& _position) const;

@@ -15,12 +15,12 @@ private:
 	~Chunk_Data_Generator();
 
 	/*Generate all existing block randomly.*/
-	void GenerateNewChunkData(Chunk_Data* _chunkData) const;
-	void SetSideChunks(Chunk_Data* _chunkData) const;
+	void GenerateNewChunkData(Chunk_Data*& _chunkData) const;
+	void SetSideChunks(Chunk_Data*& _chunkData) const;
 
 private:
 	//maybe the generator seed and a ?Terrain_Generator
-	//mutable HANDLE mutex;
+	mutable HANDLE mutex;
 
 	unsigned randMax;
 	Chunks_Manager* chunksManager;

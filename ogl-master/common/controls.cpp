@@ -21,7 +21,7 @@ const glm::mat4& getProjectionMatrix()
 
 // Initial position : on +Z
 //glm::vec3 position = glm::vec3( -16, 48, -16 ); 
-glm::vec3 position = glm::vec3( 8, 48, 8 ); 
+glm::vec3 position = glm::vec3( 8, 96, 8 ); 
 const glm::vec3& getPosition()
 {
 	return position;
@@ -29,7 +29,8 @@ const glm::vec3& getPosition()
 // Initial horizontal angle : toward -Z
 float horizontalAngle = 0.8f;
 // Initial vertical angle : none
-float verticalAngle = -0.5f;
+float verticalAngle = -1.5f;
+//float verticalAngle = -0.5f;
 // Initial Field of View
 float initialFoV = 45.0f;
 
