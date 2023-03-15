@@ -26,7 +26,6 @@ typedef struct SThread_AddChunk
 class Chunks_Manager
 {
 	friend class World;
-	friend class Chunk_Data_Generator;//debug
 
 private:
 	Chunks_Manager();

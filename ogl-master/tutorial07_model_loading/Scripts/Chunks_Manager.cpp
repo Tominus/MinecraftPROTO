@@ -169,11 +169,6 @@ Chunks_Manager::~Chunks_Manager()
 
 	const size_t& _max = worldChunks.size();
 
-	if (_max > 9)
-	{
-		printf("why");
-	}
-
 	for (size_t i = 0; i < _max; ++i)
 	{
 		Chunk*& _chunk = worldChunks[i];
@@ -208,10 +203,8 @@ void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 
 	Chunk* _chunk = new Chunk(_thisPtr->chunkDataGenerator, _thisPtr->chunkRenderGenerator, _position);
 
-
 	WaitForSingleObject(_thisPtr->mutex, INFINITE);
 	_thisPtr->chunkWaitingForCGgen.push_back(_chunk);
-	_thisPtr->chunkPositionFinishGeneration.push_back(_position);
 	ReleaseMutex(_thisPtr->mutex);
 
 	_thisThread->OnFinished.Invoke(_thisThread);
@@ -231,7 +224,6 @@ void Chunks_Manager::AddStartingWorldBaseChunk()
 
 	WaitForSingleObject(mutex, INFINITE);
 	chunkWaitingForCGgen.push_back(_chunk);
-	chunkPositionFinishGeneration.push_back(_playerPositionChunkRelative);
 	ReleaseMutex(mutex);
 
 	renderDistanceIndex = 1;
@@ -266,8 +258,6 @@ void Chunks_Manager::UpdateRender()
 
 void Chunks_Manager::CheckGenerateNewChunkRender()
 {
-	std::vector<Chunk*> _chunkToAdd;
-
 	WaitForSingleObject(mutex, INFINITE);
 
 	size_t _size (chunkWaitingForCGgen.size());
@@ -279,24 +269,10 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 		chunkWaitingForCGgen.erase(chunkWaitingForCGgen.begin());
 		--_size;
 
-		_chunkToAdd.push_back(_chunk);
+		chunkPositionFinishGeneration.push_back(_chunk->chunkPosition);
 
-		//chunkDataGenerator->SetSideChunks(_chunk->chunkData);
-
-		//worldChunks.push_back(_chunk);
+		worldChunks.push_back(_chunk);
 	}
-
-	const size_t& _max = _chunkToAdd.size();//
-	for (size_t i = 0; i < _max; ++i)//
-	{//
-		Chunk*& _chunk = _chunkToAdd[i];//
-		worldChunks.push_back(_chunk);//
-	}//
-	for (size_t i = 0; i < _max; ++i)//
-	{//
-		Chunk*& _chunk = _chunkToAdd[i];//
-		chunkDataGenerator->SetSideChunks(_chunk->chunkData);//
-	}//
 
 	ReleaseMutex(mutex);
 }
@@ -312,11 +288,9 @@ void Chunks_Manager::CheckGenerateChunkPosition()
 	{
 		const glm::vec3& _finishPosition = chunkPositionFinishGeneration[0];
 
-		const size_t& _max = chunkPositionBeingGenerated.size();
-		for (_index = 0; _index < _max; ++_index)
+		for (_index = 0; chunkPositionBeingGenerated[_index] != _finishPosition; ++_index)
 		{
-			if (chunkPositionBeingGenerated[_index] == _finishPosition)
-				break;
+			
 		}
 
 		chunkPositionBeingGenerated.erase(chunkPositionBeingGenerated.begin() + _index);
@@ -396,8 +370,8 @@ void Chunks_Manager::CheckRenderDistance()
 						_data->thisPtr = this;
 						_data->position = new glm::vec3(_chunkCheckPosition);
 						
-						_thread->CreateThreadFunction(true, AddChunk, _data);
 						chunkPositionBeingGenerated.push_back(_chunkCheckPosition);
+						_thread->CreateThreadFunction(true, AddChunk, _data);
 					}
 				}
 			}
@@ -420,8 +394,8 @@ bool Chunks_Manager::CheckIfNoChunkLoaded(const size_t& _worldChunkSize, const g
 				_data->thisPtr = this;
 				_data->position = new glm::vec3(_playerPositionChunkRelative);
 
-				_thread->CreateThreadFunction(true, AddChunk, _data);
 				chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
+				_thread->CreateThreadFunction(true, AddChunk, _data);
 			}
 		}
 		renderDistanceIndex = 1;

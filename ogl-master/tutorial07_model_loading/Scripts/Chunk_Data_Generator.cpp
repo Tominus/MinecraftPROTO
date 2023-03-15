@@ -25,7 +25,7 @@ Chunk_Data_Generator::~Chunk_Data_Generator()
 
 void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData) const
 {
-	//SetSideChunks(_chunkData);
+	SetSideChunks(_chunkData);
 
 	std::random_device _rd;
 	std::mt19937 _gen(_rd());
@@ -59,11 +59,6 @@ void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 
 	Chunk*& _ownerChunk = _chunkData->ownerChunk;
 	const glm::vec3& _ownerChunkPosition = _ownerChunk->GetChunkPosition();
-
-	if (chunksManager->worldChunks.size() > 9)
-	{
-		printf("aaaaaa");
-	}
 	
 	if (Chunk* _downChunk = chunksManager->GetChunkAtPosition(_ownerChunkPosition + glm::vec3(0, -1, 0)))
 	{
