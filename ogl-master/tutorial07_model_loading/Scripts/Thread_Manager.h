@@ -37,5 +37,8 @@ private:
 private:
 	HANDLE mutex;
 
+	HANDLE mainThread;
+	DWORD_PTR mainThreadAffinity;
+
 	std::vector<Thread*> allCurrentThread;
 };

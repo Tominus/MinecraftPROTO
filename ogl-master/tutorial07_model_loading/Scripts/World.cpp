@@ -10,6 +10,21 @@
 
 #include <common/shader.hpp>
 
+World::World()
+{
+	textureLoader = nullptr;
+	chunksManager = nullptr;
+	blocksGlobalShapes = nullptr;
+	debugWorld = nullptr;
+	programID = 0;
+	matrixID = 0;
+	vertexArrayID = 0;
+	gameTime = 0.f;
+	tickTime = 0.f;
+	fpsTime = 0.f;
+	deltaTime = 0.f;
+}
+
 World::~World()
 {
 	delete debugWorld;

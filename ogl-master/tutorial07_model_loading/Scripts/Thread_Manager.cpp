@@ -5,6 +5,23 @@
 Thread_Manager::Thread_Manager()
 {
 	mutex = CreateMutex(0, false, 0);
+
+	mainThread = GetCurrentThread();
+
+	PGROUP_AFFINITY _groupAffinity = new GROUP_AFFINITY();
+	GetThreadGroupAffinity(mainThread, _groupAffinity);
+
+	mainThreadAffinity = _groupAffinity->Mask;
+	delete _groupAffinity;
+
+	SetThreadAffinityMask(mainThread, mainThreadAffinity);
+
+
+	PPROCESSOR_NUMBER _processorNumber = new PROCESSOR_NUMBER();
+	_processorNumber->Number = 0;
+	
+	if (!SetThreadIdealProcessorEx(mainThread, _processorNumber, nullptr))
+		throw std::exception("[Thread_Manager::Thread_Manager] -> Can't set Thread Manager ideal proc");
 }
 
 Thread_Manager::~Thread_Manager()
@@ -14,7 +31,7 @@ Thread_Manager::~Thread_Manager()
 
 Thread* Thread_Manager::CreateThread()
 {
-	Thread* _thread = new Thread();
+	Thread* _thread = new Thread(~mainThreadAffinity);
 	_thread->OnFinished.AddDynamic(this, &Thread_Manager::DeleteFinishedThread);
 
 	WaitForSingleObject(mutex, INFINITE);

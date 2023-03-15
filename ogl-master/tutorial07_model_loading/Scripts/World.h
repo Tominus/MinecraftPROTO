@@ -16,7 +16,7 @@ class World
 	friend class MainGame;
 
 private:
-	World() {};
+	World();
 	~World();
 
 	void InitWorld(GLFWwindow* _window);

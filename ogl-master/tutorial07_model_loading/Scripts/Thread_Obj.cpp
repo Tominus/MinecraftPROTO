@@ -1,11 +1,12 @@
 #include "Thread_Obj.h"
 
 
-Thread::Thread()
+Thread::Thread(DWORD_PTR _threadAffinity)
 {
 	bIsExecuted = false;
 	currentThread = nullptr;
 	currentThreadID = nullptr;
+	currentThreadAffinity = _threadAffinity;
 }
 
 Thread::~Thread()

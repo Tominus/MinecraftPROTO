@@ -10,7 +10,6 @@
 class TextureLoader
 {
 	friend class World;
-	friend class Chunk_Render_Generator;//
 
 private:
 	TextureLoader();

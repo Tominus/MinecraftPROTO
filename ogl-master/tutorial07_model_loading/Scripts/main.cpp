@@ -66,7 +66,7 @@ int main( void )
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+	
 	MainGame* _mainGame = new MainGame(window);
 
 	_mainGame->GameLoop();
