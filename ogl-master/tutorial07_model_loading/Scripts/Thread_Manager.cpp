@@ -14,8 +14,12 @@ Thread_Manager::Thread_Manager()
 	mainThreadAffinity = _groupAffinity->Mask;
 	delete _groupAffinity;
 
+	mainThreadAffinity = 1;
+
 	SetThreadAffinityMask(mainThread, mainThreadAffinity);
 
+	if (!SetThreadPriority(mainThread, THREAD_PRIORITY_HIGHEST))
+		throw std::exception("[Thread_Manager::Thread_Manager] -> Can't set Thread Manager priority");
 
 	PPROCESSOR_NUMBER _processorNumber = new PROCESSOR_NUMBER();
 	_processorNumber->Number = 0;
@@ -31,7 +35,7 @@ Thread_Manager::~Thread_Manager()
 
 Thread* Thread_Manager::CreateThread()
 {
-	Thread* _thread = new Thread(~mainThreadAffinity);
+	Thread* _thread = new Thread(65534);
 	_thread->OnFinished.AddDynamic(this, &Thread_Manager::DeleteFinishedThread);
 
 	WaitForSingleObject(mutex, INFINITE);

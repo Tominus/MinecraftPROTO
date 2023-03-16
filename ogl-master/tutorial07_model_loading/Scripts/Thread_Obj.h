@@ -21,6 +21,9 @@ public:
 		currentThread = CreateThread(0, 0, (Thread_Func)_method, _params, CREATE_SUSPENDED, currentThreadID);
 	
 		SetThreadAffinityMask(currentThread, currentThreadAffinity);
+		
+		if (!SetThreadPriority(currentThread, THREAD_PRIORITY_NORMAL))
+			throw std::exception("[Thread::CreateThreadFunction] -> Can't set Thread priority");
 
 		PPROCESSOR_NUMBER _processorNumber = new PROCESSOR_NUMBER();
 		GetThreadIdealProcessorEx(currentThread, _processorNumber);
