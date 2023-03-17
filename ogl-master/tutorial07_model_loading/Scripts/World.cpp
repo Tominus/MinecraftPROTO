@@ -5,6 +5,7 @@
 #include "Chunks_Manager.h"
 #include "Debug_World.h"
 #include "Blocks_Global_Shapes.h"
+#include "Blocks_Global_Datas.h"
 #include "Thread_Manager.h"
 #include "Thread_Obj.h"
 
@@ -16,9 +17,12 @@ World::World()
 	chunksManager = nullptr;
 	blocksGlobalShapes = nullptr;
 	debugWorld = nullptr;
+	blocksGlobalDatas = nullptr;
+
 	programID = 0;
 	matrixID = 0;
 	vertexArrayID = 0;
+
 	gameTime = 0.f;
 	tickTime = 0.f;
 	fpsTime = 0.f;
@@ -31,6 +35,7 @@ World::~World()
 	delete chunksManager;
 	delete textureLoader;
 	delete blocksGlobalShapes;
+	delete blocksGlobalDatas;
 
 	glDeleteProgram(programID);
 	glDeleteVertexArrays(1, &vertexArrayID);
@@ -54,11 +59,15 @@ void World::InitWorld(GLFWwindow* _window)
 	blocksGlobalShapes = new Blocks_Global_Shapes();
 	blocksGlobalShapes->GenerateBlocksShapeDatas();
 
+	blocksGlobalDatas = new Blocks_Global_Datas();
+	blocksGlobalDatas->GenerateBlocksGlobalDatas();
+
 	chunksManager = new Chunks_Manager();
 }
 
 void World::Start()
 {
+	chunksManager->StartChunkManager();
 	chunksManager->AddStartingWorldBaseChunk();
 }
 

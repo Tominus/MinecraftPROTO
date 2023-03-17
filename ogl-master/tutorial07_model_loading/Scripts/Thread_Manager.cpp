@@ -26,6 +26,8 @@ Thread_Manager::Thread_Manager()
 	
 	if (!SetThreadIdealProcessorEx(mainThread, _processorNumber, nullptr))
 		throw std::exception("[Thread_Manager::Thread_Manager] -> Can't set Thread Manager ideal proc");
+
+	delete _processorNumber;
 }
 
 Thread_Manager::~Thread_Manager()

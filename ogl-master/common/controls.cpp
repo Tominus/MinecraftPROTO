@@ -108,9 +108,12 @@ void computeMatricesFromInputs(){
 
 
 	if (glfwGetKey( window, GLFW_KEY_KP_ADD ) == GLFW_PRESS)
-		speed += 3.f;
-	if (glfwGetKey( window, GLFW_KEY_KP_SUBTRACT ) == GLFW_PRESS)
-		speed -= 3.f;
+		speed += 1.f;
+	if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
+	{
+		speed -= 1.f;
+		speed = speed < 1.f ? 1.f : speed;
+	}
 
 	// Go up
 	if (glfwGetKey( window, GLFW_KEY_SPACE ) == GLFW_PRESS){

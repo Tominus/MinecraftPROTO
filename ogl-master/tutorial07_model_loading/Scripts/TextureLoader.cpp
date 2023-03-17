@@ -17,6 +17,7 @@ TextureLoader::~TextureLoader()
 void TextureLoader::LoadTextures()
 {
 	//---
+	blockTextureID.emplace(EBlock_Type::Air, LoadFile_PNG("Textures/block/acacia_log.png")); // TODO remove
 	blockTextureID.emplace(EBlock_Type::Acacia_Log, LoadFile_PNG("Textures/block/acacia_log.png"));
 	blockTextureID.emplace(EBlock_Type::Amethyst_Block, LoadFile_PNG("Textures/block/amethyst_block.png"));
 	blockTextureID.emplace(EBlock_Type::Barrel_Side, LoadFile_PNG("Textures/block/barrel_side.png"));

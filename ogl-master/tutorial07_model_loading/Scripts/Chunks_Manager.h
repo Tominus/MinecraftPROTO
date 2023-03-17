@@ -15,6 +15,7 @@ class Thread;
 class Thread_Manager;
 class Chunk_Data_Generator;
 class Chunk_Render_Generator;
+class Blocks_Global_Datas;
 
 typedef struct SThread_AddChunk
 {
@@ -32,6 +33,8 @@ private:
 	~Chunks_Manager();
 
 private:
+	void StartChunkManager();
+
 	static void WINAPI AddChunk(SThread_AddChunk_Ptr _data);
 	
 	void AddStartingWorldBaseChunk();

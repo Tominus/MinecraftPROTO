@@ -8,6 +8,7 @@ class Chunk_Render;
 
 class World;
 class TextureLoader;
+class Blocks_Global_Datas;
 class Blocks_Global_Shapes;
 
 struct SChunk_Render_Data;
@@ -34,5 +35,6 @@ private:
 
 	World* world;
 	TextureLoader* textureLoader;
-	Blocks_Global_Shapes* blocksGlobalShapes;
+	Blocks_Global_Datas* blocksGlobalDatas;
+	Blocks_Global_Shapes* blockGlobalShapes;
 };

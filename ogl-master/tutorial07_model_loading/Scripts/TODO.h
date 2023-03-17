@@ -19,11 +19,6 @@
 
 /* 
 * - toujours load les chunks sous le player
-* - lock le main thread core
-*/
-
-/* Render Separatly each face of the block
-* 
 */
 
 /* Store Chunk in there position instead of an array

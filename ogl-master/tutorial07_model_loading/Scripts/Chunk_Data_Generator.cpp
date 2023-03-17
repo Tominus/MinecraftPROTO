@@ -46,7 +46,11 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData) const
 
 			for (size_t z = 0; z < Chunk_Size; ++z)
 			{
-				const EBlock_Type& _type = (EBlock_Type)(_dist(_gen));
+				int _i = (_dist(_gen));
+				if (_i == 6 || _i == 7 || _i == 8 || _i == 9)
+					_i = 0;
+
+				const EBlock_Type& _type = (EBlock_Type)(_i);
 				_blocksXY[z] = new Block(_type);
 			}
 		}

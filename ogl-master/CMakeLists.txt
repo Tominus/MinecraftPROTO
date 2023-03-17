@@ -61,12 +61,16 @@ add_executable(tutorial07_model_loading
 	tutorial07_model_loading/Scripts/Action.h
 	tutorial07_model_loading/Scripts/Block.cpp
 	tutorial07_model_loading/Scripts/Block.h
-	tutorial07_model_loading/Scripts/Block_Render.cpp	
+	tutorial07_model_loading/Scripts/Block_Datas.h
+	tutorial07_model_loading/Scripts/Block_Render.cpp
 	tutorial07_model_loading/Scripts/Block_Render.h
+	tutorial07_model_loading/Scripts/Block_Render_Type.h
 	tutorial07_model_loading/Scripts/Block_Shape_Data.cpp
 	tutorial07_model_loading/Scripts/Block_Shape_Data.h
 	tutorial07_model_loading/Scripts/Block_Shapes_Type.h
 	tutorial07_model_loading/Scripts/Block_Type.h
+	tutorial07_model_loading/Scripts/Blocks_Global_Datas.cpp
+	tutorial07_model_loading/Scripts/Blocks_Global_Datas.h
 	tutorial07_model_loading/Scripts/Blocks_Global_Shapes.cpp
 	tutorial07_model_loading/Scripts/Blocks_Global_Shapes.h
 	tutorial07_model_loading/Scripts/Chunk.cpp

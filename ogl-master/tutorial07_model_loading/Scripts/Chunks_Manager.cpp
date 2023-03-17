@@ -24,328 +24,6 @@ Chunks_Manager::Chunks_Manager()
 	renderMaxDistance = renderDistance - 1;
 
 	mutex = CreateMutex(0, false, 0);
-
-	onUpdate.AddDynamic(this, &Chunks_Manager::UpdateRender);
-
-	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateNewChunkRender);
-	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateChunkPosition);
-	//onTick.AddDynamic(this, &Chunks_Manager::CheckRenderDistance);
-
-	Thread_Manager* _threadManager = &Thread_Manager::Instance();
-	{
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3();
-
-			chunkPositionBeingGenerated.push_back(glm::vec3());
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-
-		//d
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(0, -1, 0);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(0, -1, 0));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//u
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(0, 1, 0);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(0, 1, 0));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//l
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(-1, 0, 0);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(-1, 0, 0));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//r
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(1, 0, 0);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(1, 0, 0));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//b
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(0, 0, -1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(0, 0, -1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//f
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(0, 0, 1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(0, 0, 1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-	}
-
-	{
-		//l
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(1, 0, 1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(1, 0, 1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//r
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(-1, 0, -1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(-1, 0, -1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//b
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(1, 0, -1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(1, 0, -1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//f
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(-1, 0, 1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(-1, 0, 1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-	}
-
-	{
-		//l
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(1, -1, 1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(1, -1, 1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//r
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(-1, -1, -1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(-1, -1, -1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//b
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(1, -1, -1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(1, -1, -1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//f
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(-1, -1, 1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(-1, -1, 1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-	}
-
-	{
-		//l
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(1, 1, 1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(1, 1, 1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//r
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(-1, 1, -1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(-1, 1, -1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//b
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(1, 1, -1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(1, 1, -1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//f
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(-1, 1, 1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(-1, 1, 1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-	}
-
-	{
-		//ld
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(-1, -1, 0);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(-1, -1, 0));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//rd
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(1, -1, 0);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(1, -1, 0));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//bd
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(0, -1, -1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(0, -1, -1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//fd
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(0, -1, 1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(0, -1, 1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-	}
-
-	{
-		//lu
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(-1, 1, 0);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(-1, 1, 0));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//ru
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(1, 1, 0);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(1, 1, 0));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//bu
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(0, 1, -1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(0, 1, -1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-		//fu
-		if (Thread* _thread = _threadManager->CreateThread())
-		{
-			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
-			_data->thisThread = _thread;
-			_data->thisPtr = this;
-			_data->position = new glm::vec3(0, 1, 1);
-
-			chunkPositionBeingGenerated.push_back(glm::vec3(0, 1, 1));
-			_thread->CreateThreadFunction(true, AddChunk, _data);
-		}
-	}
 }
 
 Chunks_Manager::~Chunks_Manager()
@@ -380,6 +58,15 @@ Chunks_Manager::~Chunks_Manager()
 	delete chunkRenderGenerator;
 }
 
+void Chunks_Manager::StartChunkManager()
+{
+	onUpdate.AddDynamic(this, &Chunks_Manager::UpdateRender);
+
+	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateNewChunkRender);
+	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateChunkPosition);
+	onTick.AddDynamic(this, &Chunks_Manager::CheckRenderDistance);
+}
+
 void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 {	
 	const glm::vec3& _position = *_data->position;
@@ -400,7 +87,7 @@ void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 
 void Chunks_Manager::AddStartingWorldBaseChunk()
 {
-	/*const glm::vec3& _playerPosition = getPosition() - glm::vec3(8.f);
+	const glm::vec3& _playerPosition = getPosition() - glm::vec3(8.f);
 	const glm::vec3 _playerPositionChunkRelative(round(_playerPosition.x / 16.f), 0.f, round(_playerPosition.z / 16.f));
 
 	chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
@@ -414,7 +101,7 @@ void Chunks_Manager::AddStartingWorldBaseChunk()
 	renderDistanceIndex = 1;
 
 	CheckGenerateNewChunkRender();
-	CheckGenerateChunkPosition();*/
+	CheckGenerateChunkPosition();
 }
 
 void Chunks_Manager::UpdateChunksManager() const

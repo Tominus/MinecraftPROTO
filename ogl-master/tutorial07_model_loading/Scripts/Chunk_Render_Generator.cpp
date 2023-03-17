@@ -4,18 +4,23 @@
 #include "World.h"
 #include "TextureLoader.h"
 #include "Blocks_Global_Shapes.h"
+#include "Blocks_Global_Datas.h"
 #include "Chunks_Manager.h"
 #include "Chunk.h"
 #include "Chunk_Data.h"
 #include "Chunk_Render.h"
 #include "Block.h"
+#include "Block_Datas.h"
+
+#define Check_Block(_block) blocksGlobalDatas->GetBlockData(_block->GetBlockType())->blockRenderType != EBlock_Render_Type::Opaque
 
 Chunk_Render_Generator::Chunk_Render_Generator(Chunks_Manager* _chunksManager)
 {
 	world = &World::Instance();
 	matrixID = world->GetMatrixID();
 	textureLoader = world->GetTextureLoader();
-	blocksGlobalShapes = world->GetBlocksGlobalShapes();
+	blockGlobalShapes = world->GetBlocksGlobalShapes();
+	blocksGlobalDatas = world->GetBlocksGlobalDatas();
 
 	chunksManager = _chunksManager;
 }
@@ -40,63 +45,230 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 	_allBlockShapes = new SChunk_Render_Shapes***[Chunk_Size];
 
 	glm::vec3 _blockPosition;
-	for (size_t x = 0; x < Chunk_Size; ++x)
+	for (int x = 0; x < Chunk_Size; ++x)
 	{
 		SChunk_Render_Shapes***& _currentRenderShapesX = _allBlockShapes[x];
 		_currentRenderShapesX = new SChunk_Render_Shapes**[Chunk_Size];
 
 		_blockPosition.x = x;
 
-		for (size_t y = 0; y < Chunk_Size; ++y)
+		for (int y = 0; y < Chunk_Size; ++y)
 		{
 			SChunk_Render_Shapes**& _currentRenderShapesY = _currentRenderShapesX[y];
 			_currentRenderShapesY = new SChunk_Render_Shapes*[Chunk_Size];
 
 			_blockPosition.y = y;
 
-			for (size_t z = 0; z < Chunk_Size; ++z)
+			for (int z = 0; z < Chunk_Size; ++z)
 			{
 				_blockPosition.z = z;
 				Block*& _block = _blocksData[x][y][z];
 				const EBlock_Type& _blockType = _block->GetBlockType();
 
+				const SBlock_Datas const* _blockData = blocksGlobalDatas->GetBlockData(_blockType);
+
 				//--- Will be replaced when Global data finished
 				const GLuint& _textureID = textureLoader->GetBlockTextureID(_blockType);
-				const SBlock_Shape_Data* _shapesData = blocksGlobalShapes->GetBlockShapeData(EBlock_Shapes_Type::Block);
+				const SBlock_Shape_Data* _shapesData = nullptr;
 				
-				const glm::vec3* _vertexs = _shapesData->GetVertexs();
-				const glm::vec2* _uvs = _shapesData->GetUVs();
+				const glm::vec3* _vertexs = nullptr;
+				const glm::vec2* _uvs = nullptr;
+
+				unsigned _index = 0;
 
 				SChunk_Render_Shapes* _currentShape = nullptr;
-				if (x > 0 && y > 0 && z > 0 && x < Chunk_Max_Size && y < Chunk_Max_Size && z < Chunk_Max_Size)
+				if (_blockData->blockRenderType == EBlock_Render_Type::No_Render)
 				{
-					
+					//No Render
 				}
 				else
 				{
-					_currentShape = new SChunk_Render_Shapes(_vertexs, _uvs);
-				}
-				
-
-				if (_currentShape)
-				{
-					SChunk_Render_Data* _currentChunkRenderData = GetChunkRenderData(_currentRenderDatas, _textureID);
-					_currentChunkRenderData->verticesGlobalSize += _shapesData->GetVertexsSize();
-					_currentChunkRenderData->renderBuffer.push_back(_currentShape);
-
-					const size_t& _max = _shapesData->GetVertexsSize();
-					for (size_t i = 0; i < _max; ++i)
+					if (x > 0 && y > 0 && z > 0 && x < Chunk_Max_Size && y < Chunk_Max_Size && z < Chunk_Max_Size)
 					{
-						_currentChunkRenderData->globalVertexs.push_back(_vertexs[i] + _blockPosition);
-						_currentChunkRenderData->globalUVs.push_back(_uvs[i]);
+						//in chunk
+
+						//Down
+						if (Check_Block(_blocksData[x][y - 1][z]))
+						{
+							_index += 1;
+						}
+
+						//Up
+						if (Check_Block(_blocksData[x][y + 1][z]))
+						{
+							_index += 2;
+						}
+
+						//Left
+						if (Check_Block(_blocksData[x - 1][y][z]))
+						{
+							_index += 4;
+						}
+
+						//Right
+						if (Check_Block(_blocksData[x + 1][y][z]))
+						{
+							_index += 8;
+						}
+
+						//Back
+						if (Check_Block(_blocksData[x][y][z - 1]))
+						{
+							_index += 16;
+						}
+
+						//Front
+						if (Check_Block(_blocksData[x][y][z + 1]))
+						{
+							_index += 32;
+						}
+					}
+					else
+					{
+						//chunk border
+
+						//Down
+						if (y - 1 > -1)
+						{
+							if (Check_Block(_blocksData[x][y - 1][z]))
+							{
+								_index += 1;
+							}
+						}
+						else
+						{
+							if (Chunk* _downChunk = _chunkData->downChunk)
+							{
+								if (Check_Block(_downChunk->GetChunkData()->GetBlock(glm::uvec3(x, Chunk_Max_Size, z))))
+								{
+									_index += 1;
+								}
+							}
+							else
+							{
+								_index += 1;
+							}
+						}
+
+						//Up
+						if (y + 1 < Chunk_Size)
+						{
+							if (Check_Block(_blocksData[x][y + 1][z]))
+							{
+								_index += 2;
+							}
+						}
+						else
+						{
+							if (Chunk* _upChunk = _chunkData->upChunk)
+							{
+								if (Check_Block(_upChunk->GetChunkData()->GetBlock(glm::uvec3(x, 0, z))))
+								{
+									_index += 2;
+								}
+							}
+							else
+							{
+								_index += 2;
+							}
+						}
+
+						//Left
+						if (x - 1 > -1)
+						{
+							if (Check_Block(_blocksData[x - 1][y][z]))
+							{
+								_index += 4;
+							}
+						}
+						else
+						{
+							if (Chunk* _leftChunk = _chunkData->leftChunk)
+							{
+								if (Check_Block(_leftChunk->GetChunkData()->GetBlock(glm::uvec3(Chunk_Max_Size, y, z))))
+								{
+									_index += 4;
+								}
+							}
+						}
+
+						//Right
+						if (x + 1 < Chunk_Size)
+						{
+							if (Check_Block(_blocksData[x + 1][y][z]))
+							{
+								_index += 8;
+							}
+						}
+						else
+						{
+							if (Chunk* _rightChunk = _chunkData->rightChunk)
+							{
+								if (Check_Block(_rightChunk->GetChunkData()->GetBlock(glm::uvec3(0, y, z))))
+								{
+									_index += 8;
+								}
+							}
+						}
+
+						//Back
+						if (z - 1 > -1)
+						{
+							if (Check_Block(_blocksData[x][y][z - 1]))
+							{
+								_index += 16;
+							}
+						}
+						else
+						{
+							if (Chunk* _backChunk = _chunkData->backChunk)
+							{
+								if (Check_Block(_backChunk->GetChunkData()->GetBlock(glm::uvec3(x, y, Chunk_Max_Size))))
+								{
+									_index += 16;
+								}
+							}
+						}
+
+						//Front
+						if (z + 1 < Chunk_Size)
+						{
+							if (Check_Block(_blocksData[x][y][z + 1]))
+							{
+								_index += 32;
+							}
+						}
+						else
+						{
+							if (Chunk* _frontChunk = _chunkData->frontChunk)
+							{
+								if (Check_Block(_frontChunk->GetChunkData()->GetBlock(glm::uvec3(x, y, 0))))
+								{
+									_index += 32;
+								}
+							}
+						}
+					}
+
+					if (_shapesData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, _index))
+					{
+						_vertexs = _shapesData->GetVertexs();
+						_uvs = _shapesData->GetUVs();
+						_currentShape = new SChunk_Render_Shapes(_vertexs, _uvs);
+
+
+						SChunk_Render_Data* _currentChunkRenderData = GetChunkRenderData(_currentRenderDatas, _textureID);
+						_currentChunkRenderData->verticesGlobalSize += _shapesData->GetVertexsSize();
+						_currentChunkRenderData->renderBuffer.push_back(_currentShape);
+
+						const size_t& _max = _shapesData->GetVertexsSize();
+						for (size_t i = 0; i < _max; ++i)
+						{
+							_currentChunkRenderData->globalVertexs.push_back(_vertexs[i] + _blockPosition);
+							_currentChunkRenderData->globalUVs.push_back(_uvs[i]);
+						}
 					}
 				}
-
-				// TODO after ->
-				//- Chaque face de mon block a une value allant de 1 à 32;
-				//- j'additionne ces valeurs pour ensuite l'envoyer au Block_Global_Shapes(::Block, unsigned int);
-				//- et il me retourne un Chunk_Render_Shapes*.
-				//
 
 				_currentRenderShapesY[z] = _currentShape;
 			}

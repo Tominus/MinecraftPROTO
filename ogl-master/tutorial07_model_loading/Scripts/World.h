@@ -9,6 +9,7 @@
 class TextureLoader;
 class Chunks_Manager;
 class Blocks_Global_Shapes;
+class Blocks_Global_Datas;
 class Debug_World;
 
 class World
@@ -35,12 +36,14 @@ public:
 	inline TextureLoader* GetTextureLoader() const { return textureLoader; }
 	inline Chunks_Manager* GetChunksManager() const { return chunksManager; }
 	inline Blocks_Global_Shapes* GetBlocksGlobalShapes() const { return blocksGlobalShapes; }
+	inline Blocks_Global_Datas* GetBlocksGlobalDatas() const { return blocksGlobalDatas; }
 	inline const GLuint& GetMatrixID() const { return matrixID; }
 
 private:
 	TextureLoader* textureLoader;
 	Chunks_Manager* chunksManager;
 	Blocks_Global_Shapes* blocksGlobalShapes;
+	Blocks_Global_Datas* blocksGlobalDatas;
 	Debug_World* debugWorld;
 
 	GLuint programID;

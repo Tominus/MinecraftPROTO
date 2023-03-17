@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 class Block;
 class Chunk;
 
@@ -23,6 +25,8 @@ public:
 	inline Chunk* GetRightChunk() const { return rightChunk; }
 	inline Chunk* GetBackChunk()  const { return backChunk; }
 	inline Chunk* GetFrontChunk() const { return frontChunk; }
+
+	inline Block* GetBlock(const glm::uvec3& _position) const { return blocks[_position.x][_position.y][_position.z]; }
 
 private:
 	Block**** blocks;

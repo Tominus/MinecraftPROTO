@@ -29,6 +29,8 @@ public:
 	/*Return the chunkPosition * 16.f to have his position in the world.*/
 	inline const glm::vec3& GetWorldPosition() const { return worldPosition; }
 
+	inline Chunk_Data* GetChunkData() const { return chunkData; }
+
 private:
 	Chunk_Data* chunkData;
 	Chunk_Render* chunkRender;

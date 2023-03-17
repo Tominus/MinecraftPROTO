@@ -2,7 +2,7 @@
 
 enum class EBlock_Type
 {
-	Air = -1,
+	Air = 0,
 
 	Acacia_Log,
 	Amethyst_Block,
