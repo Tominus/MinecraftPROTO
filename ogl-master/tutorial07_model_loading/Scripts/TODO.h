@@ -17,7 +17,22 @@
 * ...
 */
 
+/*
+* - donner le side à rework
+* - les rendus à changer sont fait par le main thread
+* 
+* - je dis aux chunks qu'ils doivent s'update 
+*/
+
 /* 
+* - fix rendu du chunk sur coté
+* - test destroy block
+* - rendu alpha
+* - cull
+* - physics
+* - player
+* - generation
+* 
 * - toujours load les chunks sous le player
 */
 

@@ -24,6 +24,8 @@ Chunks_Manager::Chunks_Manager()
 	renderMaxDistance = renderDistance - 1;
 
 	mutex = CreateMutex(0, false, 0);
+	mutex_Update = CreateMutex(0, false, 0);
+	allMutex = new HANDLE[2]{ mutex, mutex_Update };
 }
 
 Chunks_Manager::~Chunks_Manager()
@@ -39,14 +41,19 @@ Chunks_Manager::~Chunks_Manager()
 		_chunk = nullptr;
 	}
 	ReleaseMutex(mutex);
+	ReleaseMutex(mutex_Update);
 
 	CloseHandle(mutex);
+	CloseHandle(mutex_Update);
+
+	delete[] allMutex;
 
 	onUpdate.RemoveDynamic(this, &Chunks_Manager::UpdateRender);
 
 	onTick.RemoveDynamic(this, &Chunks_Manager::CheckGenerateNewChunkRender);
 	onTick.RemoveDynamic(this, &Chunks_Manager::CheckGenerateChunkPosition);
 	onTick.RemoveDynamic(this, &Chunks_Manager::CheckRenderDistance);
+	onTick.RemoveDynamic(this, &Chunks_Manager::CheckUpdateChunkSideRender);
 
 	const size_t& _max2 = chunkWaitingForCGgen.size();
 	for (size_t i = 0; i < _max2; ++i)
@@ -65,6 +72,7 @@ void Chunks_Manager::StartChunkManager()
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateNewChunkRender);
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateChunkPosition);
 	onTick.AddDynamic(this, &Chunks_Manager::CheckRenderDistance);
+	onTick.AddDynamic(this, &Chunks_Manager::CheckUpdateChunkSideRender);
 }
 
 void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
@@ -102,6 +110,23 @@ void Chunks_Manager::AddStartingWorldBaseChunk()
 
 	CheckGenerateNewChunkRender();
 	CheckGenerateChunkPosition();
+}
+
+void Chunks_Manager::AddWaitingForSideUpdateChunk(Chunk* _chunk)
+{
+	WaitForMultipleObjects(2, allMutex, TRUE, INFINITE);
+
+	const size_t& _max = chunkWaitingForGraphicalUpdate.size();
+	for (size_t i = 0; i < _max; ++i)
+	{
+		if (chunkWaitingForGraphicalUpdate[i] == _chunk)
+			return;
+	}
+
+	chunkWaitingForGraphicalUpdate.push_back(_chunk);
+
+	ReleaseMutex(mutex);
+	ReleaseMutex(mutex_Update);
 }
 
 void Chunks_Manager::UpdateChunksManager() const
@@ -170,6 +195,22 @@ void Chunks_Manager::CheckGenerateChunkPosition()
 		--_size;
 	}
 	ReleaseMutex(mutex);
+}
+
+void Chunks_Manager::CheckUpdateChunkSideRender()
+{
+	WaitForMultipleObjects(2, allMutex, TRUE, INFINITE);
+
+	const size_t& _max = chunkWaitingForGraphicalUpdate.size();
+	for (size_t i = 0; i < _max; ++i)
+	{
+		chunkWaitingForGraphicalUpdate[0]->UpdateChunkSideRender();
+	}
+
+	chunkWaitingForGraphicalUpdate.clear();
+
+	ReleaseMutex(mutex);
+	ReleaseMutex(mutex_Update);
 }
 
 void Chunks_Manager::CheckRenderDistance()
@@ -299,6 +340,16 @@ void Chunks_Manager::DeleteChunksOutOfRange(std::vector<Chunk*>& _chunkInRange, 
 
 		if (!_isInRange)
 		{
+			const size_t& _size = chunkWaitingForGraphicalUpdate.size();
+			for (size_t k = 0; k < _size; ++k)
+			{
+				if (chunkWaitingForGraphicalUpdate[k] == _worldChunk)
+				{
+					chunkWaitingForGraphicalUpdate.erase(chunkWaitingForGraphicalUpdate.begin() + k);
+					break;
+				}
+			}
+
 			delete _worldChunk;
 			_worldChunk = nullptr;
 		}

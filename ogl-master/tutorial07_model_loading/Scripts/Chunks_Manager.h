@@ -27,6 +27,7 @@ typedef struct SThread_AddChunk
 class Chunks_Manager
 {
 	friend class World;
+	friend class Chunk_Render_Generator;
 
 private:
 	Chunks_Manager();
@@ -38,6 +39,7 @@ private:
 	static void WINAPI AddChunk(SThread_AddChunk_Ptr _data);
 	
 	void AddStartingWorldBaseChunk();
+	void AddWaitingForSideUpdateChunk(Chunk* _chunk);
 
 	void UpdateChunksManager() const;
 	void TickChunksManager() const;
@@ -46,6 +48,7 @@ private:
 
 	void CheckGenerateNewChunkRender();
 	void CheckGenerateChunkPosition();
+	void CheckUpdateChunkSideRender();
 
 	void CheckRenderDistance();
 	bool CheckIfNoChunkLoaded(const size_t& _worldChunkSize, const glm::vec3& _playerPositionChunkRelative);
@@ -67,6 +70,8 @@ private:
 	Thread_Manager* threadManager;
 
 	std::vector<Chunk*> chunkWaitingForCGgen;
+	std::vector<Chunk*> chunkWaitingForGraphicalUpdate;
+
 	std::vector<glm::vec3> chunkPositionBeingGenerated;
 	std::vector<glm::vec3> chunkPositionFinishGeneration;
 
@@ -74,6 +79,8 @@ private:
 	Action<> onTick;
 
 	mutable HANDLE mutex;
+	mutable HANDLE mutex_Update;
+	const HANDLE* allMutex;
 
 	int renderDistanceIndex;
 	int renderDistance;

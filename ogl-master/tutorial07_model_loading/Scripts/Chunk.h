@@ -13,6 +13,7 @@ class Chunk
 	friend class Chunks_Manager;
 	friend class Chunk_Render;
 	friend class Chunk_Data_Generator;
+	friend class Chunk_Render_Generator;
 
 private:
 	Chunk(Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator, const glm::vec3& _position);
@@ -21,6 +22,8 @@ private:
 	void Render() const;
 
 	void GenerateCGRender();
+
+	void UpdateChunkSideRender();
 
 public:
 	/*Return the position of the chunk.*/

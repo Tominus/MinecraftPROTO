@@ -23,11 +23,14 @@ Chunk_Render_Generator::Chunk_Render_Generator(Chunks_Manager* _chunksManager)
 	blocksGlobalDatas = world->GetBlocksGlobalDatas();
 
 	chunksManager = _chunksManager;
+
+	mutex_All_ChunkManager = chunksManager->allMutex;
+	mutex_ChunkManager = chunksManager->mutex;
 }
 
 Chunk_Render_Generator::~Chunk_Render_Generator()
 {
-	
+
 }
 
 void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, Chunk_Data* _chunkData)
@@ -137,6 +140,7 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 						}
 						else
 						{
+							WaitForMultipleObjects(2, mutex_All_ChunkManager, TRUE, INFINITE);
 							if (Chunk* _downChunk = _chunkData->downChunk)
 							{
 								if (Check_Block(_downChunk->GetChunkData()->GetBlock(glm::uvec3(x, Chunk_Max_Size, z))))
@@ -148,6 +152,9 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 							{
 								_index += 1;
 							}
+
+							ReleaseMutex(mutex_All_ChunkManager[0]);
+							ReleaseMutex(mutex_All_ChunkManager[1]);
 						}
 
 						//Up
@@ -160,6 +167,7 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 						}
 						else
 						{
+							WaitForMultipleObjects(2, mutex_All_ChunkManager, TRUE, INFINITE);
 							if (Chunk* _upChunk = _chunkData->upChunk)
 							{
 								if (Check_Block(_upChunk->GetChunkData()->GetBlock(glm::uvec3(x, 0, z))))
@@ -171,6 +179,9 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 							{
 								_index += 2;
 							}
+
+							ReleaseMutex(mutex_All_ChunkManager[0]);
+							ReleaseMutex(mutex_All_ChunkManager[1]);
 						}
 
 						//Left
@@ -183,6 +194,7 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 						}
 						else
 						{
+							WaitForMultipleObjects(2, mutex_All_ChunkManager, TRUE, INFINITE);
 							if (Chunk* _leftChunk = _chunkData->leftChunk)
 							{
 								if (Check_Block(_leftChunk->GetChunkData()->GetBlock(glm::uvec3(Chunk_Max_Size, y, z))))
@@ -190,6 +202,9 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 									_index += 4;
 								}
 							}
+
+							ReleaseMutex(mutex_All_ChunkManager[0]);
+							ReleaseMutex(mutex_All_ChunkManager[1]);
 						}
 
 						//Right
@@ -202,6 +217,7 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 						}
 						else
 						{
+							WaitForMultipleObjects(2, mutex_All_ChunkManager, TRUE, INFINITE);
 							if (Chunk* _rightChunk = _chunkData->rightChunk)
 							{
 								if (Check_Block(_rightChunk->GetChunkData()->GetBlock(glm::uvec3(0, y, z))))
@@ -209,6 +225,9 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 									_index += 8;
 								}
 							}
+
+							ReleaseMutex(mutex_All_ChunkManager[0]);
+							ReleaseMutex(mutex_All_ChunkManager[1]);
 						}
 
 						//Back
@@ -221,6 +240,7 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 						}
 						else
 						{
+							WaitForMultipleObjects(2, mutex_All_ChunkManager, TRUE, INFINITE);
 							if (Chunk* _backChunk = _chunkData->backChunk)
 							{
 								if (Check_Block(_backChunk->GetChunkData()->GetBlock(glm::uvec3(x, y, Chunk_Max_Size))))
@@ -228,6 +248,9 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 									_index += 16;
 								}
 							}
+
+							ReleaseMutex(mutex_All_ChunkManager[0]);
+							ReleaseMutex(mutex_All_ChunkManager[1]);
 						}
 
 						//Front
@@ -240,6 +263,7 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 						}
 						else
 						{
+							WaitForMultipleObjects(2, mutex_All_ChunkManager, TRUE, INFINITE);
 							if (Chunk* _frontChunk = _chunkData->frontChunk)
 							{
 								if (Check_Block(_frontChunk->GetChunkData()->GetBlock(glm::uvec3(x, y, 0))))
@@ -247,6 +271,9 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 									_index += 32;
 								}
 							}
+
+							ReleaseMutex(mutex_All_ChunkManager[0]);
+							ReleaseMutex(mutex_All_ChunkManager[1]);
 						}
 					}
 
@@ -254,15 +281,16 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 					{
 						_vertexs = _shapesData->GetVertexs();
 						_uvs = _shapesData->GetUVs();
+						const size_t& _vertexsSize = _shapesData->GetVertexsSize();
 						_currentShape = new SChunk_Render_Shapes(_vertexs, _uvs);
 
 
 						SChunk_Render_Data* _currentChunkRenderData = GetChunkRenderData(_currentRenderDatas, _textureID);
-						_currentChunkRenderData->verticesGlobalSize += _shapesData->GetVertexsSize();
+
+						_currentChunkRenderData->verticesGlobalSize += _vertexsSize;
 						_currentChunkRenderData->renderBuffer.push_back(_currentShape);
 
-						const size_t& _max = _shapesData->GetVertexsSize();
-						for (size_t i = 0; i < _max; ++i)
+						for (size_t i = 0; i < _vertexsSize; ++i)
 						{
 							_currentChunkRenderData->globalVertexs.push_back(_vertexs[i] + _blockPosition);
 							_currentChunkRenderData->globalUVs.push_back(_uvs[i]);
@@ -274,6 +302,8 @@ void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, 
 			}
 		}
 	}
+
+	SetAllSideChunkForUpdate(_chunkData);
 }
 
 void Chunk_Render_Generator::GenerateChunkCGRender(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas)
@@ -313,4 +343,61 @@ SChunk_Render_Data* Chunk_Render_Generator::GetChunkRenderData(std::map<GLuint, 
 	SChunk_Render_Data* _currentChunkRenderData = new SChunk_Render_Data();
 	_currentRenderDatas.emplace(_textureID, _currentChunkRenderData);
 	return _currentChunkRenderData;
+}
+
+void Chunk_Render_Generator::SetAllSideChunkForUpdate(Chunk_Data* _chunkData)
+{
+	WaitForMultipleObjects(2, mutex_All_ChunkManager, TRUE, INFINITE);
+
+	Chunk* _downChunk = _chunkData->downChunk;
+	Chunk* _upChunk = _chunkData->upChunk;
+	Chunk* _leftChunk = _chunkData->leftChunk;
+	Chunk* _rightChunk = _chunkData->rightChunk;
+	Chunk* _backChunk = _chunkData->backChunk;
+	Chunk* _frontChunk = _chunkData->frontChunk;
+
+	if (_downChunk)
+	{
+		_downChunk->chunkRender->sideToUpdate |= ESide::Down;
+		chunksManager->AddWaitingForSideUpdateChunk(_downChunk);
+	}
+	if (_upChunk)
+	{
+		_upChunk->chunkRender->sideToUpdate |= ESide::Up;
+		chunksManager->AddWaitingForSideUpdateChunk(_upChunk);
+	}
+
+	if (_leftChunk)
+	{
+		_leftChunk->chunkRender->sideToUpdate |= ESide::Left;
+		chunksManager->AddWaitingForSideUpdateChunk(_leftChunk);
+	}
+	if (_rightChunk)
+	{
+		_rightChunk->chunkRender->sideToUpdate |= ESide::Right;
+		chunksManager->AddWaitingForSideUpdateChunk(_rightChunk);
+	}
+
+	if (_backChunk)
+	{
+		_backChunk->chunkRender->sideToUpdate |= ESide::Back;
+		chunksManager->AddWaitingForSideUpdateChunk(_backChunk);
+	}
+	if (_frontChunk)
+	{
+		_frontChunk->chunkRender->sideToUpdate |= ESide::Front;
+		chunksManager->AddWaitingForSideUpdateChunk(_frontChunk);
+	}
+
+	ReleaseMutex(mutex_All_ChunkManager[0]);
+	ReleaseMutex(mutex_All_ChunkManager[1]);
+}
+
+void Chunk_Render_Generator::UpdateChunkSideRender(Chunk* _chunk)
+{
+	//Chunk_Data*& _chunkData = _chunk->chunkData;
+	//Chunk_Render*& _chunkRender = _chunk->chunkRender;
+
+
+
 }

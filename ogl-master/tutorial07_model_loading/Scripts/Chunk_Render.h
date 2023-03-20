@@ -1,4 +1,6 @@
 #pragma once
+#include "Side.h"
+
 #include <map>
 #include <vector>
 #include <GL/glew.h>
@@ -71,6 +73,7 @@ private:
 	glm::vec3 ownerChunkPosition;
 
 	GLuint matrixID;
+	ESide sideToUpdate;
 	
 	/*Stock les rendu dans leur world position.*/
 	//std::vector<std::vector<std::vector<Chunk_Render_Shapes*>>> allBlockShapes;

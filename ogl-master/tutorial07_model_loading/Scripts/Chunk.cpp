@@ -35,3 +35,8 @@ void Chunk::GenerateCGRender()
 {
 	chunkRenderGenerator->GenerateChunkCGRender(chunkRender->renderDatas);
 }
+
+void Chunk::UpdateChunkSideRender()
+{
+	chunkRenderGenerator->UpdateChunkSideRender(this);
+}

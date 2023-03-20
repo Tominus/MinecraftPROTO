@@ -83,8 +83,8 @@ void World::Update()
 	if (tickTime > Tick_Time)
 	{
 		tickTime -= Tick_Time;
-		Tick();
 	}
+		Tick();
 	//if (fpsTime > Fps_Time)
 	{
 	//	fpsTime -= Fps_Time;
