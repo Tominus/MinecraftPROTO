@@ -20,9 +20,18 @@ Chunk_Render::~Chunk_Render()
 {
 	for each (const std::pair<GLuint, SChunk_Render_Data*>& _datas in renderDatas)
 	{
-		const SChunk_Render_Data* _renderBuffer = _datas.second;
+		SChunk_Render_Data* _renderBuffer = _datas.second;
 		glDeleteBuffers(1, &_renderBuffer->vertexsBuffer);
 		glDeleteBuffers(1, &_renderBuffer->uvsBuffer);
+
+		std::vector<SChunk_Render_Buffer*>& _renderBufferPosition = _renderBuffer->renderBuffer;
+
+		const size_t& _max = _renderBufferPosition.size();
+		for (size_t i = 0; i < _max; ++i)
+		{
+			delete _renderBufferPosition[i];
+		}
+
 		delete _renderBuffer;
 	}
 

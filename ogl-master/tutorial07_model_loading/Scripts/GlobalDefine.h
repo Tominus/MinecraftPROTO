@@ -3,6 +3,9 @@
 #define Chunk_Size (16)
 #define Chunk_Max_Size (15)
 
+/*If this function can be use in tread*/
+#define Main_Thread
+#define Threaded
 #define Thread_Func unsigned long(__stdcall*)(void*)
 #define Thread_Used_Qty (16)
 

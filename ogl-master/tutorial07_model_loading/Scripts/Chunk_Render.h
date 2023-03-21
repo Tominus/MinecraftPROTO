@@ -5,47 +5,51 @@
 #include <vector>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include "GlobalDefine.h"
 
 /*Rendu pour chaque block. Peut être nullptr.
 Permet uniquement de retrouver le rendu d'un block en particulier.*/
 struct SChunk_Render_Shapes
 {
-	//const std::vector<glm::vec3>* vertexs;
-	//const std::vector<glm::vec2>* uvs;
-
-	/*Chunk_Render_Shapes(const std::vector<glm::vec3>* _vertexs, const std::vector<glm::vec2>* _uvs)
-	{
-		vertexs = _vertexs;
-		uvs = _uvs;
-	}*/
-
 	const glm::vec3* vertexs = nullptr;
 	const glm::vec2* uvs = nullptr;
+	const size_t* vertexsSize = nullptr;
 
 	SChunk_Render_Shapes() = delete;
-	SChunk_Render_Shapes(const glm::vec3 _vertexs[], const glm::vec2 _uvs[])
+	SChunk_Render_Shapes(const glm::vec3 _vertexs[], const glm::vec2 _uvs[], const size_t* _vertexsSize)
 	{
 		vertexs = _vertexs;
 		uvs = _uvs;
+		vertexsSize = _vertexsSize;
+	}
+};
+
+struct SChunk_Render_Buffer
+{
+	const SChunk_Render_Shapes* shapes = nullptr;
+	glm::vec3 position;
+
+	SChunk_Render_Buffer() = delete;
+	SChunk_Render_Buffer(const SChunk_Render_Shapes* _shapes, const glm::vec3& _position)
+	{
+		shapes = _shapes;
+		position = _position;
 	}
 };
 
 /*Stock pour une texture tout les blocks qu'il va devoir rendre.*/
 struct SChunk_Render_Data
 {
-	std::vector<const SChunk_Render_Shapes*> renderBuffer;
-	unsigned int verticesGlobalSize;
+	//Used to calculate global
+	std::vector<SChunk_Render_Buffer*> renderBuffer;
+	unsigned int verticesGlobalSize = 0;
 
-	GLuint vertexsBuffer;
-	GLuint uvsBuffer;
+	GLuint vertexsBuffer = 0;
+	GLuint uvsBuffer = 0;
 
 	//Used for the graphics generation
 	std::vector<glm::vec3> globalVertexs;
 	std::vector<glm::vec2> globalUVs;
-
-	//const Chunk_Render_Shapes* renderBuffer = nullptr;
-	//glm::vec3* globalVertexs = nullptr;
-	//glm::vec2* globalUVs = nullptr;
 };
 
 class Chunk_Render
@@ -76,7 +80,6 @@ private:
 	ESide sideToUpdate;
 	
 	/*Stock les rendu dans leur world position.*/
-	//std::vector<std::vector<std::vector<Chunk_Render_Shapes*>>> allBlockShapes;
 	SChunk_Render_Shapes**** allBlockShapes;
 
 	/*Stock tout les datas à rendre. textures -> */

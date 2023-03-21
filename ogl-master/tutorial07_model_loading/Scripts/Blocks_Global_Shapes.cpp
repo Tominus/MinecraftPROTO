@@ -128,8 +128,9 @@ void Blocks_Global_Shapes::GenerateBlocksShapeDatas()
 		glm::vec2(1.0f, 1.0f),
 		glm::vec2(1.0f, 0.0f),
 	};
+		const size_t* _vertexsSize = new size_t(Block_Total_Shapes);
 
-		SBlock_Shape_Data* _datasBlock = new SBlock_Shape_Data(_vertices, _uvs, Block_Total_Shapes, Block_Total_Shapes);
+		SBlock_Shape_Data* _datasBlock = new SBlock_Shape_Data(_vertices, _uvs, _vertexsSize, Block_Total_Shapes);
 		blocksShapes.emplace(EBlock_Shapes_Type::Block, _datasBlock);
 
 		std::vector<SBlock_Shape_Data*> _blockShapes;
@@ -154,6 +155,7 @@ void Blocks_Global_Shapes::GenerateBlocksShapeDatas()
 			}
 
 			const size_t& _max = _tmpVertices.size();
+			const size_t* _shapeVertexsSize = new size_t(_max);
 
 			glm::vec3* _shapeVertices = new glm::vec3[_max];
 			glm::vec2* _shapeUVs = new glm::vec2[_max];
@@ -164,7 +166,7 @@ void Blocks_Global_Shapes::GenerateBlocksShapeDatas()
 				_shapeUVs[j] = _tmpUVs[j];
 			}
 
-			_blockShapes.push_back(new SBlock_Shape_Data(_shapeVertices, _shapeUVs, _max, _max));
+			_blockShapes.push_back(new SBlock_Shape_Data(_shapeVertices, _shapeUVs, _shapeVertexsSize, _max));
 		}
 
 		blockShapesDatas.emplace(EBlock_Shapes_Type::Block, _blockShapes);
@@ -186,4 +188,18 @@ const SBlock_Shape_Data* Blocks_Global_Shapes::GetBlockVertexsAndUVs(const EBloc
 	--_index;
 
 	return blockShapesDatas.at(_blockShapesType)[_index];
+}
+
+unsigned Blocks_Global_Shapes::GetVertexsIndex(const EBlock_Shapes_Type& _blockShapesType, const glm::vec3* _vertexs)
+{
+	std::vector<SBlock_Shape_Data*>& _data = blockShapesDatas.at(_blockShapesType);
+
+	const size_t& _max = _data.size();
+	for (size_t i = 0; i < _max; ++i)
+	{
+		if (_vertexs == _data[i]->vertexs)
+			return i;
+	}
+
+	return 999999999;
 }

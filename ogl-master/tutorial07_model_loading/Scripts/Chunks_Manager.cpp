@@ -15,6 +15,8 @@
 
 Chunks_Manager::Chunks_Manager()
 {
+	mutex = CreateMutex(0, false, 0);
+
 	chunkDataGenerator = new Chunk_Data_Generator(this);
 	chunkRenderGenerator = new Chunk_Render_Generator(this);
 	threadManager = &Thread_Manager::Instance();
@@ -22,10 +24,6 @@ Chunks_Manager::Chunks_Manager()
 	renderDistanceIndex = 1;
 	renderDistance = Render_Distance_Current;
 	renderMaxDistance = renderDistance - 1;
-
-	mutex = CreateMutex(0, false, 0);
-	mutex_Update = CreateMutex(0, false, 0);
-	allMutex = new HANDLE[2]{ mutex, mutex_Update };
 }
 
 Chunks_Manager::~Chunks_Manager()
@@ -41,12 +39,8 @@ Chunks_Manager::~Chunks_Manager()
 		_chunk = nullptr;
 	}
 	ReleaseMutex(mutex);
-	ReleaseMutex(mutex_Update);
 
 	CloseHandle(mutex);
-	CloseHandle(mutex_Update);
-
-	delete[] allMutex;
 
 	onUpdate.RemoveDynamic(this, &Chunks_Manager::UpdateRender);
 
@@ -114,7 +108,7 @@ void Chunks_Manager::AddStartingWorldBaseChunk()
 
 void Chunks_Manager::AddWaitingForSideUpdateChunk(Chunk* _chunk)
 {
-	WaitForMultipleObjects(2, allMutex, TRUE, INFINITE);
+	WaitForSingleObject(mutex, INFINITE);
 
 	const size_t& _max = chunkWaitingForGraphicalUpdate.size();
 	for (size_t i = 0; i < _max; ++i)
@@ -126,7 +120,6 @@ void Chunks_Manager::AddWaitingForSideUpdateChunk(Chunk* _chunk)
 	chunkWaitingForGraphicalUpdate.push_back(_chunk);
 
 	ReleaseMutex(mutex);
-	ReleaseMutex(mutex_Update);
 }
 
 void Chunks_Manager::UpdateChunksManager() const
@@ -199,7 +192,7 @@ void Chunks_Manager::CheckGenerateChunkPosition()
 
 void Chunks_Manager::CheckUpdateChunkSideRender()
 {
-	WaitForMultipleObjects(2, allMutex, TRUE, INFINITE);
+	WaitForSingleObject(mutex, INFINITE);
 
 	const size_t& _max = chunkWaitingForGraphicalUpdate.size();
 	for (size_t i = 0; i < _max; ++i)
@@ -210,7 +203,6 @@ void Chunks_Manager::CheckUpdateChunkSideRender()
 	chunkWaitingForGraphicalUpdate.clear();
 
 	ReleaseMutex(mutex);
-	ReleaseMutex(mutex_Update);
 }
 
 void Chunks_Manager::CheckRenderDistance()

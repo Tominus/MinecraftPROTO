@@ -20,6 +20,8 @@ public:
 
 	const SBlock_Shape_Data* GetBlockVertexsAndUVs(const EBlock_Shapes_Type& _blockShapesType, unsigned _index);
 
+	unsigned GetVertexsIndex(const EBlock_Shapes_Type& _blockShapesType, const glm::vec3* _vertexs);
+
 private:
 	std::map<EBlock_Shapes_Type, SBlock_Shape_Data*> blocksShapes;
 

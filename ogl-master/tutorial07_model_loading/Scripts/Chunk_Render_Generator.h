@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <map>
+#include <vector>
 #include <Windows.h>
 
 class Chunk_Data;
@@ -31,6 +32,10 @@ private:
 
 	void SetAllSideChunkForUpdate(Chunk_Data* _chunkData);
 	void UpdateChunkSideRender(Chunk* _chunk);
+	void AddTextureToUpdate(std::vector<GLuint>& _texturesToUpdate, const GLuint& _textureID);
+	void RegenerateRender(Chunk* _chunk, std::vector<GLuint>& _texturesToUpdate);
+
+	void GenerateChunkUpdatedCGRender(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas, std::vector<GLuint>& _texturesToUpdate);
 
 private:
 	Chunks_Manager* chunksManager;
@@ -38,7 +43,6 @@ private:
 	GLuint matrixID;
 
 	HANDLE mutex_ChunkManager;
-	const HANDLE* mutex_All_ChunkManager;
 
 	World* world;
 	TextureLoader* textureLoader;

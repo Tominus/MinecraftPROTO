@@ -1,5 +1,4 @@
 #pragma once
-#include <type_traits>
 
 enum class ESide
 {
@@ -21,4 +20,10 @@ inline ESide& operator |=(ESide& _this, ESide _right)
 {
 	_this = _this | _right;
 	return _this;
+}
+
+inline bool operator & (ESide _left, ESide _right)
+{
+	bool _state = static_cast<int>(_left) & static_cast<int>(_right);
+	return _state;
 }

@@ -79,8 +79,6 @@ private:
 	Action<> onTick;
 
 	mutable HANDLE mutex;
-	mutable HANDLE mutex_Update;
-	const HANDLE* allMutex;
 
 	int renderDistanceIndex;
 	int renderDistance;
