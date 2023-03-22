@@ -46,6 +46,8 @@ private:
 
 	void UpdateRender();
 
+	void TMP();
+
 	void CheckGenerateNewChunkRender();
 	void CheckGenerateChunkPosition();
 	void CheckUpdateChunkSideRender();
@@ -79,6 +81,10 @@ private:
 	Action<> onTick;
 
 	mutable HANDLE mutex;
+
+	float _tmp;
+	bool _a;
+	bool _b;
 
 	int renderDistanceIndex;
 	int renderDistance;

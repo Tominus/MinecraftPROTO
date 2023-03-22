@@ -2,6 +2,7 @@
 #include <common/controls.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
+#include "GlobalDefine.h"
 
 
 Debug_World::Debug_World(GLFWwindow* _window)
@@ -71,7 +72,7 @@ void Debug_World::InitDebug(const GLuint& _matrixID)
 
 void Debug_World::UpdateDebug()
 {
-	Debug_DrawChunk();
+	Debug_DrawDebugScaledChunk();
 }
 
 void Debug_World::Debug_DrawChunk()
@@ -98,6 +99,47 @@ void Debug_World::Debug_DrawChunk()
 		{
 			_offset.y = y;
 			for (float z = -16.f; z < 32.f; z += 16.f)
+			{
+				_offset.z = z;
+				const glm::mat4& _MVP = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), _playerPositionChunkRelative + _offset) * glm::mat4(1.0f);
+				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &_MVP[0][0]);
+
+				glBindBuffer(GL_ARRAY_BUFFER, vertexsBufferDrawChunk);
+				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+				glDrawArrays(GL_LINES, 0, vertexsSizeDrawChunk);
+			}
+		}
+	}
+	glDisableVertexAttribArray(0);
+}
+
+void Debug_World::Debug_DrawDebugScaledChunk()
+{
+	if (glfwGetKey(window, GLFW_KEY_G) && glfwGetKey(window, GLFW_KEY_F3))
+		bDebugDrawChunk = !bDebugDrawChunk;
+
+	if (!bDebugDrawChunk)return;
+
+	float _chunkSize = (float)Chunk_Size;
+
+	const glm::vec3& _playerPosition = getPosition() - glm::vec3(_chunkSize / 2.f, _chunkSize / 2.f, _chunkSize / 2.f);
+	const float& _xPos = round(_playerPosition.x / _chunkSize);
+	const float& _yPos = round(_playerPosition.y / _chunkSize);
+	const float& _zPos = round(_playerPosition.z / _chunkSize);
+
+	const glm::vec3 _playerPositionChunkRelative(_xPos * _chunkSize, _yPos * _chunkSize, _zPos * _chunkSize);
+
+
+	glm::vec3 _offset;
+	glEnableVertexAttribArray(0);
+	for (float x = -_chunkSize; x < _chunkSize * 2.f; x += _chunkSize)
+	{
+		_offset.x = x;
+		for (float y = -_chunkSize; y < _chunkSize * 2.f; y += _chunkSize)
+		{
+			_offset.y = y;
+			for (float z = -_chunkSize; z < _chunkSize * 2.f; z += _chunkSize)
 			{
 				_offset.z = z;
 				const glm::mat4& _MVP = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), _playerPositionChunkRelative + _offset) * glm::mat4(1.0f);

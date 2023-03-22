@@ -17,6 +17,7 @@ private:
 	void UpdateDebug();
 
 	void Debug_DrawChunk();
+	void Debug_DrawDebugScaledChunk();
 
 private:
 	GLFWwindow* window;

@@ -21,6 +21,10 @@ Chunks_Manager::Chunks_Manager()
 	chunkRenderGenerator = new Chunk_Render_Generator(this);
 	threadManager = &Thread_Manager::Instance();
 
+	_tmp = 0.f; /////////////
+	_a = false;
+	_b = false;
+
 	renderDistanceIndex = 1;
 	renderDistance = Render_Distance_Current;
 	renderMaxDistance = renderDistance - 1;
@@ -62,10 +66,11 @@ Chunks_Manager::~Chunks_Manager()
 void Chunks_Manager::StartChunkManager()
 {
 	onUpdate.AddDynamic(this, &Chunks_Manager::UpdateRender);
+	onUpdate.AddDynamic(this, &Chunks_Manager::TMP);   ////////////
 
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateNewChunkRender);
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateChunkPosition);
-	onTick.AddDynamic(this, &Chunks_Manager::CheckRenderDistance);
+	//onTick.AddDynamic(this, &Chunks_Manager::CheckRenderDistance);
 	onTick.AddDynamic(this, &Chunks_Manager::CheckUpdateChunkSideRender);
 }
 
@@ -144,6 +149,27 @@ void Chunks_Manager::UpdateRender()
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+}
+
+void Chunks_Manager::TMP()
+{
+	World* _world = &World::Instance();
+	_tmp += _world->GetDeltaTime();
+
+	if (_tmp > 3.f && !_b)
+	{
+		if (Thread* _thread = threadManager->CreateThread())
+		{
+			SThread_AddChunk_Ptr _data = new SThread_AddChunk();
+			_data->thisThread = _thread;
+			_data->thisPtr = this;
+			_data->position = new glm::vec3(1.f, 0.f, 0.f);
+
+			chunkPositionBeingGenerated.push_back(glm::vec3(1.f, 0.f, 0.f));
+			_thread->CreateThreadFunction(true, AddChunk, _data);
+		}
+		_b = true;
+	}
 }
 
 void Chunks_Manager::CheckGenerateNewChunkRender()

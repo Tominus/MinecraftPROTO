@@ -37,7 +37,11 @@ public:
 	inline Chunks_Manager* GetChunksManager() const { return chunksManager; }
 	inline Blocks_Global_Shapes* GetBlocksGlobalShapes() const { return blocksGlobalShapes; }
 	inline Blocks_Global_Datas* GetBlocksGlobalDatas() const { return blocksGlobalDatas; }
+
 	inline const GLuint& GetMatrixID() const { return matrixID; }
+
+	inline const float& GetDeltaTime() const { return deltaTime; }
+	inline const float& GetGameTime() const { return gameTime; }
 
 private:
 	TextureLoader* textureLoader;
@@ -50,8 +54,8 @@ private:
 	GLuint matrixID;
 	GLuint vertexArrayID;
 
+	float deltaTime;
 	float gameTime;
 	float tickTime;
 	float fpsTime;
-	float deltaTime;
 };

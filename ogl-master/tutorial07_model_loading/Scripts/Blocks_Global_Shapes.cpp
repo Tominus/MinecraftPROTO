@@ -201,5 +201,6 @@ unsigned Blocks_Global_Shapes::GetVertexsIndex(const EBlock_Shapes_Type& _blockS
 			return i;
 	}
 
+	throw std::exception("[Blocks_Global_Shapes::GetVertexsIndex] -> This vertexs doesn't exist");
 	return 999999999;
 }

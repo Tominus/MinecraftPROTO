@@ -9,7 +9,7 @@
 Chunk::Chunk(Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator, const glm::vec3& _position)
 {
 	chunkPosition = _position;
-	worldPosition = _position * 16.0f;
+	worldPosition = _position * (float)Chunk_Size;
 
 	chunkDataGenerator = _chunkDataGenerator;
 	chunkRenderGenerator = _chunkRenderGenerator;
