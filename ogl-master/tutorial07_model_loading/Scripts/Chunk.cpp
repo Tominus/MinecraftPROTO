@@ -15,15 +15,23 @@ Chunk::Chunk(Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* 
 	chunkRenderGenerator = _chunkRenderGenerator;
 
 	chunkData = new Chunk_Data(this);
-	chunkDataGenerator->GenerateNewChunkData(chunkData);
 	chunkRender = new Chunk_Render(this);
-	chunkRenderGenerator->GenerateNewChunkRender(chunkRender, chunkData);
 }
 
 Chunk::~Chunk()
 {
 	delete chunkData;
 	delete chunkRender;
+}
+
+void Chunk::InitChunkData()
+{
+	chunkDataGenerator->GenerateNewChunkData(chunkData);
+}
+
+void Chunk::InitChunkRender()
+{
+	chunkRenderGenerator->GenerateNewChunkRender(chunkRender, chunkData);
 }
 
 void Chunk::Render() const

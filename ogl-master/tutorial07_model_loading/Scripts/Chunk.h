@@ -19,10 +19,11 @@ private:
 	Chunk(Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator, const glm::vec3& _position);
 	~Chunk();
 
+	void InitChunkData();
+	void InitChunkRender();
+
 	void Render() const;
-
 	void GenerateCGRender();
-
 	void UpdateChunkSideRender();
 
 public:

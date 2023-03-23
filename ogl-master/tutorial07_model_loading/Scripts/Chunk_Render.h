@@ -28,7 +28,6 @@ struct SChunk_Render_Buffer
 {
 	const SChunk_Render_Shapes* shapes = nullptr;
 	glm::vec3 position;
-	bool isUpdate = false;
 
 	SChunk_Render_Buffer() = delete;
 	SChunk_Render_Buffer(const SChunk_Render_Shapes* _shapes, const glm::vec3& _position)

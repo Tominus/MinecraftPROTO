@@ -23,44 +23,46 @@ void Debug_World::InitDebug(const GLuint& _matrixID)
 {
 	matrixID = _matrixID;
 
+	const float& _chunkSize = (float)Chunk_Size;
+
 	std::vector<glm::vec3> _vertices{
 		glm::vec3(0.f, 0.f, 0.f),
-		glm::vec3(16.f, 0.f, 0.f),
+		glm::vec3(_chunkSize, 0.f, 0.f),
 
-		glm::vec3(16.f, 0.f, 0.f),
-		glm::vec3(16.f, 0.f, 16.f),
+		glm::vec3(_chunkSize, 0.f, 0.f),
+		glm::vec3(_chunkSize, 0.f, _chunkSize),
 
-		glm::vec3(16.f, 0.f, 16.f),
-		glm::vec3(0.f, 0.f, 16.f),
+		glm::vec3(_chunkSize, 0.f, _chunkSize),
+		glm::vec3(0.f, 0.f, _chunkSize),
 
-		glm::vec3(0.f, 0.f, 16.f),
+		glm::vec3(0.f, 0.f, _chunkSize),
 		glm::vec3(0.f, 0.f, 0.f),
 
 		//-> y
 		glm::vec3(0.f, 0.f, 0.f),
-		glm::vec3(0.f, 16.f, 0.f),
+		glm::vec3(0.f, _chunkSize, 0.f),
 
-		glm::vec3(16.f, 0.f, 0.f),
-		glm::vec3(16.f, 16.f, 0.f),
+		glm::vec3(_chunkSize, 0.f, 0.f),
+		glm::vec3(_chunkSize, _chunkSize, 0.f),
 
-		glm::vec3(16.f, 0.f, 16.f),
-		glm::vec3(16.f, 16.f, 16.f),
+		glm::vec3(_chunkSize, 0.f, _chunkSize),
+		glm::vec3(_chunkSize, _chunkSize, _chunkSize),
 
-		glm::vec3(0.f, 0.f, 16.f),
-		glm::vec3(0.f, 16.f, 16.f),
+		glm::vec3(0.f, 0.f, _chunkSize),
+		glm::vec3(0.f, _chunkSize, _chunkSize),
 
 		//y
-		glm::vec3(0.f, 16.f, 0.f),
-		glm::vec3(16.f, 16.f, 0.f),
+		glm::vec3(0.f, _chunkSize, 0.f),
+		glm::vec3(_chunkSize, _chunkSize, 0.f),
 
-		glm::vec3(16.f, 16.f, 0.f),
-		glm::vec3(16.f, 16.f, 16.f),
+		glm::vec3(_chunkSize, _chunkSize, 0.f),
+		glm::vec3(_chunkSize, _chunkSize, _chunkSize),
 
-		glm::vec3(16.f, 16.f, 16.f),
-		glm::vec3(0.f, 16.f, 16.f),
+		glm::vec3(_chunkSize, _chunkSize, _chunkSize),
+		glm::vec3(0.f, _chunkSize, _chunkSize),
 
-		glm::vec3(0.f, 16.f, 16.f),
-		glm::vec3(0.f, 16.f, 0.f),
+		glm::vec3(0.f, _chunkSize, _chunkSize),
+		glm::vec3(0.f, _chunkSize, 0.f),
 	};
 
 	vertexsSizeDrawChunk = _vertices.size();
@@ -121,7 +123,7 @@ void Debug_World::Debug_DrawDebugScaledChunk()
 
 	if (!bDebugDrawChunk)return;
 
-	float _chunkSize = (float)Chunk_Size;
+	const float& _chunkSize = (float)Chunk_Size;
 
 	const glm::vec3& _playerPosition = getPosition() - glm::vec3(_chunkSize / 2.f, _chunkSize / 2.f, _chunkSize / 2.f);
 	const float& _xPos = round(_playerPosition.x / _chunkSize);

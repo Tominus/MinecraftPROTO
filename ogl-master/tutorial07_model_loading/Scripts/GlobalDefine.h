@@ -19,4 +19,4 @@
 #define Render_Distance_Max (16)
 
 #define Block_Total_Shapes (36)
-#define Block_Total_Possible_Shapes_Max (64)
+#define Block_Total_Possible_Shapes (64)

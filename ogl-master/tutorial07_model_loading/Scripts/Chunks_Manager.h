@@ -28,6 +28,8 @@ class Chunks_Manager
 {
 	friend class World;
 	friend class Chunk_Render_Generator;
+	friend class Chunk_Data_Generator;
+	friend class Chunk_Data;
 
 private:
 	Chunks_Manager();
@@ -60,6 +62,7 @@ private:
 public:
 	Chunk* GetChunkAtPosition(const glm::vec3& _position) const;
 	bool GetIsChunkAtPositionBeingGenerated(const glm::vec3& _position) const;
+	Chunk* GetChunkBeingGeneratedAtPosition(const glm::vec3& _position) const;
 
 	inline Chunk_Data_Generator* GetChunkDataGenerator() const { return chunkDataGenerator; }
 	inline Chunk_Render_Generator* GetChunkRenderGenerator() const { return chunkRenderGenerator; }
@@ -71,6 +74,8 @@ private:
 	Chunk_Render_Generator* chunkRenderGenerator;
 	Thread_Manager* threadManager;
 
+	std::vector<Chunk*> chunkBeingGenerating;
+
 	std::vector<Chunk*> chunkWaitingForCGgen;
 	std::vector<Chunk*> chunkWaitingForGraphicalUpdate;
 
@@ -79,6 +84,7 @@ private:
 
 	Action<> onUpdate;
 	Action<> onTick;
+	Action<Chunk*> onChunkInitialized;
 
 	mutable HANDLE mutex;
 

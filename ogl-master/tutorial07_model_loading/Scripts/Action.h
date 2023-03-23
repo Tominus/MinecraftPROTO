@@ -279,6 +279,19 @@ public:
             return _result;
         }
     }
+
+    void Clear()
+    {
+        const size_t& _size = delegates.size();
+        for (size_t i = 0; i < _size; ++i)
+        {
+            delete delegates[i];
+            delegates[i] = nullptr;
+        }
+
+        delegates.clear();
+    }
+
 };
 
 template<typename ... Params>

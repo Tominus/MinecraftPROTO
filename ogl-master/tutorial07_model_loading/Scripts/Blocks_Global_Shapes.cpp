@@ -135,7 +135,10 @@ void Blocks_Global_Shapes::GenerateBlocksShapeDatas()
 
 		std::vector<SBlock_Shape_Data*> _blockShapes;
 
-		for (size_t i = 1; i < Block_Total_Possible_Shapes_Max; ++i)
+		//push a null render cause there is no render for the block
+		_blockShapes.push_back(nullptr);
+
+		for (size_t i = 1; i < Block_Total_Possible_Shapes; ++i)
 		{
 			std::vector<glm::vec3> _tmpVertices;
 			std::vector<glm::vec2> _tmpUVs;
@@ -183,10 +186,6 @@ const SBlock_Shape_Data* Blocks_Global_Shapes::GetBlockShapeData(const EBlock_Sh
 
 const SBlock_Shape_Data* Blocks_Global_Shapes::GetBlockVertexsAndUVs(const EBlock_Shapes_Type& _blockShapesType, unsigned _index)
 {
-	if (_index == 0) return nullptr;
-
-	--_index;
-
 	return blockShapesDatas.at(_blockShapesType)[_index];
 }
 
@@ -195,7 +194,9 @@ unsigned Blocks_Global_Shapes::GetVertexsIndex(const EBlock_Shapes_Type& _blockS
 	std::vector<SBlock_Shape_Data*>& _data = blockShapesDatas.at(_blockShapesType);
 
 	const size_t& _max = _data.size();
-	for (size_t i = 0; i < _max; ++i)
+
+	//_data[0] is always nullptr
+	for (size_t i = 1; i < _max; ++i)
 	{
 		if (_vertexs == _data[i]->vertexs)
 			return i;

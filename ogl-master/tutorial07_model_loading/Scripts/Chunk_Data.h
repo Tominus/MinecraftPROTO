@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <vector>
 
 class Block;
 class Chunk;
@@ -15,6 +16,8 @@ class Chunk_Data
 private:
 	Chunk_Data(Chunk* _ownerChunk);
 	~Chunk_Data();
+
+	void AddSideChunk(Chunk* _chunk);
 
 public:
 	inline Chunk* GetOwnerChunk() const { return ownerChunk; }
@@ -32,6 +35,10 @@ private:
 	Block**** blocks;
 
 	Chunk* ownerChunk;
+
+	std::vector<glm::vec3> chunkPositionToWait;
+	bool bHasFinishWait;
+	Action<> onAllSideValid;
 
 	Chunk* downChunk;
 	Chunk* upChunk;
