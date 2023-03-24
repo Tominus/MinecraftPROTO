@@ -378,7 +378,7 @@ Threaded void Chunk_Render_Generator::SetAllSideChunkForUpdate(Chunk_Data* _chun
 	ReleaseMutex(mutex_ChunkManager);
 }
 
-Threaded void Chunk_Render_Generator::UpdateChunkSideRender(Chunk* _chunk)
+void Chunk_Render_Generator::UpdateChunkSideRender(Chunk* _chunk)
 {
 	WaitForSingleObject(mutex_ChunkManager, INFINITE);
 	Chunk_Data* _chunkData = _chunk->chunkData;
@@ -389,7 +389,7 @@ Threaded void Chunk_Render_Generator::UpdateChunkSideRender(Chunk* _chunk)
 	
 	std::map<GLuint, SChunk_Render_Data*>& _renderDatas = _chunkRender->renderDatas;
 
-	const ESide& _side = _chunkRender->sideToUpdate;
+	ESide& _side = _chunkRender->sideToUpdate;
 
 	std::vector<GLuint> _textureToUpdate;
 
@@ -551,7 +551,7 @@ Threaded void Chunk_Render_Generator::UpdateChunkSideRender(Chunk* _chunk)
 
 							if (_shape)
 							{
-								//Add the Right side of the block
+								//Add the Back side of the block
 								unsigned _index = blockGlobalShapes->GetVertexsIndex(_blockData->blockShapeType, _shape->vertexs);
 
 								_index |= (unsigned)ESide::Back;
@@ -611,7 +611,7 @@ Threaded void Chunk_Render_Generator::UpdateChunkSideRender(Chunk* _chunk)
 
 							if (_shape)
 							{
-								//Add the Right side of the block
+								//Add the Front side of the block
 								unsigned _index = blockGlobalShapes->GetVertexsIndex(_blockData->blockShapeType, _shape->vertexs);
 
 								_index |= (unsigned)ESide::Front;
@@ -645,12 +645,14 @@ Threaded void Chunk_Render_Generator::UpdateChunkSideRender(Chunk* _chunk)
 		}
 	}
 
+	_side = ESide::None;
+
 	RegenerateRender(_chunk, _textureToUpdate);
 
 	ReleaseMutex(mutex_ChunkManager);
 }
 
-Threaded void Chunk_Render_Generator::AddTextureToUpdate(std::vector<GLuint>& _texturesToUpdate, const GLuint& _textureID)
+void Chunk_Render_Generator::AddTextureToUpdate(std::vector<GLuint>& _texturesToUpdate, const GLuint& _textureID)
 {
 	const size_t& _max = _texturesToUpdate.size();
 	for (size_t i = 0; i < _max; ++i)
@@ -662,7 +664,7 @@ Threaded void Chunk_Render_Generator::AddTextureToUpdate(std::vector<GLuint>& _t
 	_texturesToUpdate.push_back(_textureID);
 }
 
-Threaded void Chunk_Render_Generator::RegenerateRender(Chunk* _chunk, std::vector<GLuint>& _texturesToUpdate)
+void Chunk_Render_Generator::RegenerateRender(Chunk* _chunk, std::vector<GLuint>& _texturesToUpdate)
 {
 	Chunk_Render* _chunkRender = _chunk->chunkRender;
 

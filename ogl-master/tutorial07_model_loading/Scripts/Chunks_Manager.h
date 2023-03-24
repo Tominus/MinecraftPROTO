@@ -19,9 +19,9 @@ class Blocks_Global_Datas;
 
 typedef struct SThread_AddChunk
 {
-	Thread* thisThread;
-	Chunks_Manager* thisPtr;
-	const glm::vec3* position;
+	Thread* thisThread = nullptr;
+	Chunks_Manager* thisPtr = nullptr;
+	Chunk* chunk = nullptr;
 } SThread_AddChunk, *SThread_AddChunk_Ptr;
 
 class Chunks_Manager
@@ -87,10 +87,6 @@ private:
 	Action<Chunk*> onChunkInitialized;
 
 	mutable HANDLE mutex;
-
-	float _tmp;
-	bool _a;
-	bool _b;
 
 	int renderDistanceIndex;
 	int renderDistance;

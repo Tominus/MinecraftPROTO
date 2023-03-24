@@ -42,6 +42,7 @@ void Chunk::Render() const
 void Chunk::GenerateCGRender()
 {
 	chunkRenderGenerator->GenerateChunkCGRender(chunkRender->renderDatas);
+	chunkRender->bHasFinishGeneration = true;
 }
 
 void Chunk::UpdateChunkSideRender()

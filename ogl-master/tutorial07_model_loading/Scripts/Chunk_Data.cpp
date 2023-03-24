@@ -116,8 +116,6 @@ void Chunk_Data::AddSideChunk(Chunk* _chunk)
 	{
 		bHasFinishWait = true;
 		_chunkManager->onChunkInitialized.RemoveDynamic(this, &Chunk_Data::AddSideChunk);
-		onAllSideValid.Invoke();
-		onAllSideValid.RemoveDynamic(ownerChunk, &Chunk::InitChunkRender);
 	}
 
 	ReleaseMutex(_chunkManager->mutex);

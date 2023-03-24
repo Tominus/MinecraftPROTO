@@ -5,7 +5,7 @@ template<typename Res, typename ... Params>
 struct IDelegate
 {
 public:
-    virtual Res Invoke(Params... _params) const = 0;
+    virtual void Invoke(Params... _params) const = 0;
 };
 
 template<typename Res, typename Class, typename ... Params>
@@ -261,25 +261,54 @@ public:
         }
     }
 
-    Res Invoke(Params... _params) const override
+    /*  Call every bound function
+    * - Functions can't be AddDynamic and RemoveDynamic during this process
+    * - Delegate can't be Clear during this process
+    */
+    void Invoke(Params... _params) const override
     {
         const size_t& _size = delegates.size();
 
-        if constexpr (std::is_same_v<Res, void>)
+        for (size_t i = 0; i < _size; ++i)
         {
-            for (size_t i = 0; i < _size; ++i)
-                delegates[i]->Invoke(_params...);
-            return Res();
-        }
-        else
-        {
-            Res _result = Res();
-            for (size_t i = 0; i < _size; ++i)
-                _result = delegates[i]->Invoke(_params...);
-            return _result;
+            delegates[i]->Invoke(_params...);
         }
     }
 
+    /*  Call every bound function
+    * - Functions can't be AddDynamic during this process but can be RemoveDynamic
+    * - Delegate can't be Clear during this process
+    */
+    void Invoke_Delete(Params... _params) const
+    {
+        size_t _size = delegates.size();
+
+        for (size_t i = 0; i < _size; ++i)
+        {
+            delegates[i]->Invoke(_params...);
+            if (_size > delegates.size())
+            {
+                --_size;
+                --i;
+            }
+        }
+    }
+
+    /*  Call every bound function and return the last function result
+    * - Functions can't be AddDynamic and RemoveDynamic during this process
+    * - Delegate can't be Clear during this process
+    */
+    Res Invoke_Return(Params... _params) const
+    {
+        const size_t& _size = delegates.size();
+
+        Res _result = Res();
+        for (size_t i = 0; i < _size; ++i)
+            _result = delegates[i]->Invoke(_params...);
+        return _result;
+    }
+
+    /*  Clear every bound functions  */
     void Clear()
     {
         const size_t& _size = delegates.size();
@@ -291,7 +320,6 @@ public:
 
         delegates.clear();
     }
-
 };
 
 template<typename ... Params>

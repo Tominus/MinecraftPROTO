@@ -26,8 +26,6 @@ Chunk_Data_Generator::~Chunk_Data_Generator()
 
 void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData) const
 {
-	//SetSideChunks(_chunkData);
-
 	std::random_device _rd;
 	std::mt19937 _gen(_rd());
 	std::uniform_int_distribution<> _dist(0, randMax - 1);
@@ -72,7 +70,9 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	const glm::vec3& _backPosition = _ownerChunkPosition + glm::vec3(0, 0, -1);
 	const glm::vec3& _frontPosition = _ownerChunkPosition + glm::vec3(0, 0, 1);
 
-	
+	bool _needToWait = false;
+
+	//TODO check chunk height out of bounds
 	if (Chunk* _downChunk = chunksManager->GetChunkAtPosition(_downPosition))
 	{
 		_downChunk->chunkData->upChunk = _ownerChunk;
@@ -97,7 +97,9 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_leftPosition))
 	{
 		_chunkData->chunkPositionToWait.push_back(_leftPosition);
+
 	}
+
 
 	if (Chunk* _rightChunk = chunksManager->GetChunkAtPosition(_rightPosition))
 	{
@@ -109,8 +111,9 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 		_rightChunk->chunkData->leftChunk = _ownerChunk;
 		_chunkData->rightChunk = _rightChunk;
 	}
-	else
+	else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_rightPosition))
 		_chunkData->chunkPositionToWait.push_back(_rightPosition);
+
 
 	if (Chunk* _backChunk = chunksManager->GetChunkAtPosition(_backPosition))
 	{
@@ -122,8 +125,9 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 		_backChunk->chunkData->frontChunk = _ownerChunk;
 		_chunkData->backChunk = _backChunk;
 	}
-	else
+	else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_backPosition))
 		_chunkData->chunkPositionToWait.push_back(_backPosition);
+
 
 	if (Chunk* _frontChunk = chunksManager->GetChunkAtPosition(_frontPosition))
 	{
@@ -135,10 +139,17 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 		_frontChunk->chunkData->backChunk = _ownerChunk;
 		_chunkData->frontChunk = _frontChunk;
 	}
-	else
+	else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_frontPosition))
 		_chunkData->chunkPositionToWait.push_back(_frontPosition);
 
-	chunksManager->onChunkInitialized.AddDynamic(_chunkData, &Chunk_Data::AddSideChunk);
+	if (_needToWait)
+	{
+		chunksManager->onChunkInitialized.AddDynamic(_chunkData, &Chunk_Data::AddSideChunk);
+	}
+	else
+	{
+		_chunkData->bHasFinishWait = true;
+	}
 
 	ReleaseMutex(mutex_ChunkManager);
 }

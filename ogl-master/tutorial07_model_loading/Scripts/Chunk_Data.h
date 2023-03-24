@@ -1,4 +1,5 @@
 #pragma once
+#include "Action.h"
 
 #include <glm/glm.hpp>
 #include <vector>
@@ -38,7 +39,6 @@ private:
 
 	std::vector<glm::vec3> chunkPositionToWait;
 	bool bHasFinishWait;
-	Action<> onAllSideValid;
 
 	Chunk* downChunk;
 	Chunk* upChunk;

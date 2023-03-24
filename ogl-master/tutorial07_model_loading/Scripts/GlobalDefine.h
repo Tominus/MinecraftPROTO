@@ -15,7 +15,7 @@
 #define Fps_Time (0.00694f) //144fps
 
 #define Render_Distance_Min (2)
-#define Render_Distance_Current (3)
+#define Render_Distance_Current (10)
 #define Render_Distance_Max (16)
 
 #define Block_Total_Shapes (36)
