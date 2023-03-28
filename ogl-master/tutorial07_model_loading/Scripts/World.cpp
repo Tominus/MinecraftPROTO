@@ -6,8 +6,6 @@
 #include "Debug_World.h"
 #include "Blocks_Global_Shapes.h"
 #include "Blocks_Global_Datas.h"
-#include "Thread_Manager.h"
-#include "Thread_Obj.h"
 
 #include <common/shader.hpp>
 

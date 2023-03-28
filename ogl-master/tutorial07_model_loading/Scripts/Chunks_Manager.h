@@ -48,8 +48,6 @@ private:
 
 	void UpdateRender();
 
-	void TMP();
-
 	void CheckGenerateNewChunkRender();
 	void CheckGenerateChunkPosition();
 	void CheckUpdateChunkSideRender();

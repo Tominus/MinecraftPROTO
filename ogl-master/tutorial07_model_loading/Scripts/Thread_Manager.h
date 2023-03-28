@@ -1,10 +1,10 @@
 #pragma once
 #include "GlobalDefine.h"
 
+#include "Thread.h"
+
 #include <vector>
 #include <Windows.h>
-
-#include "Thread_Obj.h"
 
 /**
 * The Manager of thread.

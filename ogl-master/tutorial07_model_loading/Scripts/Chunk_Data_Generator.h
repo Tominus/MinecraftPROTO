@@ -1,4 +1,6 @@
 #pragma once
+#include "GlobalDefine.h"
+
 #include <Windows.h>
 
 class Chunk_Data;
@@ -16,7 +18,7 @@ private:
 
 	/*Generate all existing block randomly.*/
 	void GenerateNewChunkData(Chunk_Data*& _chunkData) const;
-	void SetSideChunks(Chunk_Data*& _chunkData) const;
+	Threaded void SetSideChunks(Chunk_Data*& _chunkData) const;
 
 private:
 	//maybe the generator seed and a ?Terrain_Generator

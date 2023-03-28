@@ -8,7 +8,7 @@
 #include "Chunk_Render_Generator.h"
 #include <common/controls.hpp>
 #include "Thread_Manager.h"
-#include "Thread_Obj.h"
+#include "Thread.h"
 
 #include <Windows.h>
 #include <stdio.h>
@@ -30,9 +30,7 @@ Chunks_Manager::Chunks_Manager()
 Chunks_Manager::~Chunks_Manager()
 {
 	WaitForSingleObject(mutex, INFINITE);
-
 	const size_t& _max = worldChunks.size();
-
 	for (size_t i = 0; i < _max; ++i)
 	{
 		Chunk*& _chunk = worldChunks[i];
@@ -41,14 +39,22 @@ Chunks_Manager::~Chunks_Manager()
 	}
 	ReleaseMutex(mutex);
 
+	WaitForSingleObject(mutex, INFINITE);//
+	const size_t& _max2 = chunkBeingGenerating.size();
+	for (size_t i = 0; i < _max2; ++i)
+	{
+		chunkBeingGenerating[i]->chunkData->bHasFinishWaitSideChunk;
+	}
+	ReleaseMutex(mutex);//
+
 	CloseHandle(mutex);
 
 	onUpdate.Clear();
 	onTick.Clear();
 	onChunkInitialized.Clear();
 
-	const size_t& _max2 = chunkWaitingForCGgen.size();
-	for (size_t i = 0; i < _max2; ++i)
+	const size_t& _max3 = chunkWaitingForCGgen.size();
+	for (size_t i = 0; i < _max3; ++i)
 	{
 		delete chunkWaitingForCGgen[i];
 	}
@@ -71,33 +77,36 @@ Threaded void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 {	
 	Thread* _thisThread = _data->thisThread;
 	Chunks_Manager* _thisPtr = _data->thisPtr;
+	HANDLE _mutex = _thisPtr->mutex;
 
-	WaitForSingleObject(_thisPtr->mutex, INFINITE);
+	WaitForSingleObject(_mutex, INFINITE);
 	Chunk* _chunk = _data->chunk;
-	ReleaseMutex(_thisPtr->mutex);
+	Chunk_Data* _chunkData = _chunk->chunkData;
+	ReleaseMutex(_mutex);
 
 	_chunk->InitChunkData();
 	
-	WaitForSingleObject(_thisPtr->mutex, INFINITE);
+	WaitForSingleObject(_mutex, INFINITE);
 	_thisPtr->chunkBeingGenerating.push_back(_chunk);
-	_thisPtr->chunkDataGenerator->SetSideChunks(_chunk->chunkData);
-	ReleaseMutex(_thisPtr->mutex);
+	_thisPtr->chunkDataGenerator->SetSideChunks(_chunkData);
+	ReleaseMutex(_mutex);
 
 	bool _hasFinish = false;
-
 	while (_hasFinish == false)
 	{
-		WaitForSingleObject(_thisPtr->mutex, INFINITE);
-		_hasFinish = _chunk->chunkData->bHasFinishWait;
-		ReleaseMutex(_thisPtr->mutex);
+		WaitForSingleObject(_mutex, INFINITE);
+		_hasFinish = _chunkData->CheckChunkToWaitEmpty();
+		ReleaseMutex(_mutex);
+
+		Sleep(16);
 	}
 
 	_chunk->InitChunkRender();
 
-	WaitForSingleObject(_thisPtr->mutex, INFINITE);
+	WaitForSingleObject(_mutex, INFINITE);
 	_thisPtr->chunkWaitingForCGgen.push_back(_chunk);
 	_thisPtr->onChunkInitialized.Invoke_Delete(_chunk);
-	ReleaseMutex(_thisPtr->mutex);
+	ReleaseMutex(_mutex);
 
 	_thisThread->OnFinished.Invoke(_thisThread);
 
@@ -182,7 +191,8 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 
 		worldChunks.push_back(_chunk);
 
-		for (_index = 0; chunkBeingGenerating[_index] != _chunk; ++_index)
+		size_t _index = 0;
+		for (; chunkBeingGenerating[_index] != _chunk; ++_index)
 		{
 
 		}
@@ -297,19 +307,22 @@ void Chunks_Manager::CheckRenderDistance()
 			else if (!GetIsChunkAtPositionBeingGenerated(_chunkCheckPosition))
 			{
 				if (GetChunkAtPosition(_chunkCheckPosition + glm::vec3(0, -1, 0)) ||
-					GetChunkAtPosition(_chunkCheckPosition + glm::vec3(0, 1, 0))  ||
+					GetChunkAtPosition(_chunkCheckPosition + glm::vec3(0, 1, 0)) ||
 					GetChunkAtPosition(_chunkCheckPosition + glm::vec3(-1, 0, 0)) ||
-					GetChunkAtPosition(_chunkCheckPosition + glm::vec3(1, 0, 0))  ||
+					GetChunkAtPosition(_chunkCheckPosition + glm::vec3(1, 0, 0)) ||
 					GetChunkAtPosition(_chunkCheckPosition + glm::vec3(0, 0, -1)) ||
 					GetChunkAtPosition(_chunkCheckPosition + glm::vec3(0, 0, 1)))
 				{
+					if (_threadToActivate.size() > 1 || chunkBeingGenerating.size() > 1 || chunkPositionBeingGenerated.size() > 1 || chunkPositionFinishGeneration.size() > 1)
+					{                                                                                                    ////TODO delete
+						continue;
+					}
 					if (Thread* _thread = threadManager->CreateThread())
 					{
 						SThread_AddChunk_Ptr _data = new SThread_AddChunk();
 						_data->thisThread = _thread;
 						_data->thisPtr = this;
 						_data->chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, _chunkCheckPosition);
-
 						_threadToActivate.push_back(_thread);
 
 						_thread->CreateThreadFunction(false, AddChunk, _data);

@@ -4,7 +4,6 @@
 #include <random>
 #include <glm/detail/type_vec.hpp>
 
-#include "GlobalDefine.h"
 #include "Chunks_Manager.h"
 #include "Chunk_Data.h"
 #include "Chunk.h"
@@ -89,7 +88,7 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 		_leftChunk->chunkData->rightChunk = _ownerChunk;
 		_chunkData->leftChunk = _leftChunk;
 	}
-	else if(Chunk * _leftChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_leftPosition))
+	else if (Chunk* _leftChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_leftPosition))
 	{
 		_leftChunk->chunkData->rightChunk = _ownerChunk;
 		_chunkData->leftChunk = _leftChunk;
@@ -97,7 +96,7 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_leftPosition))
 	{
 		_chunkData->chunkPositionToWait.push_back(_leftPosition);
-
+		_needToWait = true;
 	}
 
 
@@ -112,7 +111,10 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 		_chunkData->rightChunk = _rightChunk;
 	}
 	else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_rightPosition))
+	{
 		_chunkData->chunkPositionToWait.push_back(_rightPosition);
+		_needToWait = true;
+	}
 
 
 	if (Chunk* _backChunk = chunksManager->GetChunkAtPosition(_backPosition))
@@ -126,7 +128,10 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 		_chunkData->backChunk = _backChunk;
 	}
 	else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_backPosition))
+	{
 		_chunkData->chunkPositionToWait.push_back(_backPosition);
+		_needToWait = true;
+	}
 
 
 	if (Chunk* _frontChunk = chunksManager->GetChunkAtPosition(_frontPosition))
@@ -140,7 +145,11 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 		_chunkData->frontChunk = _frontChunk;
 	}
 	else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_frontPosition))
+	{
 		_chunkData->chunkPositionToWait.push_back(_frontPosition);
+		_needToWait = true;
+	}
+
 
 	if (_needToWait)
 	{
@@ -148,7 +157,7 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	}
 	else
 	{
-		_chunkData->bHasFinishWait = true;
+		_chunkData->bHasFinishWaitSideChunk = true;
 	}
 
 	ReleaseMutex(mutex_ChunkManager);

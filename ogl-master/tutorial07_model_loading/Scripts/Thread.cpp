@@ -1,4 +1,4 @@
-#include "Thread_Obj.h"
+#include "Thread.h"
 
 
 Thread::Thread(DWORD_PTR _threadAffinity)

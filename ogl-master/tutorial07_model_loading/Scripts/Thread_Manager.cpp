@@ -1,7 +1,5 @@
 #include "Thread_Manager.h"
 
-#include "Thread_Obj.h"
-
 Thread_Manager::Thread_Manager()
 {
 	mutex = CreateMutex(0, false, 0);

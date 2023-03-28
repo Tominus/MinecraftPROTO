@@ -19,6 +19,9 @@ private:
 	~Chunk_Data();
 
 	void AddSideChunk(Chunk* _chunk);
+	void AddOtherSideChunk(Chunk_Data*& _otherChunkData, const glm::vec3& _ownerPosition);
+
+	bool CheckChunkToWaitEmpty();
 
 public:
 	inline Chunk* GetOwnerChunk() const { return ownerChunk; }
@@ -35,10 +38,11 @@ public:
 private:
 	Block**** blocks;
 
+	Chunks_Manager* chunkManager;
 	Chunk* ownerChunk;
 
 	std::vector<glm::vec3> chunkPositionToWait;
-	bool bHasFinishWait;
+	bool bHasFinishWaitSideChunk;
 
 	Chunk* downChunk;
 	Chunk* upChunk;
