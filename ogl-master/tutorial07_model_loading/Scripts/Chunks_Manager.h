@@ -48,6 +48,8 @@ private:
 
 	void UpdateRender();
 
+	void Exit();
+
 	void CheckGenerateNewChunkRender();
 	void CheckGenerateChunkPosition();
 	void CheckUpdateChunkSideRender();
@@ -83,8 +85,11 @@ private:
 	Action<> onUpdate;
 	Action<> onTick;
 	Action<Chunk*> onChunkInitialized;
+	Action<Chunk*> onChunkDestroyed;
 
 	mutable HANDLE mutex;
+
+	bool bInterruptThread_NotSafe;
 
 	int renderDistanceIndex;
 	int renderDistance;

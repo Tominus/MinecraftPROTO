@@ -95,3 +95,8 @@ void World::Tick()
 {
 	chunksManager->TickChunksManager();
 }
+
+void World::Exit()
+{
+	chunksManager->Exit();
+}

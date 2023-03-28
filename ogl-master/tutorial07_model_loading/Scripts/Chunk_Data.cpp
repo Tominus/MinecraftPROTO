@@ -128,6 +128,7 @@ void Chunk_Data::AddSideChunk(Chunk* _chunk)
 	{
 		bHasFinishWaitSideChunk = true;
 		chunkManager->onChunkInitialized.RemoveDynamic(this, &Chunk_Data::AddSideChunk);
+		chunkManager->onChunkDestroyed.RemoveDynamic(this, &Chunk_Data::RemoveSideChunk);
 	}
 
 	ReleaseMutex(chunkManager->mutex);
@@ -152,6 +153,29 @@ void Chunk_Data::AddOtherSideChunk(Chunk_Data*& _otherChunkData, const glm::vec3
 	{
 		_otherChunkData->bHasFinishWaitSideChunk = true;
 		chunkManager->onChunkInitialized.RemoveDynamic(_otherChunkData, &Chunk_Data::AddSideChunk);
+	}
+}
+
+void Chunk_Data::RemoveSideChunk(Chunk* _chunk)
+{
+	const glm::vec3& _position = _chunk->GetChunkPosition();
+
+	size_t _size = chunkPositionToWait.size();
+	for (size_t i = 0; i < _size; ++i)
+	{
+		if (chunkPositionToWait[i] == _position)
+		{
+			chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
+			--_size;
+			break;
+		}
+	}
+
+	if (_size == 0)
+	{
+		bHasFinishWaitSideChunk = true;
+		chunkManager->onChunkInitialized.RemoveDynamic(this, &Chunk_Data::AddSideChunk);
+		chunkManager->onChunkDestroyed.RemoveDynamic(this, &Chunk_Data::RemoveSideChunk);
 	}
 }
 

@@ -36,22 +36,25 @@ Chunk_Render::~Chunk_Render()
 		delete _renderBuffer;
 	}
 
-	for (size_t x = 0; x < Chunk_Size; ++x)
+	if (allBlockShapes)
 	{
-		SChunk_Render_Shapes*** _x = allBlockShapes[x];
-		for (size_t y = 0; y < Chunk_Size; ++y)
+		for (size_t x = 0; x < Chunk_Size; ++x)
 		{
-			SChunk_Render_Shapes** _y = _x[y];
-			for (size_t z = 0; z < Chunk_Size; ++z)
+			SChunk_Render_Shapes*** _x = allBlockShapes[x];
+			for (size_t y = 0; y < Chunk_Size; ++y)
 			{
-				if (SChunk_Render_Shapes* _shapes = _y[z])
-					delete _shapes;
+				SChunk_Render_Shapes** _y = _x[y];
+				for (size_t z = 0; z < Chunk_Size; ++z)
+				{
+					if (SChunk_Render_Shapes* _shapes = _y[z])
+						delete _shapes;
+				}
+				delete[] _y;
 			}
-			delete[] _y;
+			delete[] _x;
 		}
-		delete[] _x;
+		delete[] allBlockShapes;
 	}
-	delete[] allBlockShapes;
 }
 
 void Chunk_Render::Render()

@@ -17,6 +17,7 @@
 Chunks_Manager::Chunks_Manager()
 {
 	mutex = CreateMutex(0, false, 0);
+	bInterruptThread_NotSafe = false;
 
 	chunkDataGenerator = new Chunk_Data_Generator(this);
 	chunkRenderGenerator = new Chunk_Render_Generator(this);
@@ -39,19 +40,12 @@ Chunks_Manager::~Chunks_Manager()
 	}
 	ReleaseMutex(mutex);
 
-	WaitForSingleObject(mutex, INFINITE);//
-	const size_t& _max2 = chunkBeingGenerating.size();
-	for (size_t i = 0; i < _max2; ++i)
-	{
-		chunkBeingGenerating[i]->chunkData->bHasFinishWaitSideChunk;
-	}
-	ReleaseMutex(mutex);//
-
 	CloseHandle(mutex);
 
 	onUpdate.Clear();
 	onTick.Clear();
 	onChunkInitialized.Clear();
+	onChunkDestroyed.Clear();
 
 	const size_t& _max3 = chunkWaitingForCGgen.size();
 	for (size_t i = 0; i < _max3; ++i)
@@ -88,6 +82,7 @@ Threaded void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 	
 	WaitForSingleObject(_mutex, INFINITE);
 	_thisPtr->chunkBeingGenerating.push_back(_chunk);
+	_thisPtr->onChunkDestroyed.AddDynamic(_chunkData, &Chunk_Data::RemoveSideChunk);
 	_thisPtr->chunkDataGenerator->SetSideChunks(_chunkData);
 	ReleaseMutex(_mutex);
 
@@ -96,6 +91,13 @@ Threaded void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 	{
 		WaitForSingleObject(_mutex, INFINITE);
 		_hasFinish = _chunkData->CheckChunkToWaitEmpty();
+		if (_thisPtr->bInterruptThread_NotSafe)
+		{
+			delete _chunk;
+			delete _data;
+			_thisThread->OnFinished.Invoke(_thisThread);
+			return;
+		}
 		ReleaseMutex(_mutex);
 
 		Sleep(16);
@@ -170,6 +172,11 @@ void Chunks_Manager::UpdateRender()
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+}
+
+void Chunks_Manager::Exit()
+{
+	bInterruptThread_NotSafe = true;
 }
 
 void Chunks_Manager::CheckGenerateNewChunkRender()
@@ -397,6 +404,8 @@ void Chunks_Manager::DeleteChunksOutOfRange(std::vector<Chunk*>& _chunkInRange, 
 					break;
 				}
 			}
+
+			onChunkDestroyed.Invoke_Delete(_worldChunk);
 
 			delete _worldChunk;
 			_worldChunk = nullptr;

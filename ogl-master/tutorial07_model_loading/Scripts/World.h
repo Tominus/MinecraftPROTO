@@ -25,6 +25,7 @@ private:
 	void Start();
 	void Update();
 	void Tick();
+	void Exit();
 
 public:
 	inline static World& Instance()

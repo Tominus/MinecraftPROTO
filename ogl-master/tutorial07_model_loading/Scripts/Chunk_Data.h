@@ -21,6 +21,8 @@ private:
 	void AddSideChunk(Chunk* _chunk);
 	void AddOtherSideChunk(Chunk_Data*& _otherChunkData, const glm::vec3& _ownerPosition);
 
+	void RemoveSideChunk(Chunk* _chunk);
+
 	bool CheckChunkToWaitEmpty();
 
 public:

@@ -53,6 +53,9 @@ void MainGame::GameLoop()
 	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
 	//---Exit
+	_world->Exit();
+
+	//---Waiting Thread To Stop there behavior
 	do {
 
 	} while (threadManager->GetHasAllThreadFinished() == false);
