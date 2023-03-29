@@ -69,10 +69,7 @@ Threaded void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chun
 				const EBlock_Type& _blockType = _block->GetBlockType();
 
 				const SBlock_Datas const* _blockData = blocksGlobalDatas->GetBlockData(_blockType);
-
-				//--- Will be replaced when Global data finished
 				const GLuint& _textureID = textureLoader->GetBlockTextureID(_blockType);
-				const SBlock_Shape_Data* _shapesData = nullptr;
 
 				unsigned _index = 0;
 
@@ -262,7 +259,7 @@ Threaded void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chun
 						}
 					}
 
-					if (_shapesData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, _index))
+					if (const SBlock_Shape_Data* _shapesData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, _index))
 					{
 						const glm::vec3* _vertexs = _shapesData->GetVertexs();
 						const glm::vec2* _uvs = _shapesData->GetUVs();
@@ -730,4 +727,9 @@ Threaded void Chunk_Render_Generator::GenerateChunkUpdatedCGRender(std::map<GLui
 		_globalVertexs.clear();
 		_globalUVs.clear();
 	}
+}
+
+void Chunk_Render_Generator::ClearUnUsedChunkCGRender()
+{
+	//TODO if last block of a render is destroy
 }

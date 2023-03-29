@@ -24,6 +24,5 @@ inline ESide& operator |=(ESide& _this, ESide _right)
 
 inline bool operator & (ESide _left, ESide _right)
 {
-	bool _state = static_cast<int>(_left) & static_cast<int>(_right);
-	return _state;
+	return static_cast<int>(_left) & static_cast<int>(_right);
 }

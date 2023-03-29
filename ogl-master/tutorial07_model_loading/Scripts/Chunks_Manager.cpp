@@ -198,8 +198,7 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 
 		worldChunks.push_back(_chunk);
 
-		size_t _index = 0;
-		for (; chunkBeingGenerating[_index] != _chunk; ++_index)
+		for (_index = 0; chunkBeingGenerating[_index] != _chunk; ++_index)
 		{
 
 		}

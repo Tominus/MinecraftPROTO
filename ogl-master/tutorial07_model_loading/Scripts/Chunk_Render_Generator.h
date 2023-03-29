@@ -36,6 +36,7 @@ private:
 	void RegenerateRender(Chunk* _chunk, std::vector<GLuint>& _texturesToUpdate);
 
 	void GenerateChunkUpdatedCGRender(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas, std::vector<GLuint>& _texturesToUpdate);
+	void ClearUnUsedChunkCGRender();
 
 private:
 	Chunks_Manager* chunksManager;
