@@ -2,6 +2,9 @@
 
 #define Chunk_Size (16)
 #define Chunk_Max_Size (15)
+#define Chunk_Min_World_Height (-1)
+#define Chunk_Zero_World_Height (0)
+#define Chunk_Max_World_Height (3)
 
 /*If this function can be use in tread*/
 #define Main_Thread

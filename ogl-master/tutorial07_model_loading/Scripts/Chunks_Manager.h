@@ -91,7 +91,6 @@ private:
 
 	bool bInterruptThread_NotSafe;
 
-	int renderDistanceIndex;
 	int renderDistance;
 	int renderMaxDistance;
 };

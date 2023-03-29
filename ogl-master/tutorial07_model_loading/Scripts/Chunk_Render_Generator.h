@@ -45,6 +45,9 @@ private:
 
 	HANDLE mutex_ChunkManager;
 
+	float fMinHeightChunk;
+	float fMaxHeightChunk;
+
 	World* world;
 	TextureLoader* textureLoader;
 	Blocks_Global_Datas* blocksGlobalDatas;

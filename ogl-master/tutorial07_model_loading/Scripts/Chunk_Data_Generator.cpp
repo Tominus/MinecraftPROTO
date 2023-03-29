@@ -62,6 +62,9 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	Chunk*& _ownerChunk = _chunkData->ownerChunk;
 	const glm::vec3& _ownerChunkPosition = _ownerChunk->GetChunkPosition();
 
+	ReleaseMutex(mutex_ChunkManager);
+
+	const float& _ownerChunkHeight = _ownerChunkPosition.y;
 	const glm::vec3& _downPosition = _ownerChunkPosition + glm::vec3(0, -1, 0);
 	const glm::vec3& _upPosition = _ownerChunkPosition + glm::vec3(0, 1, 0);
 	const glm::vec3& _leftPosition = _ownerChunkPosition + glm::vec3(-1, 0, 0);
@@ -71,16 +74,43 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 
 	bool _needToWait = false;
 
-	//TODO check chunk height out of bounds
-	if (Chunk* _downChunk = chunksManager->GetChunkAtPosition(_downPosition))
+	WaitForSingleObject(mutex_ChunkManager, INFINITE);
+
+	if (_ownerChunkHeight > Chunk_Zero_World_Height)
 	{
-		_downChunk->chunkData->upChunk = _ownerChunk;
-		_chunkData->downChunk = _downChunk;
+		if (Chunk* _downChunk = chunksManager->GetChunkAtPosition(_downPosition))
+		{
+			_downChunk->chunkData->upChunk = _ownerChunk;
+			_chunkData->downChunk = _downChunk;
+		}
+		else if (Chunk* _downChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_downPosition))
+		{
+			_downChunk->chunkData->upChunk = _ownerChunk;
+			_chunkData->downChunk = _downChunk;
+		}
+		else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_downPosition))
+		{
+			_chunkData->chunkPositionToWait.push_back(_downPosition);
+			_needToWait = true;
+		}
 	}
-	if (Chunk* _upChunk = chunksManager->GetChunkAtPosition(_upPosition))
+	if (_ownerChunkHeight < Chunk_Max_World_Height)
 	{
-		_upChunk->chunkData->downChunk = _ownerChunk;
-		_chunkData->upChunk = _upChunk;
+		if (Chunk* _upChunk = chunksManager->GetChunkAtPosition(_upPosition))
+		{
+			_upChunk->chunkData->downChunk = _ownerChunk;
+			_chunkData->upChunk = _upChunk;
+		}
+		else if (Chunk* _upChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_upPosition))
+		{
+			_upChunk->chunkData->downChunk = _ownerChunk;
+			_chunkData->upChunk = _upChunk;
+		}
+		else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_upPosition))
+		{
+			_chunkData->chunkPositionToWait.push_back(_upPosition);
+			_needToWait = true;
+		}
 	}
 
 	if (Chunk* _leftChunk = chunksManager->GetChunkAtPosition(_leftPosition))
