@@ -1,6 +1,7 @@
 #include "MainGame.h"
 #include "World.h"
 #include "Thread_Manager.h"
+#include "Shaders_Manager.h"
 #include <common/controls.hpp>
 
 MainGame::MainGame()
@@ -33,7 +34,7 @@ void MainGame::GameLoop()
 
 
 	//--- Start
-	const GLuint& _matrixID = _world->GetMatrixID();
+	const GLuint& _matrixID = _world->GetShadersManager()->GetMatrixID();
 	_world->Start();
 
 

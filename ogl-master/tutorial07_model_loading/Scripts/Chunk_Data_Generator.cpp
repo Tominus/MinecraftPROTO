@@ -28,7 +28,7 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData) const
 	std::random_device _rd;
 	std::mt19937 _gen(_rd());
 	std::uniform_int_distribution<> _dist(0, randMax - 1);
-
+	
 	Block****& _blocks = _chunkData->blocks;
 	_blocks = new Block***[Chunk_Size];
 
@@ -64,12 +64,12 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 
 	ReleaseMutex(mutex_ChunkManager);
 
-	const float& _ownerChunkHeight = _ownerChunkPosition.y;
-	const glm::vec3& _downPosition = _ownerChunkPosition + glm::vec3(0, -1, 0);
-	const glm::vec3& _upPosition = _ownerChunkPosition + glm::vec3(0, 1, 0);
-	const glm::vec3& _leftPosition = _ownerChunkPosition + glm::vec3(-1, 0, 0);
+	const float& _ownerChunkHeight =  _ownerChunkPosition.y;
+	const glm::vec3& _downPosition =  _ownerChunkPosition + glm::vec3(0, -1, 0);
+	const glm::vec3& _upPosition =    _ownerChunkPosition + glm::vec3(0, 1, 0);
+	const glm::vec3& _leftPosition =  _ownerChunkPosition + glm::vec3(-1, 0, 0);
 	const glm::vec3& _rightPosition = _ownerChunkPosition + glm::vec3(1, 0, 0);
-	const glm::vec3& _backPosition = _ownerChunkPosition + glm::vec3(0, 0, -1);
+	const glm::vec3& _backPosition =  _ownerChunkPosition + glm::vec3(0, 0, -1);
 	const glm::vec3& _frontPosition = _ownerChunkPosition + glm::vec3(0, 0, 1);
 
 	bool _needToWait = false;

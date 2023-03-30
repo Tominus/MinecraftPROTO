@@ -1,14 +1,22 @@
 #include "Debug_World.h"
+#include "GlobalDefine.h"
+#include "World.h"
+#include "Shaders_Manager.h"
+
 #include <common/controls.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
-#include "GlobalDefine.h"
 
 
 Debug_World::Debug_World(GLFWwindow* _window)
 {
 	window = _window;
-	matrixID = 0;
+
+	Shaders_Manager* _shadersManager = &Shaders_Manager::Instance();
+	matrixID_Debug = _shadersManager->GetMatrixID_Debug();
+	matrixID_Color_Debug = _shadersManager->GetMatrixID_Color_Debug();
+	programID_Debug = _shadersManager->GetProgramID_Debug();
+
 	bDebugDrawChunk = false;
 	vertexsBufferDrawChunk = 0;
 	vertexsSizeDrawChunk = 0;
@@ -19,10 +27,8 @@ Debug_World::~Debug_World()
 	glDeleteBuffers(1, &vertexsBufferDrawChunk);
 }
 
-void Debug_World::InitDebug(const GLuint& _matrixID)
+void Debug_World::InitDebug()
 {
-	matrixID = _matrixID;
-
 	const float& _chunkSize = (float)Chunk_Size;
 
 	std::vector<glm::vec3> _vertices{
@@ -91,9 +97,13 @@ void Debug_World::Debug_DrawChunk()
 	
 	const glm::vec3 _playerPositionChunkRelative(_xPos * 16.f, _yPos * 16.f, _zPos * 16.f);
 
+	glUseProgram(programID_Debug);
+
+	float _color[4]{ 0.f, 1.f, 1.f, 1.f};
 
 	glm::vec3 _offset;
 	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
 	for (float x = -16.f; x < 32.f; x += 16.f)
 	{
 		_offset.x = x;
@@ -104,7 +114,8 @@ void Debug_World::Debug_DrawChunk()
 			{
 				_offset.z = z;
 				const glm::mat4& _MVP = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), _playerPositionChunkRelative + _offset) * glm::mat4(1.0f);
-				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &_MVP[0][0]);
+				glUniformMatrix4fv(matrixID_Debug, 1, GL_FALSE, &_MVP[0][0]);
+				glUniformMatrix4fv(matrixID_Color_Debug, 1, GL_FALSE, _color);
 
 				glBindBuffer(GL_ARRAY_BUFFER, vertexsBufferDrawChunk);
 				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -114,6 +125,7 @@ void Debug_World::Debug_DrawChunk()
 		}
 	}
 	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 }
 
 void Debug_World::Debug_DrawDebugScaledChunk()
@@ -132,6 +144,7 @@ void Debug_World::Debug_DrawDebugScaledChunk()
 
 	const glm::vec3 _playerPositionChunkRelative(_xPos * _chunkSize, _yPos * _chunkSize, _zPos * _chunkSize);
 
+	glUseProgram(programID_Debug);
 
 	glm::vec3 _offset;
 	glEnableVertexAttribArray(0);
@@ -144,8 +157,8 @@ void Debug_World::Debug_DrawDebugScaledChunk()
 			for (float z = -_chunkSize; z < _chunkSize * 2.f; z += _chunkSize)
 			{
 				_offset.z = z;
-				const glm::mat4& _MVP = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), _playerPositionChunkRelative + _offset) * glm::mat4(1.0f);
-				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &_MVP[0][0]);
+				const glm::mat4& _MVP = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), _playerPositionChunkRelative + _offset) * glm::mat4(1.f);
+				glUniformMatrix4fv(matrixID_Debug, 1, GL_FALSE, &_MVP[0][0]);
 
 				glBindBuffer(GL_ARRAY_BUFFER, vertexsBufferDrawChunk);
 				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);

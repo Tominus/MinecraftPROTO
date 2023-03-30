@@ -9,6 +9,7 @@
 #include <common/controls.hpp>
 #include "Thread_Manager.h"
 #include "Thread.h"
+#include "Shaders_Manager.h"
 
 #include <Windows.h>
 #include <stdio.h>
@@ -16,6 +17,8 @@
 
 Chunks_Manager::Chunks_Manager()
 {
+	programID = Shaders_Manager::Instance().GetProgramID();
+
 	mutex = CreateMutex(0, false, 0);
 	bInterruptThread_NotSafe = false;
 
@@ -46,8 +49,8 @@ Chunks_Manager::~Chunks_Manager()
 	onChunkInitialized.Clear();
 	onChunkDestroyed.Clear();
 
-	const size_t& _max3 = chunkWaitingForCGgen.size();
-	for (size_t i = 0; i < _max3; ++i)
+	const size_t& _max2 = chunkWaitingForCGgen.size();
+	for (size_t i = 0; i < _max2; ++i)
 	{
 		delete chunkWaitingForCGgen[i];
 	}
@@ -163,6 +166,8 @@ void Chunks_Manager::UpdateRender()
 {
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+
+	glUseProgram(programID);
 	
 	const size_t& _max = worldChunks.size();
 

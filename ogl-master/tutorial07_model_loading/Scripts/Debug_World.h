@@ -13,7 +13,7 @@ private:
 	~Debug_World();
 
 private:
-	void InitDebug(const GLuint& _matrixID);
+	void InitDebug();
 	void UpdateDebug();
 
 	void Debug_DrawChunk();
@@ -21,7 +21,9 @@ private:
 
 private:
 	GLFWwindow* window;
-	GLuint matrixID;
+	GLuint matrixID_Debug;
+	GLuint matrixID_Color_Debug;
+	GLuint programID_Debug;
 
 	bool bDebugDrawChunk;
 	GLuint vertexsBufferDrawChunk;

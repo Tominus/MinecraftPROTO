@@ -89,6 +89,8 @@ private:
 
 	mutable HANDLE mutex;
 
+	GLuint programID;
+
 	bool bInterruptThread_NotSafe;
 
 	int renderDistance;

@@ -1,0 +1,14 @@
+#version 330 core
+
+layout(location = 0) in vec3 vertexPosition;
+
+out vec4 inColor;
+
+uniform mat4 MVP_Debug;
+uniform vec4 MVP_Color_Debug;
+
+void main()
+{
+	gl_Position = MVP_Debug * vec4(vertexPosition, 1);
+	inColor = MVP_Color_Debug;
+}

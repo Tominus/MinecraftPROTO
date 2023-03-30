@@ -11,6 +11,7 @@
 #include "Chunk_Render.h"
 #include "Block.h"
 #include "Block_Datas.h"
+#include "Shaders_Manager.h"
 
 #define Check_Block(_block) blocksGlobalDatas->GetBlockData(_block->GetBlockType())->blockRenderType != EBlock_Render_Type::Opaque
 #define Debug_Out_Of_Bound(_something) _something.x > Chunk_Size || _something.y > Chunk_Size || _something.z > Chunk_Size || _something.x < 0 || _something.y < 0 || _something.z < 0
@@ -18,7 +19,7 @@
 Chunk_Render_Generator::Chunk_Render_Generator(Chunks_Manager* _chunksManager)
 {
 	world = &World::Instance();
-	matrixID = world->GetMatrixID();
+	matrixID = world->GetShadersManager()->GetMatrixID();
 	textureLoader = world->GetTextureLoader();
 	blockGlobalShapes = world->GetBlocksGlobalShapes();
 	blocksGlobalDatas = world->GetBlocksGlobalDatas();

@@ -6,20 +6,18 @@
 #include "Debug_World.h"
 #include "Blocks_Global_Shapes.h"
 #include "Blocks_Global_Datas.h"
-
-#include <common/shader.hpp>
+#include "PerlinNoise.h"
+#include "Shaders_Manager.h"
 
 World::World()
 {
 	textureLoader = nullptr;
 	chunksManager = nullptr;
 	blocksGlobalShapes = nullptr;
-	debugWorld = nullptr;
 	blocksGlobalDatas = nullptr;
-
-	programID = 0;
-	matrixID = 0;
-	vertexArrayID = 0;
+	debugWorld = nullptr;
+	perlinNoise = nullptr;
+	shaderManager = nullptr;
 
 	gameTime = 0.f;
 	tickTime = 0.f;
@@ -34,22 +32,16 @@ World::~World()
 	delete textureLoader;
 	delete blocksGlobalShapes;
 	delete blocksGlobalDatas;
-
-	glDeleteProgram(programID);
-	glDeleteVertexArrays(1, &vertexArrayID);
+	delete perlinNoise;
 }
 
 void World::InitWorld(GLFWwindow* _window)
 {
-	glGenVertexArrays(1, &vertexArrayID);
-	glBindVertexArray(vertexArrayID);
-
-	programID = LoadShaders("TransformVertexShader.vertexshader", "TextureFragmentShader.fragmentshader");
-	matrixID = glGetUniformLocation(programID, "MVP");
-	glUseProgram(programID);
+	shaderManager = &Shaders_Manager::Instance();
+	shaderManager->Initialize();
 
 	debugWorld = new Debug_World(_window);
-	debugWorld->InitDebug(matrixID);
+	debugWorld->InitDebug();
 
 	textureLoader = new TextureLoader();
 	textureLoader->LoadTextures();
@@ -61,10 +53,14 @@ void World::InitWorld(GLFWwindow* _window)
 	blocksGlobalDatas->GenerateBlocksGlobalDatas();
 
 	chunksManager = new Chunks_Manager();
+
+	perlinNoise = new Perlin_Noise();
 }
 
 void World::Start()
 {
+	perlinNoise->Initialize();
+
 	chunksManager->StartChunkManager();
 	chunksManager->AddStartingWorldBaseChunk();
 }
