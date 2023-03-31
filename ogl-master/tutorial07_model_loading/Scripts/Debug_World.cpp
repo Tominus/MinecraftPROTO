@@ -20,55 +20,60 @@ Debug_World::Debug_World(GLFWwindow* _window)
 	bDebugDrawChunk = false;
 	vertexsBufferDrawChunk = 0;
 	vertexsSizeDrawChunk = 0;
+
+	fChunkSize = (float)Chunk_Size;
+	fHalfChunkSize = fChunkSize / 2.f;
+	fDoubleChunkSize = fChunkSize * 2.f;
+
+	debugColor = new float[4]{ 0.f, 1.f, 0.f, 1.f };
 }
 
 Debug_World::~Debug_World()
 {
+	delete[] debugColor;
 	glDeleteBuffers(1, &vertexsBufferDrawChunk);
 }
 
 void Debug_World::InitDebug()
 {
-	const float& _chunkSize = (float)Chunk_Size;
-
 	std::vector<glm::vec3> _vertices{
 		glm::vec3(0.f, 0.f, 0.f),
-		glm::vec3(_chunkSize, 0.f, 0.f),
+		glm::vec3(fChunkSize, 0.f, 0.f),
 
-		glm::vec3(_chunkSize, 0.f, 0.f),
-		glm::vec3(_chunkSize, 0.f, _chunkSize),
+		glm::vec3(fChunkSize, 0.f, 0.f),
+		glm::vec3(fChunkSize, 0.f, fChunkSize),
 
-		glm::vec3(_chunkSize, 0.f, _chunkSize),
-		glm::vec3(0.f, 0.f, _chunkSize),
+		glm::vec3(fChunkSize, 0.f, fChunkSize),
+		glm::vec3(0.f, 0.f, fChunkSize),
 
-		glm::vec3(0.f, 0.f, _chunkSize),
+		glm::vec3(0.f, 0.f, fChunkSize),
 		glm::vec3(0.f, 0.f, 0.f),
 
 		//-> y
 		glm::vec3(0.f, 0.f, 0.f),
-		glm::vec3(0.f, _chunkSize, 0.f),
+		glm::vec3(0.f, fChunkSize, 0.f),
 
-		glm::vec3(_chunkSize, 0.f, 0.f),
-		glm::vec3(_chunkSize, _chunkSize, 0.f),
+		glm::vec3(fChunkSize, 0.f, 0.f),
+		glm::vec3(fChunkSize, fChunkSize, 0.f),
 
-		glm::vec3(_chunkSize, 0.f, _chunkSize),
-		glm::vec3(_chunkSize, _chunkSize, _chunkSize),
+		glm::vec3(fChunkSize, 0.f, fChunkSize),
+		glm::vec3(fChunkSize, fChunkSize, fChunkSize),
 
-		glm::vec3(0.f, 0.f, _chunkSize),
-		glm::vec3(0.f, _chunkSize, _chunkSize),
+		glm::vec3(0.f, 0.f, fChunkSize),
+		glm::vec3(0.f, fChunkSize, fChunkSize),
 
 		//y
-		glm::vec3(0.f, _chunkSize, 0.f),
-		glm::vec3(_chunkSize, _chunkSize, 0.f),
+		glm::vec3(0.f, fChunkSize, 0.f),
+		glm::vec3(fChunkSize, fChunkSize, 0.f),
 
-		glm::vec3(_chunkSize, _chunkSize, 0.f),
-		glm::vec3(_chunkSize, _chunkSize, _chunkSize),
+		glm::vec3(fChunkSize, fChunkSize, 0.f),
+		glm::vec3(fChunkSize, fChunkSize, fChunkSize),
 
-		glm::vec3(_chunkSize, _chunkSize, _chunkSize),
-		glm::vec3(0.f, _chunkSize, _chunkSize),
+		glm::vec3(fChunkSize, fChunkSize, fChunkSize),
+		glm::vec3(0.f, fChunkSize, fChunkSize),
 
-		glm::vec3(0.f, _chunkSize, _chunkSize),
-		glm::vec3(0.f, _chunkSize, 0.f),
+		glm::vec3(0.f, fChunkSize, fChunkSize),
+		glm::vec3(0.f, fChunkSize, 0.f),
 	};
 
 	vertexsSizeDrawChunk = _vertices.size();
@@ -103,7 +108,6 @@ void Debug_World::Debug_DrawChunk()
 
 	glm::vec3 _offset;
 	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
 	for (float x = -16.f; x < 32.f; x += 16.f)
 	{
 		_offset.x = x;
@@ -125,7 +129,6 @@ void Debug_World::Debug_DrawChunk()
 		}
 	}
 	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
 }
 
 void Debug_World::Debug_DrawDebugScaledChunk()
@@ -135,30 +138,29 @@ void Debug_World::Debug_DrawDebugScaledChunk()
 
 	if (!bDebugDrawChunk)return;
 
-	const float& _chunkSize = (float)Chunk_Size;
+	const glm::vec3& _playerPosition = getPosition() - glm::vec3(fHalfChunkSize);
+	const float& _xPos = round(_playerPosition.x / fChunkSize);
+	const float& _yPos = round(_playerPosition.y / fChunkSize);
+	const float& _zPos = round(_playerPosition.z / fChunkSize);
 
-	const glm::vec3& _playerPosition = getPosition() - glm::vec3(_chunkSize / 2.f, _chunkSize / 2.f, _chunkSize / 2.f);
-	const float& _xPos = round(_playerPosition.x / _chunkSize);
-	const float& _yPos = round(_playerPosition.y / _chunkSize);
-	const float& _zPos = round(_playerPosition.z / _chunkSize);
-
-	const glm::vec3 _playerPositionChunkRelative(_xPos * _chunkSize, _yPos * _chunkSize, _zPos * _chunkSize);
+	const glm::vec3 _playerPositionChunkRelative(_xPos * fChunkSize, _yPos * fChunkSize, _zPos * fChunkSize);
 
 	glUseProgram(programID_Debug);
 
 	glm::vec3 _offset;
 	glEnableVertexAttribArray(0);
-	for (float x = -_chunkSize; x < _chunkSize * 2.f; x += _chunkSize)
+	for (float x = -fChunkSize; x < fDoubleChunkSize; x += fChunkSize)
 	{
 		_offset.x = x;
-		for (float y = -_chunkSize; y < _chunkSize * 2.f; y += _chunkSize)
+		for (float y = -fChunkSize; y < fDoubleChunkSize; y += fChunkSize)
 		{
 			_offset.y = y;
-			for (float z = -_chunkSize; z < _chunkSize * 2.f; z += _chunkSize)
+			for (float z = -fChunkSize; z < fDoubleChunkSize; z += fChunkSize)
 			{
 				_offset.z = z;
 				const glm::mat4& _MVP = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), _playerPositionChunkRelative + _offset) * glm::mat4(1.f);
 				glUniformMatrix4fv(matrixID_Debug, 1, GL_FALSE, &_MVP[0][0]);
+				glUniform4fv(matrixID_Color_Debug, 1, debugColor);
 
 				glBindBuffer(GL_ARRAY_BUFFER, vertexsBufferDrawChunk);
 				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);

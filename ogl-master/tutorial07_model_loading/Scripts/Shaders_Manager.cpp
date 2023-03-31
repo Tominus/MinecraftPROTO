@@ -16,7 +16,7 @@ Shaders_Manager::Shaders_Manager()
 Shaders_Manager::~Shaders_Manager()
 {
 	glDeleteProgram(programID);
-	//glDeleteProgram(programID_Debug);
+	glDeleteProgram(programID_Debug);
 	glDeleteVertexArrays(1, &vertexArrayID);
 }
 

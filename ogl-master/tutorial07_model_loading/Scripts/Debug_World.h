@@ -28,4 +28,10 @@ private:
 	bool bDebugDrawChunk;
 	GLuint vertexsBufferDrawChunk;
 	unsigned vertexsSizeDrawChunk;
+
+	float fHalfChunkSize;
+	float fChunkSize;
+	float fDoubleChunkSize;
+
+	float* debugColor;
 };
