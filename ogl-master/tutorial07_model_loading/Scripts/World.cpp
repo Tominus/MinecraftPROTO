@@ -32,7 +32,6 @@ World::~World()
 	delete textureLoader;
 	delete blocksGlobalShapes;
 	delete blocksGlobalDatas;
-	delete perlinNoise;
 }
 
 void World::InitWorld(GLFWwindow* _window)
@@ -54,7 +53,7 @@ void World::InitWorld(GLFWwindow* _window)
 
 	chunksManager = new Chunks_Manager();
 
-	perlinNoise = new Perlin_Noise();
+	perlinNoise = &Perlin_Noise::Instance();
 }
 
 void World::Start()

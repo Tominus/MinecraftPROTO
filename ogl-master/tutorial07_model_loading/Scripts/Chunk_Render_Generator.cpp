@@ -831,22 +831,34 @@ Threaded void Chunk_Render_Generator::GenerateChunkUpdatedCGRender(std::map<GLui
 	{
 		SChunk_Render_Data* _renderData = _currentRenderDatas.at(_texturesToUpdate[i]);
 		const unsigned& _verticesGlobalSize = _renderData->verticesGlobalSize;
-		GLuint& _vertexsBuffer = _renderData->vertexsBuffer;
-		GLuint& _uvsBuffer = _renderData->uvsBuffer;
 
-		std::vector<glm::vec3>& _globalVertexs = _renderData->globalVertexs;
-		std::vector<glm::vec2>& _globalUVs = _renderData->globalUVs;
+		if (_verticesGlobalSize > 0)
+		{
+			GLuint& _vertexsBuffer = _renderData->vertexsBuffer;
+			GLuint& _uvsBuffer = _renderData->uvsBuffer;
 
-		glGenBuffers(1, &_vertexsBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, _vertexsBuffer);
-		glBufferData(GL_ARRAY_BUFFER, _verticesGlobalSize * sizeof(glm::vec3), &_globalVertexs[0], GL_STATIC_DRAW);
+			std::vector<glm::vec3>& _globalVertexs = _renderData->globalVertexs;
+			std::vector<glm::vec2>& _globalUVs = _renderData->globalUVs;
 
-		glGenBuffers(1, &_uvsBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, _uvsBuffer);
-		glBufferData(GL_ARRAY_BUFFER, _verticesGlobalSize * sizeof(glm::vec2), &_globalUVs[0], GL_STATIC_DRAW);
+			glGenBuffers(1, &_vertexsBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, _vertexsBuffer);
+			glBufferData(GL_ARRAY_BUFFER, _verticesGlobalSize * sizeof(glm::vec3), &_globalVertexs[0], GL_STATIC_DRAW);
 
-		_globalVertexs.clear();
-		_globalUVs.clear();
+			glGenBuffers(1, &_uvsBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, _uvsBuffer);
+			glBufferData(GL_ARRAY_BUFFER, _verticesGlobalSize * sizeof(glm::vec2), &_globalUVs[0], GL_STATIC_DRAW);
+
+			_globalVertexs.clear();
+			_globalUVs.clear();
+		}
+		else
+		{
+			_currentRenderDatas.erase(_texturesToUpdate[i]);
+			delete _renderData;
+
+			printf("[Chunk_Render_Generator::GenerateChunkUpdatedCGRender] -> Last render block side is deleted");
+			continue;
+		}
 	}
 }
 
