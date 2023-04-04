@@ -59,6 +59,7 @@ void World::InitWorld(GLFWwindow* _window)
 void World::Start()
 {
 	perlinNoise->Initialize();
+	perlinNoise->GenerateImage();
 
 	chunksManager->StartChunkManager();
 	chunksManager->AddStartingWorldBaseChunk();

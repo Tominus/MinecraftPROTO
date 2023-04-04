@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 class Perlin_Noise
 {
@@ -19,7 +20,16 @@ public:
 private:
 	void Initialize();
 
-public:
+	void GenerateImage();
 
+	void SetSeed(unsigned seed);
+	double GetNoise(double x, double y, double z);
+
+	double Fade(double t);
+	double Lerp(double t, double a, double b);
+	double Grad(int hash, double x, double y, double z);
+
+private:
+	std::vector<int> permutation;
 
 };
