@@ -8,7 +8,6 @@
 #include <numeric>
 
 
-
 Perlin_Noise::Perlin_Noise()
 {
 
@@ -39,54 +38,31 @@ void Perlin_Noise::Initialize()
 
 void Perlin_Noise::GenerateImage()
 {
-	lodepng::State _state;
-
-	for (size_t i = 0; i < 16; ++i)
-	{
-		unsigned char r = 127 * (1 + std::sin(5 * i * 6.28318531 / 16));
-		unsigned char g = 127 * (1 + std::sin(2 * i * 6.28318531 / 16));
-		unsigned char b = 127 * (1 + std::sin(3 * i * 6.28318531 / 16));
-		unsigned char a = 63 * (1 + std::sin(8 * i * 6.28318531 / 16)) + 128;
-
-		//lodepng_palette_add(&_state.info_png.color, r, g, b, a);
-		lodepng_palette_add(&_state.info_raw, r, g, b, a);
-	}
-
-	//_state.info_png.color.colortype = LCT_PALETTE;
-	_state.info_png.color.bitdepth = 4;
-	_state.info_raw.colortype = LCT_PALETTE;
-	_state.info_raw.bitdepth = 4;
-	_state.encoder.auto_convert = 0;
-
 	const unsigned w = 256, h = 256;
 	std::vector<unsigned char> image;
-	image.resize((w * h * 4 + 7) / 8, 0);
+
 	for (size_t y = 0; y < h; ++y)
 	{
 		for (size_t x = 0; x < w; ++x)
 		{
-			size_t byte_index = (y * w + x) / 2;
-			bool byte_half = (y * w + x) % 2 == 1;
+			double _noise = GetNoise(y, x, 0.5);
 
-			int color = (int)(4 * ((1 + std::sin(2.0 * 6.28318531 * x / (double)w))
-				+ (1 + std::sin(2.0 * 6.28318531 * y / (double)h))));
+			int _color = _noise * 256.0;
 
-			image[byte_index] |= (unsigned char)(color << (byte_half ? 0 : 4));
+			image.push_back((unsigned char)_color);
 		}
 	}
 
 	std::vector<unsigned char> buffer;
-	unsigned error = lodepng::encode(buffer, image.empty() ? 0 : &image[0], w, h, _state);
-	if (error) 
+	if (lodepng::encode(buffer, &image[0], w, h, LCT_GREY, 8))
 	{
-		throw std::exception("[Perlin_Noise::GenerateImage] -> invalid image generation");
+		throw std::exception("[Perlin_Noise::GenerateImage] -> invalid noise encoding");
 	}
-	
-	
-	
-	//printf("%s", _filePath);
 
-	//lodepng::save_file(buffer, );
+	if (lodepng::save_file(buffer, "Save/map1/Noise.png"))
+	{
+		throw std::exception("[Perlin_Noise::GenerateImage] -> invalid noise save");
+	}
 }
 
 void Perlin_Noise::SetSeed(unsigned seed)
@@ -124,17 +100,17 @@ double Perlin_Noise::GetNoise(double x, double y, double z)
 	int BB = permutation[B + 1] + Z;
 
 	double res = Lerp(w, Lerp(v, Lerp(u, Grad(permutation[AA], x, y, z),
-				 Grad(permutation[BA], x - 1, y, z)), Lerp(u, Grad(permutation[AB], x, y - 1, z),
-				 Grad(permutation[BB], x - 1, y - 1, z))), Lerp(v, Lerp(u, Grad(permutation[AA + 1], x, y, z - 1),
-				 Grad(permutation[BA + 1], x - 1, y, z - 1)), Lerp(u, Grad(permutation[AB + 1], x, y - 1, z - 1),
-				 Grad(permutation[BB + 1], x - 1, y - 1, z - 1))));
+				 Grad(permutation[BA], x - 1.0, y, z)), Lerp(u, Grad(permutation[AB], x, y - 1.0, z),
+				 Grad(permutation[BB], x - 1.0, y - 1.0, z))), Lerp(v, Lerp(u, Grad(permutation[AA + 1], x, y, z - 1.0),
+				 Grad(permutation[BA + 1], x - 1.0, y, z - 1.0)), Lerp(u, Grad(permutation[AB + 1], x, y - 1.0, z - 1.0),
+				 Grad(permutation[BB + 1], x - 1.0, y - 1.0, z - 1.0))));
 
 	return (res + 1.0) / 2.0;
 }
 
 double Perlin_Noise::Fade(double t)
 {
-	return t * t * t * (t * (t * 6 - 15) + 10);
+	return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 }
 
 double Perlin_Noise::Lerp(double t, double a, double b)
@@ -146,7 +122,8 @@ double Perlin_Noise::Grad(int hash, double x, double y, double z)
 {
 	int h = hash & 15;
 
-	double u = h < 8 ? x : y,
-		v = h < 4 ? y : h == 12 || h == 14 ? x : z;
+	double u = h < 8 ? x : y;
+	double v = h < 4 ? y : h == 12 || h == 14 ? x : z;
+
 	return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 }

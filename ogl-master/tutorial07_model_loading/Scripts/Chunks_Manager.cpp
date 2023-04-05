@@ -32,6 +32,10 @@ Chunks_Manager::Chunks_Manager()
 
 Chunks_Manager::~Chunks_Manager()
 {
+	do {
+		//Wait thread to finish there behavior
+	} while (threadManager->GetHasAllThreadFinished() == false);
+
 	WaitForSingleObject(mutex, INFINITE);
 	const size_t& _max = worldChunks.size();
 	for (size_t i = 0; i < _max; ++i)

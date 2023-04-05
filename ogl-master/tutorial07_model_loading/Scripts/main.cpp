@@ -44,6 +44,7 @@ int main( void )
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
+	glfwSetWindowPos(window, 1920 / 2 - 1024/2, 1080 / 2 - 768/2);
 
 	glewExperimental = true;
 	if (glewInit() != GLEW_OK) {

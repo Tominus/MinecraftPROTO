@@ -61,6 +61,11 @@ void Chunk_Data::AddSideChunk(Chunk* _chunk)
 	const glm::vec3& _diffPosition = _position - _ownerPosition;
 
 	size_t _size = chunkPositionToWait.size();
+	if (_size > 6)
+	{
+		throw std::exception("Chunk_Data::AddSideChunk -> ChunkPositionToWait size is > 6");
+	}
+
 	for (size_t i = 0; i < _size; ++i)
 	{
 		if (chunkPositionToWait[i] == _position)
