@@ -28,6 +28,7 @@ Chunks_Manager::Chunks_Manager()
 
 	renderDistance = Render_Distance_Current;
 	renderMaxDistance = renderDistance - 1;
+	lastPlayerPosition = glm::vec3();
 }
 
 Chunks_Manager::~Chunks_Manager()
@@ -184,7 +185,14 @@ void Chunks_Manager::UpdateRender()
 
 void Chunks_Manager::Exit()
 {
+	WaitForSingleObject(mutex, INFINITE);
+
 	bInterruptThread_NotSafe = true;
+
+	onChunkInitialized.Clear();
+	onChunkDestroyed.Clear();
+
+	ReleaseMutex(mutex);
 }
 
 void Chunks_Manager::CheckGenerateNewChunkRender()
@@ -255,7 +263,6 @@ void Chunks_Manager::CheckUpdateChunkSideRender()
 			chunkWaitingForGraphicalUpdate.erase(chunkWaitingForGraphicalUpdate.begin() + i);
 			--i;
 			--_max;
-			break;
 		}
 	}
 

@@ -23,3 +23,8 @@
 
 #define Block_Total_Shapes (36)
 #define Block_Total_Possible_Shapes (64)
+
+#define Perlin_Noise_Octave (6)
+#define Perlin_Noise_Frequency (0.0390625) // 10.0 / Perlin_Noise_Resolution
+#define Perlin_Noise_Resolution (256.0)
+#define Perlin_Noise_DefaultZ (0.34567)

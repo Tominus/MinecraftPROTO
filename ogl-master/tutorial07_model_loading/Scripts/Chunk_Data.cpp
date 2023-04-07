@@ -61,11 +61,6 @@ void Chunk_Data::AddSideChunk(Chunk* _chunk)
 	const glm::vec3& _diffPosition = _position - _ownerPosition;
 
 	size_t _size = chunkPositionToWait.size();
-	if (_size > 6)
-	{
-		throw std::exception("Chunk_Data::AddSideChunk -> ChunkPositionToWait size is > 6");
-	}
-
 	for (size_t i = 0; i < _size; ++i)
 	{
 		if (chunkPositionToWait[i] == _position)
@@ -163,6 +158,7 @@ void Chunk_Data::AddOtherSideChunk(Chunk_Data*& _otherChunkData, const glm::vec3
 
 void Chunk_Data::RemoveSideChunk(Chunk* _chunk)
 {
+	WaitForSingleObject(chunkManager->mutex, INFINITE);
 	const glm::vec3& _position = _chunk->GetChunkPosition();
 
 	size_t _size = chunkPositionToWait.size();
@@ -182,6 +178,7 @@ void Chunk_Data::RemoveSideChunk(Chunk* _chunk)
 		chunkManager->onChunkInitialized.RemoveDynamic(this, &Chunk_Data::AddSideChunk);
 		chunkManager->onChunkDestroyed.RemoveDynamic(this, &Chunk_Data::RemoveSideChunk);
 	}
+	ReleaseMutex(chunkManager->mutex);
 }
 
 bool Chunk_Data::CheckChunkToWaitEmpty()
@@ -191,6 +188,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 	size_t _size = chunkPositionToWait.size();
 	const glm::vec3& _ownerPosition = ownerChunk->chunkPosition;
 
+	WaitForSingleObject(chunkManager->mutex, INFINITE);
 	for (size_t i = 0; i < _size; ++i)
 	{
 		const glm::vec3& _position = chunkPositionToWait[i];
@@ -295,6 +293,8 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 			}
 		}
 	}
+
+	ReleaseMutex(chunkManager->mutex);
 
 	return _size == 0;
 }

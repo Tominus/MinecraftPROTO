@@ -1,7 +1,6 @@
 #include "Chunk_Data_Generator.h"
 
 #include <vector>
-#include <random>
 #include <glm/detail/type_vec.hpp>
 
 #include "Chunks_Manager.h"
@@ -10,6 +9,7 @@
 #include "Block.h"
 #include "Block_Type.h"
 #include "Action.h"
+#include "PerlinNoise.h"
 
 Chunk_Data_Generator::Chunk_Data_Generator(Chunks_Manager* _chunksManager)
 {
@@ -25,10 +25,13 @@ Chunk_Data_Generator::~Chunk_Data_Generator()
 
 void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData) const
 {
-	std::random_device _rd;
-	std::mt19937 _gen(_rd());
-	std::uniform_int_distribution<> _dist(0, randMax - 1);
-	
+	WaitForSingleObject(mutex_ChunkManager, INFINITE);
+	Perlin_Noise _noiseCopy = Perlin_Noise::Instance();
+	ReleaseMutex(mutex_ChunkManager);
+
+	const glm::vec3& _chunkWorldPosition = _chunkData->ownerChunk->worldPosition;
+
+
 	Block****& _blocks = _chunkData->blocks;
 	_blocks = new Block***[Chunk_Size];
 
@@ -44,15 +47,24 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData) const
 
 			for (size_t z = 0; z < Chunk_Size; ++z)
 			{
-				int _i = (_dist(_gen));
-				if (_i == 6 || _i == 7 || _i == 8 || _i == 9)
-					_i = 0;
+				EBlock_Type _type;
 
-				const EBlock_Type& _type = (EBlock_Type)(_i);
+				int _noiseHeight = _noiseCopy.CalculateNoise(x + _chunkWorldPosition.x, z + _chunkWorldPosition.z);
+				if (_noiseHeight / 10 < _chunkWorldPosition.y + y)
+				{
+					_type = EBlock_Type::Air;
+				}
+				else
+				{
+					_type = (EBlock_Type) (rand() % 3 + 2);
+				}
+
 				_blocksXY[z] = new Block(_type);
 			}
 		}
 	}
+
+
 }
 
 Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const

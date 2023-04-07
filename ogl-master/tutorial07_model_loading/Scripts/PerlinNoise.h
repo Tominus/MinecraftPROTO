@@ -1,10 +1,13 @@
 #pragma once
-#include <vector>
+#include <array>
+#include <random>
+#include <Windows.h>
 
 class Perlin_Noise
 {
 
 	friend class World;
+	friend class Chunk_Data_Generator;
 
 private:
 	Perlin_Noise();
@@ -18,18 +21,24 @@ public:
 	}
 
 private:
-	void Initialize();
-
+	void InitializeSeed(unsigned _seed);
 	void GenerateImage();
 
-	void SetSeed(unsigned seed);
-	double GetNoise(double x, double y, double z);
-
-	double Fade(double t);
-	double Lerp(double t, double a, double b);
-	double Grad(int hash, double x, double y, double z);
+public:
+	double CalculateNoise(double x, double y);
 
 private:
-	std::vector<int> permutation;
+	double CalculateOctave(double x, double y);
+	double ClampNoiseResult(const double x);
+
+	double GetNoise(double x, double y);
+	double Fade(const double t);
+	double Grad(const unsigned _hash, const double x, const double y, const double z);
+	double Lerp(const double a, const double b, const double t);
+
+private:
+	std::array<unsigned, 256> permutation;
+	std::default_random_engine randomEngine;
+	unsigned seed;
 
 };

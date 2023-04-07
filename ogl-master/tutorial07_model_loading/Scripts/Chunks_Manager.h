@@ -95,4 +95,5 @@ private:
 
 	int renderDistance;
 	int renderMaxDistance;
+	glm::vec3 lastPlayerPosition;
 };
