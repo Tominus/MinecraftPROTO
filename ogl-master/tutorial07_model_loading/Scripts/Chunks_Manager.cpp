@@ -282,13 +282,14 @@ void Chunks_Manager::CheckRenderDistance()
 	if (CheckIfNoChunkLoaded(_worldChunkSize, _playerPositionChunkRelative))return;
 	
 	glm::vec3 _offset;
-	for (int x = -renderMaxDistance; x < renderDistance; ++x)
+	//for (int y = Chunk_Zero_World_Height; y < Chunk_Max_World_Height; ++y)
+	for (int y = Chunk_Max_World_Height - 1; y > Chunk_Zero_World_Height - 1; --y)
 	{
-		_offset.x = x;
+		_offset.y = y;
 
-		for (int y = Chunk_Zero_World_Height; y < Chunk_Max_World_Height; ++y)
+		for (int x = -renderMaxDistance; x < renderDistance; ++x)
 		{
-			_offset.y = y;
+			_offset.x = x;
 
 			for (int z = -renderMaxDistance; z < renderDistance; ++z)
 			{

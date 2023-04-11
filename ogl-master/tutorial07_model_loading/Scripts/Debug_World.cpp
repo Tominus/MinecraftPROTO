@@ -145,7 +145,7 @@ void Debug_World::Debug_DrawDebugScaledChunk()
 
 	if (_yPos < Chunk_Zero_World_Height + 1)
 		_yPos = Chunk_Zero_World_Height + 1;
-	else if (_yPos > Chunk_Max_World_Height - 1)
+	else if (_yPos > Chunk_Max_World_Height - 2)
 		_yPos = Chunk_Max_World_Height - 2;
 
 	const glm::vec3 _playerPositionChunkRelative(_xPos * fChunkSize, _yPos * fChunkSize, _zPos * fChunkSize);
