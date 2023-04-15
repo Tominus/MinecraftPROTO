@@ -92,13 +92,17 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	{
 		if (Chunk* _downChunk = chunksManager->GetChunkAtPosition(_downPosition))
 		{
-			_downChunk->chunkData->upChunk = _ownerChunk;
+			Chunk_Data* _downChunkData = _downChunk->chunkData;
+			_downChunkData->upChunk = _ownerChunk;
 			_chunkData->downChunk = _downChunk;
+			_downChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 		}
 		else if (Chunk* _downChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_downPosition))
 		{
-			_downChunk->chunkData->upChunk = _ownerChunk;
+			Chunk_Data* _downChunkData = _downChunk->chunkData;
+			_downChunkData->upChunk = _ownerChunk;
 			_chunkData->downChunk = _downChunk;
+			_downChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 		}
 		else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_downPosition))
 		{
@@ -110,13 +114,17 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	{
 		if (Chunk* _upChunk = chunksManager->GetChunkAtPosition(_upPosition))
 		{
+			Chunk_Data* _upChunkData = _upChunk->chunkData;
 			_upChunk->chunkData->downChunk = _ownerChunk;
 			_chunkData->upChunk = _upChunk;
+			_upChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 		}
 		else if (Chunk* _upChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_upPosition))
 		{
+			Chunk_Data* _upChunkData = _upChunk->chunkData;
 			_upChunk->chunkData->downChunk = _ownerChunk;
 			_chunkData->upChunk = _upChunk;
+			_upChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 		}
 		else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_upPosition))
 		{
@@ -127,13 +135,17 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 
 	if (Chunk* _leftChunk = chunksManager->GetChunkAtPosition(_leftPosition))
 	{
+		Chunk_Data* _leftChunkData = _leftChunk->chunkData;
 		_leftChunk->chunkData->rightChunk = _ownerChunk;
 		_chunkData->leftChunk = _leftChunk;
+		_leftChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
 	else if (Chunk* _leftChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_leftPosition))
 	{
+		Chunk_Data* _leftChunkData = _leftChunk->chunkData;
 		_leftChunk->chunkData->rightChunk = _ownerChunk;
 		_chunkData->leftChunk = _leftChunk;
+		_leftChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
 	else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_leftPosition))
 	{
@@ -144,13 +156,17 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 
 	if (Chunk* _rightChunk = chunksManager->GetChunkAtPosition(_rightPosition))
 	{
+		Chunk_Data* _rightChunkData = _rightChunk->chunkData;
 		_rightChunk->chunkData->leftChunk = _ownerChunk;
 		_chunkData->rightChunk = _rightChunk;
+		_rightChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
 	else if (Chunk* _rightChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_rightPosition))
 	{
+		Chunk_Data* _rightChunkData = _rightChunk->chunkData;
 		_rightChunk->chunkData->leftChunk = _ownerChunk;
 		_chunkData->rightChunk = _rightChunk;
+		_rightChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
 	else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_rightPosition))
 	{
@@ -161,13 +177,17 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 
 	if (Chunk* _backChunk = chunksManager->GetChunkAtPosition(_backPosition))
 	{
+		Chunk_Data* _backChunkData = _backChunk->chunkData;
 		_backChunk->chunkData->frontChunk = _ownerChunk;
 		_chunkData->backChunk = _backChunk;
+		_backChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
 	else if (Chunk* _backChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_backPosition))
 	{
+		Chunk_Data* _backChunkData = _backChunk->chunkData;
 		_backChunk->chunkData->frontChunk = _ownerChunk;
 		_chunkData->backChunk = _backChunk;
+		_backChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
 	else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_backPosition))
 	{
@@ -178,13 +198,17 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 
 	if (Chunk* _frontChunk = chunksManager->GetChunkAtPosition(_frontPosition))
 	{
+		Chunk_Data* _frontChunkData = _frontChunk->chunkData;
 		_frontChunk->chunkData->backChunk = _ownerChunk;
 		_chunkData->frontChunk = _frontChunk;
+		_frontChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
 	else if (Chunk* _frontChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_frontPosition))
 	{
+		Chunk_Data* _frontChunkData = _frontChunk->chunkData;
 		_frontChunk->chunkData->backChunk = _ownerChunk;
 		_chunkData->frontChunk = _frontChunk;
+		_frontChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
 	else if (chunksManager->GetIsChunkAtPositionBeingGenerated(_frontPosition))
 	{

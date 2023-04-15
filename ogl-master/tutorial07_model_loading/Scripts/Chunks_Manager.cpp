@@ -103,6 +103,7 @@ Threaded void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 			delete _chunk;
 			delete _data;
 			_thisThread->OnFinished.Invoke(_thisThread);
+			ReleaseMutex(_mutex);
 			return;
 		}
 		ReleaseMutex(_mutex);
@@ -311,9 +312,9 @@ void Chunks_Manager::CheckRenderDistance()
 						GetChunkAtPosition(_chunkCheckPosition + glm::vec3(0, 0, 1)))
 					{
 
-						if (_threadToActivate.size() > 1 || chunkBeingGenerating.size() > 1 || chunkPositionBeingGenerated.size() > 1 || chunkPositionFinishGeneration.size() > 1)
+						//if (_threadToActivate.size() > 1 || chunkBeingGenerating.size() > 1 || chunkPositionBeingGenerated.size() > 1 || chunkPositionFinishGeneration.size() > 1)
 						{                                                                                                    ////TODO delete
-							continue;
+						//	continue;
 						}
 
 						if (Thread* _thread = threadManager->CreateThread())

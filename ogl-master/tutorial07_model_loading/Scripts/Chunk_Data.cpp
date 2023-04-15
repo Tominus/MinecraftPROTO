@@ -156,6 +156,26 @@ void Chunk_Data::AddOtherSideChunk(Chunk_Data*& _otherChunkData, const glm::vec3
 	}
 }
 
+void Chunk_Data::AddGeneratedSideChunk(const glm::vec3& _otherPosition)
+{
+	size_t _sizeWait = chunkPositionToWait.size();
+	for (size_t i = 0; i < _sizeWait; ++i)
+	{
+		if (chunkPositionToWait[i] == _otherPosition)
+		{
+			chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
+			--_sizeWait;
+			break;
+		}
+	}
+
+	if (_sizeWait == 0)
+	{
+		bHasFinishWaitSideChunk = true;
+		chunkManager->onChunkInitialized.RemoveDynamic(this, &Chunk_Data::AddSideChunk);
+	}
+}
+
 void Chunk_Data::RemoveSideChunk(Chunk* _chunk)
 {
 	WaitForSingleObject(chunkManager->mutex, INFINITE);
