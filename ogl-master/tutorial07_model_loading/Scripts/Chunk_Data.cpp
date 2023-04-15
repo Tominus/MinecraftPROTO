@@ -218,6 +218,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 		{
 			if (leftChunk)
 			{
+				leftChunk->chunkData->rightChunk = ownerChunk;
 				chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
 				--_size;
 				--i;
@@ -225,6 +226,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 			else if (Chunk* _chunk = chunkManager->GetChunkAtPosition(_ownerPosition + _diffPosition))
 			{
 				leftChunk = _chunk;
+				_chunk->chunkData->rightChunk = ownerChunk;
 				chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
 				--_size;
 				--i;
@@ -234,6 +236,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 		{
 			if (rightChunk)
 			{
+				rightChunk->chunkData->leftChunk = ownerChunk;
 				chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
 				--_size;
 				--i;
@@ -241,6 +244,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 			else if (Chunk* _chunk = chunkManager->GetChunkAtPosition(_ownerPosition + _diffPosition))
 			{
 				rightChunk = _chunk;
+				_chunk->chunkData->leftChunk = ownerChunk;
 				chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
 				--_size;
 				--i;
@@ -251,6 +255,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 		{
 			if (downChunk)
 			{
+				downChunk->chunkData->upChunk = ownerChunk;
 				chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
 				--_size;
 				--i;
@@ -258,6 +263,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 			else if (Chunk* _chunk = chunkManager->GetChunkAtPosition(_ownerPosition + _diffPosition))
 			{
 				downChunk = _chunk;
+				_chunk->chunkData->upChunk = ownerChunk;
 				chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
 				--_size;
 				--i;
@@ -267,6 +273,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 		{
 			if (upChunk)
 			{
+				upChunk->chunkData->downChunk = ownerChunk;
 				chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
 				--_size;
 				--i;
@@ -274,6 +281,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 			else if (Chunk* _chunk = chunkManager->GetChunkAtPosition(_ownerPosition + _diffPosition))
 			{
 				upChunk = _chunk;
+				_chunk->chunkData->downChunk = ownerChunk;
 				chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
 				--_size;
 				--i;
@@ -284,6 +292,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 		{
 			if (backChunk)
 			{
+				backChunk->chunkData->frontChunk = ownerChunk;
 				chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
 				--_size;
 				--i;
@@ -291,6 +300,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 			else if (Chunk* _chunk = chunkManager->GetChunkAtPosition(_ownerPosition + _diffPosition))
 			{
 				backChunk = _chunk;
+				_chunk->chunkData->frontChunk = ownerChunk;
 				chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
 				--_size;
 				--i;
@@ -300,6 +310,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 		{
 			if (frontChunk)
 			{
+				frontChunk->chunkData->backChunk = ownerChunk;
 				chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
 				--_size;
 				--i;
@@ -307,6 +318,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 			else if (Chunk* _chunk = chunkManager->GetChunkAtPosition(_ownerPosition + _diffPosition))
 			{
 				frontChunk = _chunk;
+				_chunk->chunkData->backChunk = ownerChunk;
 				chunkPositionToWait.erase(chunkPositionToWait.begin() + i);
 				--_size;
 				--i;

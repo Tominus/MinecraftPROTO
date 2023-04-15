@@ -88,9 +88,12 @@ Threaded void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 	_chunk->InitChunkData();
 	
 	WaitForSingleObject(_mutex, INFINITE);
-	_thisPtr->chunkBeingGenerating.push_back(_chunk);
-	_thisPtr->onChunkDestroyed.AddDynamic(_chunkData, &Chunk_Data::RemoveSideChunk);
-	_thisPtr->chunkDataGenerator->SetSideChunks(_chunkData);
+	if (!_thisPtr->bInterruptThread_NotSafe)
+	{
+		_thisPtr->chunkBeingGenerating.push_back(_chunk);
+		_thisPtr->onChunkDestroyed.AddDynamic(_chunkData, &Chunk_Data::RemoveSideChunk);
+		_thisPtr->chunkDataGenerator->SetSideChunks(_chunkData);
+	}
 	ReleaseMutex(_mutex);
 
 	bool _hasFinish = false;
@@ -102,8 +105,8 @@ Threaded void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 		{
 			delete _chunk;
 			delete _data;
-			_thisThread->OnFinished.Invoke(_thisThread);
 			ReleaseMutex(_mutex);
+			_thisThread->OnFinished.Invoke(_thisThread);
 			return;
 		}
 		ReleaseMutex(_mutex);
@@ -189,6 +192,8 @@ void Chunks_Manager::Exit()
 	WaitForSingleObject(mutex, INFINITE);
 
 	bInterruptThread_NotSafe = true;
+
+	chunkBeingGenerating.clear();
 
 	onChunkInitialized.Clear();
 	onChunkDestroyed.Clear();
