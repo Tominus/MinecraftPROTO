@@ -4,6 +4,7 @@
 
 class Chunk_Render;
 class Chunk_Data;
+class Chunk_SideData;
 class Chunk_Data_Generator;
 class Chunk_Render_Generator;
 
@@ -21,6 +22,7 @@ private:
 
 	void InitChunkData();
 	void InitChunkRender();
+	void FinishInit();
 
 	void Render() const;
 	void GenerateCGRender();
@@ -38,6 +40,7 @@ public:
 private:
 	Chunk_Data* chunkData;
 	Chunk_Render* chunkRender;
+	Chunk_SideData* chunkSideData;
 
 	Chunk_Data_Generator* chunkDataGenerator;
 	Chunk_Render_Generator* chunkRenderGenerator;

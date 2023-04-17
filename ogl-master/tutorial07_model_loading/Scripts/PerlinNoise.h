@@ -25,16 +25,16 @@ private:
 	void GenerateImage();
 
 public:
-	double CalculateNoise(double x, double y);
+	double CalculateNoise(double x, double y) const;
 
 private:
-	double CalculateOctave(double x, double y);
-	double ClampNoiseResult(const double x);
+	double CalculateOctave(double x, double y) const;
+	double ClampNoiseResult(const double x) const;
 
-	double GetNoise(double x, double y);
-	double Fade(const double t);
-	double Grad(const unsigned _hash, const double x, const double y, const double z);
-	double Lerp(const double a, const double b, const double t);
+	double GetNoise(double x, double y) const;
+	double Fade(const double t) const;
+	double Grad(const unsigned _hash, const double x, const double y, const double z) const;
+	double Lerp(const double a, const double b, const double t) const;
 
 private:
 	std::array<unsigned, 256> permutation;

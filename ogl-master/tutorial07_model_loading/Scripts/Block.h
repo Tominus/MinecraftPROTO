@@ -5,6 +5,7 @@ class Block
 {
 	friend class Chunk_Data; // for the delete*
 	friend class Chunk_Data_Generator;
+	friend class Chunk_SideData;
 
 private:
 	Block(const EBlock_Type& _blockType);

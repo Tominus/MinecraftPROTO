@@ -62,12 +62,12 @@ void Perlin_Noise::GenerateImage()
 	}
 }
 
-double Perlin_Noise::CalculateNoise(double x, double y)
+double Perlin_Noise::CalculateNoise(double x, double y) const
 {
 	return ClampNoiseResult(CalculateOctave(x * Perlin_Noise_Frequency, y * Perlin_Noise_Frequency)) * Perlin_Noise_Resolution;
 }
 
-double Perlin_Noise::CalculateOctave(double x, double y)
+double Perlin_Noise::CalculateOctave(double x, double y) const
 {
 	double _result = 0.0;
 	double _amplitude = 1.0;
@@ -83,7 +83,7 @@ double Perlin_Noise::CalculateOctave(double x, double y)
 	return _result;
 }
 
-double Perlin_Noise::ClampNoiseResult(const double x)
+double Perlin_Noise::ClampNoiseResult(const double x) const
 {
 	if (x <= -1.0)
 	{
@@ -97,7 +97,7 @@ double Perlin_Noise::ClampNoiseResult(const double x)
 	return (x * 0.5 + 0.5);
 }
 
-double Perlin_Noise::GetNoise(double x, double y)
+double Perlin_Noise::GetNoise(double x, double y) const
 {
 	const double _x = std::floor(x);
 	const double _y = std::floor(y);
@@ -144,12 +144,12 @@ double Perlin_Noise::GetNoise(double x, double y)
 	return Lerp(r0, r1, w);
 }
 
-double Perlin_Noise::Fade(const double t)
+double Perlin_Noise::Fade(const double t) const
 {
 	return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 }
 
-double Perlin_Noise::Grad(const unsigned _hash, const double x, const double y, const double z)
+double Perlin_Noise::Grad(const unsigned _hash, const double x, const double y, const double z) const
 {
 	const unsigned h = _hash & 15;
 	const double u = h < 8 ? x : y;
@@ -157,7 +157,7 @@ double Perlin_Noise::Grad(const unsigned _hash, const double x, const double y, 
 	return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 }
 
-double Perlin_Noise::Lerp(const double a, const double b, const double t)
+double Perlin_Noise::Lerp(const double a, const double b, const double t) const
 {
 	return a + (b - a) * t;
 }

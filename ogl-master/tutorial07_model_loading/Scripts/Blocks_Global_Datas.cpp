@@ -20,13 +20,7 @@ Blocks_Global_Datas::~Blocks_Global_Datas()
 
 const SBlock_Datas const* Blocks_Global_Datas::GetBlockData(const EBlock_Type& _blockType) const
 {
-	for (size_t i = 0; i < blockDatasSize; ++i)
-	{
-		const SBlock_Datas const* _blockDatas = &blockDatas[i];
-		if (_blockType == _blockDatas->blockType)
-			return _blockDatas;
-	}
-	return nullptr;
+	return &blockDatas[(size_t)_blockType];
 }
 
 void Blocks_Global_Datas::GenerateBlocksGlobalDatas()

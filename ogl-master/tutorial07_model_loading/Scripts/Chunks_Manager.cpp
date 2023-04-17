@@ -18,7 +18,7 @@
 Chunks_Manager::Chunks_Manager()
 {
 	programID = Shaders_Manager::Instance().GetProgramID();
-
+	
 	mutex = CreateMutex(0, false, 0);
 	bInterruptThread_NotSafe = false;
 
@@ -28,7 +28,6 @@ Chunks_Manager::Chunks_Manager()
 
 	renderDistance = Render_Distance_Current;
 	renderMaxDistance = renderDistance - 1;
-	lastPlayerPosition = glm::vec3();
 }
 
 Chunks_Manager::~Chunks_Manager()
@@ -103,6 +102,7 @@ Threaded void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 		_hasFinish = _chunkData->CheckChunkToWaitEmpty();
 		if (_thisPtr->bInterruptThread_NotSafe)
 		{
+			_chunk->FinishInit();
 			delete _chunk;
 			delete _data;
 			ReleaseMutex(_mutex);
@@ -115,6 +115,7 @@ Threaded void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 	}
 
 	_chunk->InitChunkRender();
+	_chunk->FinishInit();
 
 	WaitForSingleObject(_mutex, INFINITE);
 	_thisPtr->chunkWaitingForCGgen.push_back(_chunk);
@@ -288,7 +289,6 @@ void Chunks_Manager::CheckRenderDistance()
 	if (CheckIfNoChunkLoaded(_worldChunkSize, _playerPositionChunkRelative))return;
 	
 	glm::vec3 _offset;
-	//for (int y = Chunk_Zero_World_Height; y < Chunk_Max_World_Height; ++y)
 	for (int y = Chunk_Max_World_Height - 1; y > Chunk_Zero_World_Height - 1; --y)
 	{
 		_offset.y = y;

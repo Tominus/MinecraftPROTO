@@ -3,6 +3,7 @@
 #include "GlobalDefine.h"
 #include "Chunk_Data.h"
 #include "Chunk_render.h"
+#include "Chunk_SideData.h"
 #include "Chunk_Data_Generator.h"
 #include "Chunk_Render_Generator.h"
 
@@ -16,6 +17,7 @@ Chunk::Chunk(Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* 
 
 	chunkData = new Chunk_Data(this);
 	chunkRender = new Chunk_Render(this);
+	chunkSideData = new Chunk_SideData();
 }
 
 Chunk::~Chunk()
@@ -32,6 +34,12 @@ void Chunk::InitChunkData()
 void Chunk::InitChunkRender()
 {
 	chunkRenderGenerator->GenerateNewChunkRender(chunkRender, chunkData);
+}
+
+void Chunk::FinishInit()
+{
+	delete chunkSideData;
+	chunkSideData = nullptr;
 }
 
 void Chunk::Render() const

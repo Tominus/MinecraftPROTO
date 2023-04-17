@@ -4,6 +4,7 @@
 #include <glm/detail/type_vec.hpp>
 
 #include "Chunks_Manager.h"
+#include "Chunk_SideData.h"
 #include "Chunk_Data.h"
 #include "Chunk.h"
 #include "Block.h"
@@ -15,56 +16,306 @@ Chunk_Data_Generator::Chunk_Data_Generator(Chunks_Manager* _chunksManager)
 {
 	chunksManager = _chunksManager;
 	mutex_ChunkManager = _chunksManager->mutex;
+	mutex_ChunkDataGenerator = CreateMutex(0, false, 0);
 	randMax = (unsigned)EBlock_Type::BLOCK_TYPE_MAX_NUMBER;
 }
 
 Chunk_Data_Generator::~Chunk_Data_Generator()
 {
-	
+	ReleaseMutex(mutex_ChunkDataGenerator);
 }
 
-void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData) const
+void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData)
 {
-	WaitForSingleObject(mutex_ChunkManager, INFINITE);
-	Perlin_Noise _noiseCopy = Perlin_Noise::Instance();
-	ReleaseMutex(mutex_ChunkManager);
+	WaitForSingleObject(mutex_ChunkDataGenerator, INFINITE);
+	const Perlin_Noise _noiseCopy = Perlin_Noise::Instance();
+	ReleaseMutex(mutex_ChunkDataGenerator);
 
-	const glm::vec3& _chunkWorldPosition = _chunkData->ownerChunk->worldPosition;
+	Chunk* _ownerChunk = _chunkData->ownerChunk;
+	const glm::vec3& _chunkWorldPosition = _ownerChunk->worldPosition;
 
-
-	Block****& _blocks = _chunkData->blocks;
-	_blocks = new Block***[Chunk_Size];
-
-	for (size_t x = 0; x < Chunk_Size; ++x)
+	if (/*Exist in file*/false)
 	{
-		Block***& _blocksX = _blocks[x];
-		_blocksX = new Block**[Chunk_Size];
+		// Load Data
+	}
+	else
+	{
+		// Generate New Data
 
-		for (size_t y = 0; y < Chunk_Size; ++y)
+		Block****& _blocks = _chunkData->blocks;
+		_blocks = new Block ***[Chunk_Size];
+
+		for (size_t x = 0; x < Chunk_Size; ++x)
 		{
-			Block**& _blocksXY = _blocksX[y];
-			_blocksXY = new Block*[Chunk_Size];
+			Block***& _blocksX = _blocks[x];
+			_blocksX = new Block **[Chunk_Size];
 
-			for (size_t z = 0; z < Chunk_Size; ++z)
+			for (size_t y = 0; y < Chunk_Size; ++y)
 			{
-				EBlock_Type _type;
+				Block**& _blocksXY = _blocksX[y];
+				_blocksXY = new Block *[Chunk_Size];
 
-				int _noiseHeight = _noiseCopy.CalculateNoise(x + _chunkWorldPosition.x, z + _chunkWorldPosition.z);
-				if (_noiseHeight / 10 < _chunkWorldPosition.y + y)
+				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
-					_type = EBlock_Type::Air;
-				}
-				else
-				{
-					_type = (EBlock_Type) (rand() % 3 + 2);
-				}
+					EBlock_Type _type;
 
-				_blocksXY[z] = new Block(_type);
+					int _noiseHeight = _noiseCopy.CalculateNoise(x + _chunkWorldPosition.x, z + _chunkWorldPosition.z);
+					if (_noiseHeight < _chunkWorldPosition.y + y)
+					{
+						_type = EBlock_Type::Air;
+					}
+					else
+					{
+						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
+					}
+
+					_blocksXY[z] = new Block(_type);
+				}
 			}
 		}
 	}
 
+	GenerateChunkSideData(_noiseCopy, _ownerChunk);
+}
 
+void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy, Chunk* _chunk)
+{
+	WaitForSingleObject(mutex_ChunkManager, INFINITE);
+	Chunk_SideData* _chunkSideData = _chunk->chunkSideData;
+	const glm::vec3& _chunkWorldPosition = _chunk->worldPosition;
+	ReleaseMutex(mutex_ChunkManager);
+
+	const float& _ownerChunkHeight = _chunkWorldPosition.y;
+
+	//Down Side
+	if (_ownerChunkHeight - 1 > Chunk_Min_World_Height)
+	{
+		if (/*Exist in file*/false)
+		{
+
+		}
+		else
+		{
+			const glm::vec3& _downWorldPosition = _chunkWorldPosition + glm::vec3(0.f, -1.f, 0.f);
+
+			Block***& _blocks = _chunkSideData->downBlocks;
+			_blocks = new Block **[Chunk_Size];
+
+			for (size_t x = 0; x < Chunk_Size; ++x)
+			{
+				Block**& _blocksX = _blocks[x];
+				_blocksX = new Block *[Chunk_Size];
+
+				for (size_t z = 0; z < Chunk_Size; ++z)
+				{
+					EBlock_Type _type;
+
+					int _noiseHeight = _noiseCopy.CalculateNoise(_downWorldPosition.x + x, _downWorldPosition.z + z);
+					if (_noiseHeight < _downWorldPosition.y/* + Chunk_Max_Size*/)
+					{
+						_type = EBlock_Type::Air;
+					}
+					else
+					{
+						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
+					}
+
+					_blocksX[z] = new Block(_type);
+				}
+			}
+		}
+	}
+
+	//Up Side
+	if (_ownerChunkHeight + 1 < Chunk_Max_World_Height)
+	{
+		if (/*Exist in file*/false)
+		{
+
+		}
+		else
+		{
+			const glm::vec3& _upWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 16.f, 0.f);
+
+			Block***& _blocks = _chunkSideData->upBlocks;
+			_blocks = new Block **[Chunk_Size];
+
+			for (size_t x = 0; x < Chunk_Size; ++x)
+			{
+				Block**& _blocksX = _blocks[x];
+				_blocksX = new Block *[Chunk_Size];
+
+				for (size_t z = 0; z < Chunk_Size; ++z)
+				{
+					EBlock_Type _type;
+
+					int _noiseHeight = _noiseCopy.CalculateNoise(_upWorldPosition.x + x, _upWorldPosition.z + z);
+					if (_noiseHeight < _upWorldPosition.y)
+					{
+						_type = EBlock_Type::Air;
+					}
+					else
+					{
+						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
+					}
+
+					_blocksX[z] = new Block(_type);
+				}
+			}
+		}
+	}
+
+	//Left Side
+	{
+		if (/*Exist in file*/false)
+		{
+
+		}
+		else
+		{
+			const glm::vec3& _leftWorldPosition = _chunkWorldPosition + glm::vec3(-1.f, 0.f, 0.f);
+
+			Block***& _blocks = _chunkSideData->leftBlocks;
+			_blocks = new Block **[Chunk_Size];
+
+			for (size_t y = 0; y < Chunk_Size; ++y)
+			{
+				Block**& _blocksX = _blocks[y];
+				_blocksX = new Block *[Chunk_Size];
+
+				for (size_t z = 0; z < Chunk_Size; ++z)
+				{
+					EBlock_Type _type;
+
+					int _noiseHeight = _noiseCopy.CalculateNoise(_leftWorldPosition.x/* + Chunk_Max_Size*/, _leftWorldPosition.z + z);
+					if (_noiseHeight < _leftWorldPosition.y + y)
+					{
+						_type = EBlock_Type::Air;
+					}
+					else
+					{
+						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
+					}
+
+					_blocksX[z] = new Block(_type);
+				}
+			}
+		}
+	}
+
+	//Right Side
+	{
+		if (/*Exist in file*/false)
+		{
+
+		}
+		else
+		{
+			const glm::vec3& _rightWorldPosition = _chunkWorldPosition + glm::vec3(16.f, 0.f, 0.f);
+
+			Block***& _blocks = _chunkSideData->rightBlocks;
+			_blocks = new Block **[Chunk_Size];
+
+			for (size_t y = 0; y < Chunk_Size; ++y)
+			{
+				Block**& _blocksX = _blocks[y];
+				_blocksX = new Block *[Chunk_Size];
+
+				for (size_t z = 0; z < Chunk_Size; ++z)
+				{
+					EBlock_Type _type;
+
+					int _noiseHeight = _noiseCopy.CalculateNoise(_rightWorldPosition.x, _rightWorldPosition.z + z);
+					if (_noiseHeight < _rightWorldPosition.y + y)
+					{
+						_type = EBlock_Type::Air;
+					}
+					else
+					{
+						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
+					}
+
+					_blocksX[z] = new Block(_type);
+				}
+			}
+		}
+	}
+
+	//Back Side
+	{
+		if (/*Exist in file*/false)
+		{
+
+		}
+		else
+		{
+			const glm::vec3& _backWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 0.f, -1.f);
+
+			Block***& _blocks = _chunkSideData->backBlocks;
+			_blocks = new Block **[Chunk_Size];
+
+			for (size_t x = 0; x < Chunk_Size; ++x)
+			{
+				Block**& _blocksX = _blocks[x];
+				_blocksX = new Block *[Chunk_Size];
+
+				for (size_t y = 0; y < Chunk_Size; ++y)
+				{
+					EBlock_Type _type;
+
+					int _noiseHeight = _noiseCopy.CalculateNoise(_backWorldPosition.x + x, _backWorldPosition.z/* + Chunk_Max_Size*/);
+					if (_noiseHeight < _backWorldPosition.y + y)
+					{
+						_type = EBlock_Type::Air;
+					}
+					else
+					{
+						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
+					}
+
+					_blocksX[y] = new Block(_type);
+				}
+			}
+		}
+	}
+
+	//Front Side
+	{
+		if (/*Exist in file*/false)
+		{
+
+		}
+		else
+		{
+			const glm::vec3& _frontWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 0.f, 16.f);
+
+			Block***& _blocks = _chunkSideData->frontBlocks;
+			_blocks = new Block **[Chunk_Size];
+
+			for (size_t x = 0; x < Chunk_Size; ++x)
+			{
+				Block**& _blocksX = _blocks[x];
+				_blocksX = new Block *[Chunk_Size];
+
+				for (size_t y = 0; y < Chunk_Size; ++y)
+				{
+					EBlock_Type _type;
+
+					int _noiseHeight = _noiseCopy.CalculateNoise(_frontWorldPosition.x + x, _frontWorldPosition.z);
+					if (_noiseHeight < _frontWorldPosition.y + y)
+					{
+						_type = EBlock_Type::Air;
+					}
+					else
+					{
+						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
+					}
+
+					_blocksX[y] = new Block(_type);
+				}
+			}
+		}
+	}
 }
 
 Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
