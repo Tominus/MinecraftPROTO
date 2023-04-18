@@ -57,6 +57,7 @@ class Chunk_Render
 	friend class Chunk;
 	friend class Chunks_Manager;
 	friend class Chunk_Render_Generator;
+	friend class Chunk_Data_Generator;
 
 private:
 	Chunk_Render(Chunk* _ownerChunk);
@@ -80,6 +81,7 @@ private:
 	GLuint matrixID;
 	ESide sideToUpdate;
 	bool bHasFinishGeneration;
+	bool bHasRender;
 	
 	/*Stock les rendu dans leur world position.*/
 	SChunk_Render_Shapes**** allBlockShapes;

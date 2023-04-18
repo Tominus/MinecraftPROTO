@@ -12,6 +12,7 @@ Chunk_Render::Chunk_Render(Chunk* _currentChunk)
 	matrixID = 0;
 	sideToUpdate = ESide::None;
 	bHasFinishGeneration = false;
+	bHasRender = false;
 	allBlockShapes = nullptr;
 	ownerChunk = _currentChunk;
 	ownerChunkPosition = ownerChunk->worldPosition;

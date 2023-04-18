@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <Windows.h>
 
 class Block;
 class Chunk;
@@ -42,6 +43,7 @@ private:
 	Block**** blocks;
 
 	Chunks_Manager* chunkManager;
+	HANDLE mutex_ChunkManager;
 	Chunk* ownerChunk;
 
 	std::vector<glm::vec3> chunkPositionToWait;

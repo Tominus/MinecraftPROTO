@@ -8,6 +8,7 @@
 
 #include "GlobalDefine.h"
 #include "Action.h"
+#include "Chunk.h"
 
 class Chunks_Manager;
 class Chunk;
@@ -55,14 +56,63 @@ private:
 	void CheckUpdateChunkSideRender();
 
 	void CheckRenderDistance();
-	bool CheckIfNoChunkLoaded(const size_t& _worldChunkSize, const glm::vec3& _playerPositionChunkRelative);
+	bool CheckIfNoChunkLoaded(const size_t& _worldChunkSize, glm::vec3 _playerPositionChunkRelative);
 
 	void DeleteChunksOutOfRange(std::vector<Chunk*>& _chunkInRange, size_t _worldChunkSize);
 
 public:
-	Chunk* GetChunkAtPosition(const glm::vec3& _position) const;
-	bool GetIsChunkAtPositionBeingGenerated(const glm::vec3& _position) const;
-	Chunk* GetChunkBeingGeneratedAtPosition(const glm::vec3& _position) const;
+	Chunk* GetChunkAtPosition(const glm::vec3& _position) const
+	{
+		WaitForSingleObject(mutex, INFINITE);
+
+		const size_t& _max = worldChunks.size();
+		for (size_t i = 0; i < _max; ++i)
+		{
+			Chunk* _chunk = worldChunks[i];
+			if (_position == _chunk->chunkPosition)
+			{
+				ReleaseMutex(mutex);
+				return _chunk;
+			}
+		}
+		ReleaseMutex(mutex);
+		return nullptr;
+	}
+
+	bool GetIsChunkAtPositionBeingGenerated(const glm::vec3& _position) const
+	{
+		WaitForSingleObject(mutex, INFINITE);
+
+		const size_t& _max = chunkPositionBeingGenerated.size();
+		for (size_t i = 0; i < _max; ++i)
+		{
+			if (chunkPositionBeingGenerated[i] == _position)
+			{
+				ReleaseMutex(mutex);
+				return true;
+			}
+		}
+		ReleaseMutex(mutex);
+		return false;
+	}
+
+	Chunk* GetChunkBeingGeneratedAtPosition(const glm::vec3& _position) const
+	{
+		WaitForSingleObject(mutex, INFINITE);
+
+		const size_t& _max = chunkBeingGenerating.size();
+		for (size_t i = 0; i < _max; ++i)
+		{
+			Chunk* _chunk = chunkBeingGenerating[i];
+			if (_position == _chunk->chunkPosition)
+			{
+				ReleaseMutex(mutex);
+				return _chunk;
+			}
+		}
+		ReleaseMutex(mutex);
+		return nullptr;
+	}
 
 	inline Chunk_Data_Generator* GetChunkDataGenerator() const { return chunkDataGenerator; }
 	inline Chunk_Render_Generator* GetChunkRenderGenerator() const { return chunkRenderGenerator; }

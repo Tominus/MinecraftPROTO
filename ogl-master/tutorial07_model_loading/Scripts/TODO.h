@@ -18,7 +18,9 @@
 */
 
 /* 
-* - fix rendu du chunk sur coté
+* - mutex priority
+* - chunk position optimized
+* - save data
 * - test destroy block
 * - rendu alpha
 * - cull

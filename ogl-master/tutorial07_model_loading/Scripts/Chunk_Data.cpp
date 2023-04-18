@@ -9,6 +9,7 @@
 Chunk_Data::Chunk_Data(Chunk* _ownerChunk)
 {
 	chunkManager = World::Instance().GetChunksManager();
+	mutex_ChunkManager = chunkManager->mutex;
 	ownerChunk = _ownerChunk;
 	
 	blocks = nullptr;
@@ -55,7 +56,7 @@ Chunk_Data::~Chunk_Data()
 
 void Chunk_Data::AddSideChunk(Chunk* _chunk)
 {
-	WaitForSingleObject(chunkManager->mutex, INFINITE);
+	WaitForSingleObject(mutex_ChunkManager, INFINITE);
 	const glm::vec3& _position = _chunk->GetChunkPosition();
 	const glm::vec3& _ownerPosition = ownerChunk->chunkPosition;
 	const glm::vec3& _diffPosition = _position - _ownerPosition;
@@ -131,10 +132,10 @@ void Chunk_Data::AddSideChunk(Chunk* _chunk)
 		chunkManager->onChunkDestroyed.RemoveDynamic(this, &Chunk_Data::RemoveSideChunk);
 	}
 
-	ReleaseMutex(chunkManager->mutex);
+	ReleaseMutex(mutex_ChunkManager);
 }
 
-void Chunk_Data::AddOtherSideChunk(Chunk_Data*& _otherChunkData, const glm::vec3& _ownerPosition)
+Threaded void Chunk_Data::AddOtherSideChunk(Chunk_Data*& _otherChunkData, const glm::vec3& _ownerPosition)
 {
 	std::vector<glm::vec3>& _chunkPositionToWait = _otherChunkData->chunkPositionToWait;
 
@@ -178,7 +179,7 @@ void Chunk_Data::AddGeneratedSideChunk(const glm::vec3& _otherPosition)
 
 void Chunk_Data::RemoveSideChunk(Chunk* _chunk)
 {
-	WaitForSingleObject(chunkManager->mutex, INFINITE);
+	WaitForSingleObject(mutex_ChunkManager, INFINITE);
 	const glm::vec3& _position = _chunk->GetChunkPosition();
 
 	size_t _size = chunkPositionToWait.size();
@@ -198,17 +199,17 @@ void Chunk_Data::RemoveSideChunk(Chunk* _chunk)
 		chunkManager->onChunkInitialized.RemoveDynamic(this, &Chunk_Data::AddSideChunk);
 		chunkManager->onChunkDestroyed.RemoveDynamic(this, &Chunk_Data::RemoveSideChunk);
 	}
-	ReleaseMutex(chunkManager->mutex);
+	ReleaseMutex(mutex_ChunkManager);
 }
 
 bool Chunk_Data::CheckChunkToWaitEmpty()
 {
 	if (!bHasFinishWaitSideChunk)return false;
 
+	WaitForSingleObject(mutex_ChunkManager, INFINITE);
 	size_t _size = chunkPositionToWait.size();
 	const glm::vec3& _ownerPosition = ownerChunk->chunkPosition;
-
-	WaitForSingleObject(chunkManager->mutex, INFINITE);
+	
 	for (size_t i = 0; i < _size; ++i)
 	{
 		const glm::vec3& _position = chunkPositionToWait[i];
@@ -326,7 +327,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 		}
 	}
 
-	ReleaseMutex(chunkManager->mutex);
+	ReleaseMutex(mutex_ChunkManager);
 
 	return _size == 0;
 }

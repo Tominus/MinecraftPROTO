@@ -70,7 +70,7 @@ void Chunks_Manager::StartChunkManager()
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateNewChunkRender);
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateChunkPosition);
 	onTick.AddDynamic(this, &Chunks_Manager::CheckRenderDistance);
-	onTick.AddDynamic(this, &Chunks_Manager::CheckUpdateChunkSideRender); 
+	onTick.AddDynamic(this, &Chunks_Manager::CheckUpdateChunkSideRender);
 }
 
 Threaded void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
@@ -85,8 +85,10 @@ Threaded void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 	ReleaseMutex(_mutex);
 
 	_chunk->InitChunkData();
-	
+
 	WaitForSingleObject(_mutex, INFINITE);
+	bool _hasRender = _chunk->chunkRender->bHasRender;
+
 	if (!_thisPtr->bInterruptThread_NotSafe)
 	{
 		_thisPtr->chunkBeingGenerating.push_back(_chunk);
@@ -95,9 +97,14 @@ Threaded void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 	}
 	ReleaseMutex(_mutex);
 
-	bool _hasFinish = false;
+	WaitForSingleObject(_mutex, INFINITE);
+	bool _hasFinish = _chunkData->CheckChunkToWaitEmpty();
+	ReleaseMutex(_mutex);
+
 	while (_hasFinish == false)
 	{
+		Sleep(16);
+
 		WaitForSingleObject(_mutex, INFINITE);
 		_hasFinish = _chunkData->CheckChunkToWaitEmpty();
 		if (_thisPtr->bInterruptThread_NotSafe)
@@ -110,8 +117,6 @@ Threaded void Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 			return;
 		}
 		ReleaseMutex(_mutex);
-
-		Sleep(16);
 	}
 
 	_chunk->InitChunkRender();
@@ -287,9 +292,11 @@ void Chunks_Manager::CheckRenderDistance()
 	std::vector<Thread*> _threadToActivate;
 
 	if (CheckIfNoChunkLoaded(_worldChunkSize, _playerPositionChunkRelative))return;
+
+	size_t _totalCreatedChunk = 0;
 	
 	glm::vec3 _offset;
-	for (int y = Chunk_Max_World_Height - 1; y > Chunk_Zero_World_Height - 1; --y)
+	for (int y = Chunk_Max_World_Height - 1; y > Chunk_Min_World_Height; --y)
 	{
 		_offset.y = y;
 
@@ -316,11 +323,8 @@ void Chunks_Manager::CheckRenderDistance()
 						GetChunkAtPosition(_chunkCheckPosition + glm::vec3(0, 0, -1)) ||
 						GetChunkAtPosition(_chunkCheckPosition + glm::vec3(0, 0, 1)))
 					{
-
-						//if (_threadToActivate.size() > 1 || chunkBeingGenerating.size() > 1 || chunkPositionBeingGenerated.size() > 1 || chunkPositionFinishGeneration.size() > 1)
-						{                                                                                                    ////TODO delete
-						//	continue;
-						}
+						if (_totalCreatedChunk > 16)
+							continue;
 
 						if (Thread* _thread = threadManager->CreateThread())
 						{
@@ -332,6 +336,7 @@ void Chunks_Manager::CheckRenderDistance()
 
 							_thread->CreateThreadFunction(false, AddChunk, _data);
 							chunkPositionBeingGenerated.push_back(_chunkCheckPosition);
+							++_totalCreatedChunk;
 						}
 					}
 				}
@@ -341,19 +346,28 @@ void Chunks_Manager::CheckRenderDistance()
 	
 	DeleteChunksOutOfRange(_inRenderDistanceChunks, _worldChunkSize);
 
-	const size_t& _size = _threadToActivate.size();
-	for (size_t i = 0; i < _size; ++i)
+	for (size_t i = 0; i < _totalCreatedChunk; ++i)
 	{
 		_threadToActivate[i]->Execute();
 	}
 }
 
-bool Chunks_Manager::CheckIfNoChunkLoaded(const size_t& _worldChunkSize, const glm::vec3& _playerPositionChunkRelative)
+bool Chunks_Manager::CheckIfNoChunkLoaded(const size_t& _worldChunkSize, glm::vec3 _playerPositionChunkRelative)
 {
 	if (_worldChunkSize == 0)
 	{
 		if (chunkPositionBeingGenerated.size() == 0 || chunkPositionFinishGeneration.size() == 0)
 		{
+			float _playerHeight = round((getPositionHeight() - 8.f) / 16.f);
+			if (_playerHeight < Chunk_Min_World_Height + 1)
+			{
+				_playerPositionChunkRelative.y = Chunk_Min_World_Height + 1;
+			}
+			else if (_playerHeight > Chunk_Max_World_Height - 1)
+			{
+				_playerPositionChunkRelative.y = Chunk_Max_World_Height - 1;
+			}
+
 			if (Thread* _thread = threadManager->CreateThread())
 			{
 				SThread_AddChunk_Ptr _data = new SThread_AddChunk();
@@ -415,63 +429,10 @@ void Chunks_Manager::DeleteChunksOutOfRange(std::vector<Chunk*>& _chunkInRange, 
 		if (!worldChunks[i])
 		{
 			worldChunks.erase(worldChunks.begin() + i);
-			i--;
-			_worldChunkSize--;
+			--i;
+			--_worldChunkSize;
 		}
 	}
 
 	ReleaseMutex(mutex);
-}
-
-Chunk* Chunks_Manager::GetChunkAtPosition(const glm::vec3& _position) const
-{
-	WaitForSingleObject(mutex, INFINITE);
-
-	const size_t& _max = worldChunks.size();
-	for (size_t i = 0; i < _max; ++i)
-	{
-		Chunk* _chunk = worldChunks[i];
-		if (_position == _chunk->chunkPosition)
-		{
-			ReleaseMutex(mutex);
-			return _chunk;
-		}
-	}
-	ReleaseMutex(mutex);
-	return nullptr;
-}
-
-bool Chunks_Manager::GetIsChunkAtPositionBeingGenerated(const glm::vec3& _position) const
-{
-	WaitForSingleObject(mutex, INFINITE);
-
-	const size_t& _max = chunkPositionBeingGenerated.size();
-	for (size_t i = 0; i < _max; ++i)
-	{
-		if (chunkPositionBeingGenerated[i] == _position)
-		{
-			ReleaseMutex(mutex);
-			return true;
-		}
-	}
-	ReleaseMutex(mutex);
-	return false;
-}
-
-Chunk* Chunks_Manager::GetChunkBeingGeneratedAtPosition(const glm::vec3& _position) const
-{
-	WaitForSingleObject(mutex, INFINITE);
-
-	const size_t& _max = chunkBeingGenerating.size();
-	for (size_t i = 0; i < _max; ++i)
-	{
-		Chunk* _chunk = chunkBeingGenerating[i];
-		if (_position == _chunk->chunkPosition)
-		{
-			ReleaseMutex(mutex);
-			return _chunk;
-		}
-	}
-	ReleaseMutex(mutex);
-	return nullptr;
 }

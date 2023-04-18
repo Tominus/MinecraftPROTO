@@ -6,9 +6,8 @@
 #include "Chunks_Manager.h"
 #include "Chunk_SideData.h"
 #include "Chunk_Data.h"
+#include "Chunk_Render.h"
 #include "Chunk.h"
-#include "Block.h"
-#include "Block_Type.h"
 #include "Action.h"
 #include "PerlinNoise.h"
 
@@ -18,6 +17,8 @@ Chunk_Data_Generator::Chunk_Data_Generator(Chunks_Manager* _chunksManager)
 	mutex_ChunkManager = _chunksManager->mutex;
 	mutex_ChunkDataGenerator = CreateMutex(0, false, 0);
 	randMax = (unsigned)EBlock_Type::BLOCK_TYPE_MAX_NUMBER;
+	fMinChunkHeight = Chunk_Min_World_Height + 1;
+	fMaxChunkHeight = Chunk_Max_World_Height - 1;
 }
 
 Chunk_Data_Generator::~Chunk_Data_Generator()
@@ -29,10 +30,13 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData)
 {
 	WaitForSingleObject(mutex_ChunkDataGenerator, INFINITE);
 	const Perlin_Noise _noiseCopy = Perlin_Noise::Instance();
+	Chunk* _ownerChunk = _chunkData->ownerChunk;
+	Chunk_Render* _ownerChunkRender = _ownerChunk->chunkRender;
+	glm::vec3 _chunkWorldPosition(_ownerChunk->worldPosition);
 	ReleaseMutex(mutex_ChunkDataGenerator);
 
-	Chunk* _ownerChunk = _chunkData->ownerChunk;
-	const glm::vec3& _chunkWorldPosition = _ownerChunk->worldPosition;
+	Block****& _blocks = _chunkData->blocks;
+
 
 	if (/*Exist in file*/false)
 	{
@@ -42,7 +46,6 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData)
 	{
 		// Generate New Data
 
-		Block****& _blocks = _chunkData->blocks;
 		_blocks = new Block ***[Chunk_Size];
 
 		for (size_t x = 0; x < Chunk_Size; ++x)
@@ -57,38 +60,46 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData)
 
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
-					EBlock_Type _type;
+					int _noiseHeight = _noiseCopy.CalculateNoise(_chunkWorldPosition.x + x, _chunkWorldPosition.z + z);
 
-					int _noiseHeight = _noiseCopy.CalculateNoise(x + _chunkWorldPosition.x, z + _chunkWorldPosition.z);
-					if (_noiseHeight < _chunkWorldPosition.y + y)
-					{
-						_type = EBlock_Type::Air;
-					}
-					else
-					{
-						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
-					}
-
-					_blocksXY[z] = new Block(_type);
+					_blocksXY[z] = GenerateBlock(_noiseHeight, _chunkWorldPosition.y + y);
 				}
 			}
 		}
 	}
 
-	GenerateChunkSideData(_noiseCopy, _ownerChunk);
+	for (size_t x = 0; x < Chunk_Size; ++x)
+	{
+		Block***& _blocksX = _blocks[x];
+		for (size_t y = 0; y < Chunk_Size; ++y)
+		{
+			Block**& _blocksXY = _blocksX[y];
+			for (size_t z = 0; z < Chunk_Size; ++z)
+			{
+				if (_blocksXY[z]->blockType != EBlock_Type::Air)
+				{
+					_ownerChunkRender->bHasRender = true;
+					GenerateChunkSideData(_noiseCopy, _ownerChunk);
+					return;
+				}
+			}
+		}
+	}
 }
 
 void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy, Chunk* _chunk)
 {
 	WaitForSingleObject(mutex_ChunkManager, INFINITE);
 	Chunk_SideData* _chunkSideData = _chunk->chunkSideData;
-	const glm::vec3& _chunkWorldPosition = _chunk->worldPosition;
+	glm::vec3 _chunkWorldPosition(_chunk->worldPosition);
+	float _chunkHeightPosition = _chunk->chunkPosition.y;
+	float _ownerChunkHeight = _chunkWorldPosition.y;
 	ReleaseMutex(mutex_ChunkManager);
 
-	const float& _ownerChunkHeight = _chunkWorldPosition.y;
+
 
 	//Down Side
-	if (_ownerChunkHeight - 1 > Chunk_Min_World_Height)
+	if (_chunkHeightPosition > fMinChunkHeight)
 	{
 		if (/*Exist in file*/false)
 		{
@@ -108,26 +119,16 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
-					EBlock_Type _type;
-
 					int _noiseHeight = _noiseCopy.CalculateNoise(_downWorldPosition.x + x, _downWorldPosition.z + z);
-					if (_noiseHeight < _downWorldPosition.y/* + Chunk_Max_Size*/)
-					{
-						_type = EBlock_Type::Air;
-					}
-					else
-					{
-						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
-					}
 
-					_blocksX[z] = new Block(_type);
+					_blocksX[z] = GenerateBlock(_noiseHeight, _downWorldPosition.y);
 				}
 			}
 		}
 	}
 
 	//Up Side
-	if (_ownerChunkHeight + 1 < Chunk_Max_World_Height)
+	if (_chunkHeightPosition < fMaxChunkHeight)
 	{
 		if (/*Exist in file*/false)
 		{
@@ -147,19 +148,9 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
-					EBlock_Type _type;
-
 					int _noiseHeight = _noiseCopy.CalculateNoise(_upWorldPosition.x + x, _upWorldPosition.z + z);
-					if (_noiseHeight < _upWorldPosition.y)
-					{
-						_type = EBlock_Type::Air;
-					}
-					else
-					{
-						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
-					}
 
-					_blocksX[z] = new Block(_type);
+					_blocksX[z] = GenerateBlock(_noiseHeight, _upWorldPosition.y);
 				}
 			}
 		}
@@ -185,19 +176,9 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
-					EBlock_Type _type;
+					int _noiseHeight = _noiseCopy.CalculateNoise(_leftWorldPosition.x, _leftWorldPosition.z + z);
 
-					int _noiseHeight = _noiseCopy.CalculateNoise(_leftWorldPosition.x/* + Chunk_Max_Size*/, _leftWorldPosition.z + z);
-					if (_noiseHeight < _leftWorldPosition.y + y)
-					{
-						_type = EBlock_Type::Air;
-					}
-					else
-					{
-						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
-					}
-
-					_blocksX[z] = new Block(_type);
+					_blocksX[z] = GenerateBlock(_noiseHeight, _leftWorldPosition.y + y);
 				}
 			}
 		}
@@ -223,19 +204,9 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
-					EBlock_Type _type;
-
 					int _noiseHeight = _noiseCopy.CalculateNoise(_rightWorldPosition.x, _rightWorldPosition.z + z);
-					if (_noiseHeight < _rightWorldPosition.y + y)
-					{
-						_type = EBlock_Type::Air;
-					}
-					else
-					{
-						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
-					}
 
-					_blocksX[z] = new Block(_type);
+					_blocksX[z] = GenerateBlock(_noiseHeight, _rightWorldPosition.y + y);
 				}
 			}
 		}
@@ -261,19 +232,9 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 
 				for (size_t y = 0; y < Chunk_Size; ++y)
 				{
-					EBlock_Type _type;
+					int _noiseHeight = _noiseCopy.CalculateNoise(_backWorldPosition.x + x, _backWorldPosition.z);
 
-					int _noiseHeight = _noiseCopy.CalculateNoise(_backWorldPosition.x + x, _backWorldPosition.z/* + Chunk_Max_Size*/);
-					if (_noiseHeight < _backWorldPosition.y + y)
-					{
-						_type = EBlock_Type::Air;
-					}
-					else
-					{
-						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
-					}
-
-					_blocksX[y] = new Block(_type);
+					_blocksX[y] = GenerateBlock(_noiseHeight, _backWorldPosition.y + y);
 				}
 			}
 		}
@@ -299,19 +260,9 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 
 				for (size_t y = 0; y < Chunk_Size; ++y)
 				{
-					EBlock_Type _type;
-
 					int _noiseHeight = _noiseCopy.CalculateNoise(_frontWorldPosition.x + x, _frontWorldPosition.z);
-					if (_noiseHeight < _frontWorldPosition.y + y)
-					{
-						_type = EBlock_Type::Air;
-					}
-					else
-					{
-						_type = (EBlock_Type)(rand() % 4 + 2); //Always full block  TODO generate with Noise
-					}
 
-					_blocksX[y] = new Block(_type);
+					_blocksX[y] = GenerateBlock(_noiseHeight, _frontWorldPosition.y + y);
 				}
 			}
 		}
@@ -321,13 +272,11 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 {
 	WaitForSingleObject(mutex_ChunkManager, INFINITE);
-
 	Chunk*& _ownerChunk = _chunkData->ownerChunk;
-	const glm::vec3& _ownerChunkPosition = _ownerChunk->GetChunkPosition();
-
+	glm::vec3 _ownerChunkPosition(_ownerChunk->chunkPosition);
+	float _ownerChunkHeight =  _ownerChunkPosition.y;
 	ReleaseMutex(mutex_ChunkManager);
 
-	const float& _ownerChunkHeight =  _ownerChunkPosition.y;
 	const glm::vec3& _downPosition =  _ownerChunkPosition + glm::vec3(0, -1, 0);
 	const glm::vec3& _upPosition =    _ownerChunkPosition + glm::vec3(0, 1, 0);
 	const glm::vec3& _leftPosition =  _ownerChunkPosition + glm::vec3(-1, 0, 0);
@@ -366,14 +315,14 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 		if (Chunk* _upChunk = chunksManager->GetChunkAtPosition(_upPosition))
 		{
 			Chunk_Data* _upChunkData = _upChunk->chunkData;
-			_upChunk->chunkData->downChunk = _ownerChunk;
+			_upChunkData->downChunk = _ownerChunk;
 			_chunkData->upChunk = _upChunk;
 			_upChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 		}
 		else if (Chunk* _upChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_upPosition))
 		{
 			Chunk_Data* _upChunkData = _upChunk->chunkData;
-			_upChunk->chunkData->downChunk = _ownerChunk;
+			_upChunkData->downChunk = _ownerChunk;
 			_chunkData->upChunk = _upChunk;
 			_upChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 		}
@@ -387,14 +336,14 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	if (Chunk* _leftChunk = chunksManager->GetChunkAtPosition(_leftPosition))
 	{
 		Chunk_Data* _leftChunkData = _leftChunk->chunkData;
-		_leftChunk->chunkData->rightChunk = _ownerChunk;
+		_leftChunkData->rightChunk = _ownerChunk;
 		_chunkData->leftChunk = _leftChunk;
 		_leftChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
 	else if (Chunk* _leftChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_leftPosition))
 	{
 		Chunk_Data* _leftChunkData = _leftChunk->chunkData;
-		_leftChunk->chunkData->rightChunk = _ownerChunk;
+		_leftChunkData->rightChunk = _ownerChunk;
 		_chunkData->leftChunk = _leftChunk;
 		_leftChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
@@ -408,14 +357,14 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	if (Chunk* _rightChunk = chunksManager->GetChunkAtPosition(_rightPosition))
 	{
 		Chunk_Data* _rightChunkData = _rightChunk->chunkData;
-		_rightChunk->chunkData->leftChunk = _ownerChunk;
+		_rightChunkData->leftChunk = _ownerChunk;
 		_chunkData->rightChunk = _rightChunk;
 		_rightChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
 	else if (Chunk* _rightChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_rightPosition))
 	{
 		Chunk_Data* _rightChunkData = _rightChunk->chunkData;
-		_rightChunk->chunkData->leftChunk = _ownerChunk;
+		_rightChunkData->leftChunk = _ownerChunk;
 		_chunkData->rightChunk = _rightChunk;
 		_rightChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
@@ -429,14 +378,14 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	if (Chunk* _backChunk = chunksManager->GetChunkAtPosition(_backPosition))
 	{
 		Chunk_Data* _backChunkData = _backChunk->chunkData;
-		_backChunk->chunkData->frontChunk = _ownerChunk;
+		_backChunkData->frontChunk = _ownerChunk;
 		_chunkData->backChunk = _backChunk;
 		_backChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
 	else if (Chunk* _backChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_backPosition))
 	{
 		Chunk_Data* _backChunkData = _backChunk->chunkData;
-		_backChunk->chunkData->frontChunk = _ownerChunk;
+		_backChunkData->frontChunk = _ownerChunk;
 		_chunkData->backChunk = _backChunk;
 		_backChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
@@ -450,14 +399,14 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	if (Chunk* _frontChunk = chunksManager->GetChunkAtPosition(_frontPosition))
 	{
 		Chunk_Data* _frontChunkData = _frontChunk->chunkData;
-		_frontChunk->chunkData->backChunk = _ownerChunk;
+		_frontChunkData->backChunk = _ownerChunk;
 		_chunkData->frontChunk = _frontChunk;
 		_frontChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}
 	else if (Chunk* _frontChunk = chunksManager->GetChunkBeingGeneratedAtPosition(_frontPosition))
 	{
 		Chunk_Data* _frontChunkData = _frontChunk->chunkData;
-		_frontChunk->chunkData->backChunk = _ownerChunk;
+		_frontChunkData->backChunk = _ownerChunk;
 		_chunkData->frontChunk = _frontChunk;
 		_frontChunkData->AddGeneratedSideChunk(_ownerChunkPosition);
 	}

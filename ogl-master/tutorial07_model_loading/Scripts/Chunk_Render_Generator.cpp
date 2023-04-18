@@ -8,7 +8,6 @@
 #include "Chunks_Manager.h"
 #include "Chunk.h"
 #include "Chunk_Data.h"
-#include "Chunk_Render.h"
 #include "Chunk_SideData.h"
 #include "Block.h"
 #include "Block_Datas.h"
@@ -310,20 +309,6 @@ void Chunk_Render_Generator::GenerateChunkCGRender(std::map<GLuint, SChunk_Rende
 		_globalVertexs.clear();
 		_globalUVs.clear();
 	}
-}
-
-Threaded SChunk_Render_Data* Chunk_Render_Generator::GetChunkRenderData(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas, const GLuint& _textureID)
-{
-	for each (const std::pair<const GLuint&, SChunk_Render_Data*>& _data in _currentRenderDatas)
-	{
-		if (_data.first == _textureID)
-			return _data.second;
-	}
-
-	/*Texture id doesn't exist, so we create a new one.*/
-	SChunk_Render_Data* _currentChunkRenderData = new SChunk_Render_Data();
-	_currentRenderDatas.emplace(_textureID, _currentChunkRenderData);
-	return _currentChunkRenderData;
 }
 
 Threaded void Chunk_Render_Generator::SetAllSideChunkForUpdate(Chunk_Data* _chunkData)

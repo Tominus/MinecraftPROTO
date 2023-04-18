@@ -9,6 +9,7 @@ using namespace glm;
 
 glm::mat4 ViewMatrix;
 glm::mat4 ProjectionMatrix;
+glm::vec3 position = glm::vec3( 8, 260, 8 );
 
 const glm::mat4& getViewMatrix()
 {
@@ -18,14 +19,15 @@ const glm::mat4& getProjectionMatrix()
 {
 	return ProjectionMatrix;
 }
-
-// Initial position : on +Z
-glm::vec3 position = glm::vec3( -8, 48, -8 ); 
-//glm::vec3 position = glm::vec3( 8, 8, 8 ); 
 const glm::vec3& getPosition()
 {
 	return position;
 }
+const float& getPositionHeight()
+{
+	return position.y;
+}
+
 // Initial horizontal angle : toward -Z
 //float horizontalAngle = 0.8f;
 float horizontalAngle = -2.5f;
@@ -35,7 +37,7 @@ float horizontalAngle = -2.5f;
 float verticalAngle = -0.5f;
 
 // Initial Field of View
-float initialFoV = 45.0f;
+float initialFoV = 45.70f;
 
 float speed = 12.0f; // 3 units / second
 float mouseSpeed = 0.005f;

@@ -5,6 +5,8 @@
 #include <vector>
 #include <Windows.h>
 
+#include "Chunk_Render.h"
+
 class Chunk_Data;
 class Chunk_Render;
 
@@ -12,8 +14,6 @@ class World;
 class TextureLoader;
 class Blocks_Global_Datas;
 class Blocks_Global_Shapes;
-
-struct SChunk_Render_Data;
 
 class Chunk_Render_Generator
 {
@@ -28,7 +28,19 @@ private:
 	void GenerateNewChunkRender(Chunk_Render* _chunkRender, Chunk_Data* _chunkData);
 	void GenerateChunkCGRender(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas);
 
-	SChunk_Render_Data* GetChunkRenderData(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas, const GLuint& _textureID);
+	inline SChunk_Render_Data* GetChunkRenderData(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas, const GLuint& _textureID)
+	{
+		for each (const std::pair<const GLuint&, SChunk_Render_Data*>& _data in _currentRenderDatas)
+		{
+			if (_data.first == _textureID)
+				return _data.second;
+		}
+
+		/*Texture id doesn't exist, so we create a new one.*/
+		SChunk_Render_Data* _currentChunkRenderData = new SChunk_Render_Data();
+		_currentRenderDatas.emplace(_textureID, _currentChunkRenderData);
+		return _currentChunkRenderData;
+	}
 
 	void SetAllSideChunkForUpdate(Chunk_Data* _chunkData);
 	void UpdateChunkSideRender(Chunk* _chunk);
