@@ -1,14 +1,17 @@
 #pragma once
 #include "GlobalDefine.h"
 
+#include "PerlinNoise.h"
 #include "Block_Type.h"
 #include "Block.h"
+
+#include <GL/glew.h>
+#include <glm/glm.hpp>
 
 #include <Windows.h>
 
 class Chunk_Data;
 class Chunks_Manager;
-class Perlin_Noise;
 class Chunk_SideData;
 class Block;
 
@@ -24,16 +27,16 @@ private:
 
 	/*Generate all existing block randomly.*/
 	void GenerateNewChunkData(Chunk_Data*& _chunkData);
-	void GenerateChunkSideData(const Perlin_Noise& _noiseCopy, Chunk* _chunk);
+	void GenerateChunkSideData(Chunk* _chunk);
 
-	inline Block* GenerateBlock(float _noise, float _blockHeight)
+	inline Block* GenerateBlock(const glm::vec3& _blockPosition)
 	{
 		//Smooth world
+		double _noise = perlinNoise->CalculateNoise(_blockPosition.x / 2, _blockPosition.z / 2);
+		_noise /= 8.0;
+		_noise += 128.0;
 
-		_noise /= 8.f;
-		_noise += 128.f;
-
-		if (_noise < _blockHeight)
+		if (_noise < _blockPosition.y)
 		{
 			return new Block(EBlock_Type::Air);
 		}
@@ -63,4 +66,5 @@ private:
 	float fMaxChunkHeight;
 	unsigned randMax;
 	Chunks_Manager* chunksManager;
+	Perlin_Noise* perlinNoise;
 };

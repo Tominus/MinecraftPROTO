@@ -37,29 +37,33 @@ Chunk_SideData::~Chunk_SideData()
 		delete[] upBlocks;
 	}
 
-	for (size_t x = 0; x < Chunk_Size; ++x)
+	if (leftBlocks) // if leftSide is valid so other are too
 	{
-		Block** _l = leftBlocks[x];
-		Block** _r = rightBlocks[x];
-		Block** _b = backBlocks[x];
-		Block** _f = frontBlocks[x];
 
-		for (size_t y = 0; y < Chunk_Size; ++y)
+		for (size_t x = 0; x < Chunk_Size; ++x)
 		{
-			delete _l[y];
-			delete _r[y];
-			delete _b[y];
-			delete _f[y];
+			Block** _l = leftBlocks[x];
+			Block** _r = rightBlocks[x];
+			Block** _b = backBlocks[x];
+			Block** _f = frontBlocks[x];
+
+			for (size_t y = 0; y < Chunk_Size; ++y)
+			{
+				delete _l[y];
+				delete _r[y];
+				delete _b[y];
+				delete _f[y];
+			}
+
+			delete[] _l;
+			delete[] _r;
+			delete[] _b;
+			delete[] _f;
 		}
 
-		delete[] _l;
-		delete[] _r;
-		delete[] _b;
-		delete[] _f;
+		delete[] leftBlocks;
+		delete[] rightBlocks;
+		delete[] backBlocks;
+		delete[] frontBlocks;
 	}
-
-	delete[] leftBlocks;
-	delete[] rightBlocks;
-	delete[] backBlocks;
-	delete[] frontBlocks;
 }

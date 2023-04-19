@@ -15,15 +15,22 @@ Chunk::Chunk(Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* 
 	chunkDataGenerator = _chunkDataGenerator;
 	chunkRenderGenerator = _chunkRenderGenerator;
 
-	chunkData = new Chunk_Data(this);
-	chunkRender = new Chunk_Render(this);
-	chunkSideData = new Chunk_SideData();
+	chunkData = nullptr;
+	chunkRender = nullptr;
+	chunkSideData = nullptr;
 }
 
 Chunk::~Chunk()
 {
 	delete chunkData;
 	delete chunkRender;
+}
+
+void Chunk::Init()
+{
+	chunkData = new Chunk_Data(this);
+	chunkRender = new Chunk_Render(this);
+	chunkSideData = new Chunk_SideData();
 }
 
 void Chunk::InitChunkData()
@@ -38,8 +45,11 @@ void Chunk::InitChunkRender()
 
 void Chunk::FinishInit()
 {
-	delete chunkSideData;
-	chunkSideData = nullptr;
+	if (chunkSideData)
+	{
+		delete chunkSideData;
+		chunkSideData = nullptr;
+	}
 }
 
 void Chunk::Render() const
@@ -50,7 +60,6 @@ void Chunk::Render() const
 void Chunk::GenerateCGRender()
 {
 	chunkRenderGenerator->GenerateChunkCGRender(chunkRender->renderDatas);
-	chunkRender->bHasFinishGeneration = true;
 }
 
 void Chunk::UpdateChunkSideRender()

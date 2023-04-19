@@ -13,6 +13,7 @@
 
 Chunk_Data_Generator::Chunk_Data_Generator(Chunks_Manager* _chunksManager)
 {
+	perlinNoise = &Perlin_Noise::Instance();
 	chunksManager = _chunksManager;
 	mutex_ChunkManager = _chunksManager->mutex;
 	mutex_ChunkDataGenerator = CreateMutex(0, false, 0);
@@ -29,7 +30,6 @@ Chunk_Data_Generator::~Chunk_Data_Generator()
 void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData)
 {
 	WaitForSingleObject(mutex_ChunkDataGenerator, INFINITE);
-	const Perlin_Noise _noiseCopy = Perlin_Noise::Instance();
 	Chunk* _ownerChunk = _chunkData->ownerChunk;
 	Chunk_Render* _ownerChunkRender = _ownerChunk->chunkRender;
 	glm::vec3 _chunkWorldPosition(_ownerChunk->worldPosition);
@@ -53,18 +53,28 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData)
 			Block***& _blocksX = _blocks[x];
 			_blocksX = new Block **[Chunk_Size];
 
+			_chunkWorldPosition.x += x;
+
 			for (size_t y = 0; y < Chunk_Size; ++y)
 			{
 				Block**& _blocksXY = _blocksX[y];
 				_blocksXY = new Block *[Chunk_Size];
 
+				_chunkWorldPosition.y += y;
+
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
-					int _noiseHeight = _noiseCopy.CalculateNoise(_chunkWorldPosition.x + x, _chunkWorldPosition.z + z);
+					_chunkWorldPosition.z += z;
 
-					_blocksXY[z] = GenerateBlock(_noiseHeight, _chunkWorldPosition.y + y);
+					_blocksXY[z] = GenerateBlock(_chunkWorldPosition);
+
+					_chunkWorldPosition.z -= z;
 				}
+
+				_chunkWorldPosition.y -= y;
 			}
+
+			_chunkWorldPosition.x -= x;
 		}
 	}
 
@@ -79,7 +89,7 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData)
 				if (_blocksXY[z]->blockType != EBlock_Type::Air)
 				{
 					_ownerChunkRender->bHasRender = true;
-					GenerateChunkSideData(_noiseCopy, _ownerChunk);
+					GenerateChunkSideData(_ownerChunk);
 					return;
 				}
 			}
@@ -87,7 +97,7 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData)
 	}
 }
 
-void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy, Chunk* _chunk)
+void Chunk_Data_Generator::GenerateChunkSideData(Chunk* _chunk)
 {
 	WaitForSingleObject(mutex_ChunkManager, INFINITE);
 	Chunk_SideData* _chunkSideData = _chunk->chunkSideData;
@@ -95,8 +105,6 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 	float _chunkHeightPosition = _chunk->chunkPosition.y;
 	float _ownerChunkHeight = _chunkWorldPosition.y;
 	ReleaseMutex(mutex_ChunkManager);
-
-
 
 	//Down Side
 	if (_chunkHeightPosition > fMinChunkHeight)
@@ -107,7 +115,7 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 		}
 		else
 		{
-			const glm::vec3& _downWorldPosition = _chunkWorldPosition + glm::vec3(0.f, -1.f, 0.f);
+			glm::vec3& _downWorldPosition = _chunkWorldPosition + glm::vec3(0.f, -1.f, 0.f);
 
 			Block***& _blocks = _chunkSideData->downBlocks;
 			_blocks = new Block **[Chunk_Size];
@@ -117,12 +125,18 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 				Block**& _blocksX = _blocks[x];
 				_blocksX = new Block *[Chunk_Size];
 
+				_downWorldPosition.x += x;
+
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
-					int _noiseHeight = _noiseCopy.CalculateNoise(_downWorldPosition.x + x, _downWorldPosition.z + z);
+					_downWorldPosition.z += z;
 
-					_blocksX[z] = GenerateBlock(_noiseHeight, _downWorldPosition.y);
+					_blocksX[z] = GenerateBlock(_downWorldPosition);
+
+					_downWorldPosition.z -= z;
 				}
+
+				_downWorldPosition.x -= x;
 			}
 		}
 	}
@@ -136,7 +150,7 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 		}
 		else
 		{
-			const glm::vec3& _upWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 16.f, 0.f);
+			glm::vec3& _upWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 16.f, 0.f);
 
 			Block***& _blocks = _chunkSideData->upBlocks;
 			_blocks = new Block **[Chunk_Size];
@@ -146,12 +160,18 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 				Block**& _blocksX = _blocks[x];
 				_blocksX = new Block *[Chunk_Size];
 
+				_upWorldPosition.x += x;
+
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
-					int _noiseHeight = _noiseCopy.CalculateNoise(_upWorldPosition.x + x, _upWorldPosition.z + z);
+					_upWorldPosition.z += z;
 
-					_blocksX[z] = GenerateBlock(_noiseHeight, _upWorldPosition.y);
+					_blocksX[z] = GenerateBlock(_upWorldPosition);
+
+					_upWorldPosition.z -= z;
 				}
+
+				_upWorldPosition.x -= x;
 			}
 		}
 	}
@@ -164,7 +184,7 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 		}
 		else
 		{
-			const glm::vec3& _leftWorldPosition = _chunkWorldPosition + glm::vec3(-1.f, 0.f, 0.f);
+			glm::vec3& _leftWorldPosition = _chunkWorldPosition + glm::vec3(-1.f, 0.f, 0.f);
 
 			Block***& _blocks = _chunkSideData->leftBlocks;
 			_blocks = new Block **[Chunk_Size];
@@ -174,12 +194,18 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 				Block**& _blocksX = _blocks[y];
 				_blocksX = new Block *[Chunk_Size];
 
+				_leftWorldPosition.y += y;
+
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
-					int _noiseHeight = _noiseCopy.CalculateNoise(_leftWorldPosition.x, _leftWorldPosition.z + z);
+					_leftWorldPosition.z += z;
 
-					_blocksX[z] = GenerateBlock(_noiseHeight, _leftWorldPosition.y + y);
+					_blocksX[z] = GenerateBlock(_leftWorldPosition);
+
+					_leftWorldPosition.z -= z;
 				}
+
+				_leftWorldPosition.y -= y;
 			}
 		}
 	}
@@ -192,7 +218,7 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 		}
 		else
 		{
-			const glm::vec3& _rightWorldPosition = _chunkWorldPosition + glm::vec3(16.f, 0.f, 0.f);
+			glm::vec3& _rightWorldPosition = _chunkWorldPosition + glm::vec3(16.f, 0.f, 0.f);
 
 			Block***& _blocks = _chunkSideData->rightBlocks;
 			_blocks = new Block **[Chunk_Size];
@@ -202,12 +228,18 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 				Block**& _blocksX = _blocks[y];
 				_blocksX = new Block *[Chunk_Size];
 
+				_rightWorldPosition.y += y;
+
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
-					int _noiseHeight = _noiseCopy.CalculateNoise(_rightWorldPosition.x, _rightWorldPosition.z + z);
+					_rightWorldPosition.z += z;
 
-					_blocksX[z] = GenerateBlock(_noiseHeight, _rightWorldPosition.y + y);
+					_blocksX[z] = GenerateBlock(_rightWorldPosition);
+
+					_rightWorldPosition.z -= z;
 				}
+
+				_rightWorldPosition.y -= y;
 			}
 		}
 	}
@@ -220,7 +252,7 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 		}
 		else
 		{
-			const glm::vec3& _backWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 0.f, -1.f);
+			glm::vec3& _backWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 0.f, -1.f);
 
 			Block***& _blocks = _chunkSideData->backBlocks;
 			_blocks = new Block **[Chunk_Size];
@@ -230,12 +262,18 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 				Block**& _blocksX = _blocks[x];
 				_blocksX = new Block *[Chunk_Size];
 
+				_backWorldPosition.x += x;
+
 				for (size_t y = 0; y < Chunk_Size; ++y)
 				{
-					int _noiseHeight = _noiseCopy.CalculateNoise(_backWorldPosition.x + x, _backWorldPosition.z);
+					_backWorldPosition.y += y;
 
-					_blocksX[y] = GenerateBlock(_noiseHeight, _backWorldPosition.y + y);
+					_blocksX[y] = GenerateBlock(_backWorldPosition);
+
+					_backWorldPosition.y -= y;
 				}
+
+				_backWorldPosition.x -= x;
 			}
 		}
 	}
@@ -248,7 +286,7 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 		}
 		else
 		{
-			const glm::vec3& _frontWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 0.f, 16.f);
+			glm::vec3& _frontWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 0.f, 16.f);
 
 			Block***& _blocks = _chunkSideData->frontBlocks;
 			_blocks = new Block **[Chunk_Size];
@@ -258,12 +296,18 @@ void Chunk_Data_Generator::GenerateChunkSideData(const Perlin_Noise& _noiseCopy,
 				Block**& _blocksX = _blocks[x];
 				_blocksX = new Block *[Chunk_Size];
 
+				_frontWorldPosition.x += x;
+
 				for (size_t y = 0; y < Chunk_Size; ++y)
 				{
-					int _noiseHeight = _noiseCopy.CalculateNoise(_frontWorldPosition.x + x, _frontWorldPosition.z);
+					_frontWorldPosition.y += y;
 
-					_blocksX[y] = GenerateBlock(_noiseHeight, _frontWorldPosition.y + y);
+					_blocksX[y] = GenerateBlock(_frontWorldPosition);
+
+					_frontWorldPosition.y -= y;
 				}
+
+				_frontWorldPosition.x -= x;
 			}
 		}
 	}

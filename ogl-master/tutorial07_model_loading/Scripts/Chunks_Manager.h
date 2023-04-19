@@ -61,7 +61,7 @@ private:
 	void DeleteChunksOutOfRange(std::vector<Chunk*>& _chunkInRange, size_t _worldChunkSize);
 
 public:
-	Chunk* GetChunkAtPosition(const glm::vec3& _position) const
+	inline Chunk* GetChunkAtPosition(const glm::vec3& _position) const
 	{
 		WaitForSingleObject(mutex, INFINITE);
 
@@ -79,7 +79,59 @@ public:
 		return nullptr;
 	}
 
-	bool GetIsChunkAtPositionBeingGenerated(const glm::vec3& _position) const
+	inline Chunk* GetFirstChunkAroundPosition(const glm::vec3& _position) const
+	{
+		const glm::vec3& _downPosition =  _position + glm::vec3(0.f, -1.f, 0.f);
+		const glm::vec3& _upPosition =    _position + glm::vec3(0.f, 1.f, 0.f);
+		const glm::vec3& _leftPosition =  _position + glm::vec3(-1.f, 0.f, 0.f);
+		const glm::vec3& _rightPosition = _position + glm::vec3(1.f, 0.f, 0.f);
+		const glm::vec3& _backPosition =  _position + glm::vec3(0.f, 0.f, -1.f);
+		const glm::vec3& _frontPosition = _position + glm::vec3(0.f, 0.f, 1.f);
+
+		WaitForSingleObject(mutex, INFINITE);
+
+		const size_t& _max = worldChunks.size();
+		for (size_t i = 0; i < _max; ++i)
+		{
+			Chunk* _chunk = worldChunks[i];
+			const glm::vec3& _chunkPosition = _chunk->chunkPosition;
+			
+			if (_chunkPosition == _downPosition)
+			{
+				ReleaseMutex(mutex);
+				return _chunk;
+			}
+			if (_chunkPosition == _upPosition)
+			{
+				ReleaseMutex(mutex);
+				return _chunk;
+			}
+			if (_chunkPosition == _leftPosition)
+			{
+				ReleaseMutex(mutex);
+				return _chunk;
+			}
+			if (_chunkPosition == _rightPosition)
+			{
+				ReleaseMutex(mutex);
+				return _chunk;
+			}
+			if (_chunkPosition == _backPosition)
+			{
+				ReleaseMutex(mutex);
+				return _chunk;
+			}
+			if (_chunkPosition == _frontPosition)
+			{
+				ReleaseMutex(mutex);
+				return _chunk;
+			}
+		}
+		ReleaseMutex(mutex);
+		return nullptr;
+	}
+
+	inline bool GetIsChunkAtPositionBeingGenerated(const glm::vec3& _position) const
 	{
 		WaitForSingleObject(mutex, INFINITE);
 
@@ -96,7 +148,7 @@ public:
 		return false;
 	}
 
-	Chunk* GetChunkBeingGeneratedAtPosition(const glm::vec3& _position) const
+	inline Chunk* GetChunkBeingGeneratedAtPosition(const glm::vec3& _position) const
 	{
 		WaitForSingleObject(mutex, INFINITE);
 
@@ -119,6 +171,7 @@ public:
 
 private:
 	std::vector<Chunk*> worldChunks;
+	std::vector<Chunk*> worldChunksToRender;
 
 	Chunk_Data_Generator* chunkDataGenerator;
 	Chunk_Render_Generator* chunkRenderGenerator;

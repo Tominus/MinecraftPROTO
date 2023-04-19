@@ -11,6 +11,7 @@
 #define Threaded
 #define Thread_Func unsigned long(__stdcall*)(void*)
 #define Thread_Used_Qty (16)
+#define Thread_Max_ChunkCreation (16)
 
 #define Max_FPS (60)
 #define Tick_Time (0.05f)
