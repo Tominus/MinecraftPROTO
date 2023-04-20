@@ -1,6 +1,6 @@
 #pragma once
 
-/*Every things will have to be done.*/
+/*Every things that have to be done.*/
 
 /* Storage of a Big Data for Blocks (initialized before start playing)
 * 
@@ -18,8 +18,11 @@
 */
 
 /* 
+* - ??? same than opti_worldChunks but with State enum : None, IsGenerating, Genered 
+* - Detach from everything chunk that have to be deleted, and delete them gradually
 * - mutex priority
 * - chunk position optimized
+* - stock in chunk there array index and decrement them when array is erased (probably more opti)
 * - save data
 * - test destroy block
 * - rendu alpha

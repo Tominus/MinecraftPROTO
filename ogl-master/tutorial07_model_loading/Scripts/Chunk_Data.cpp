@@ -224,7 +224,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 				--_size;
 				--i;
 			}
-			else if (Chunk* _chunk = chunkManager->GetChunkAtPosition(_ownerPosition + _diffPosition))
+			else if (Chunk* _chunk = chunkManager->Opti_GetChunk(_ownerPosition + _diffPosition))
 			{
 				leftChunk = _chunk;
 				_chunk->chunkData->rightChunk = ownerChunk;
@@ -242,7 +242,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 				--_size;
 				--i;
 			}
-			else if (Chunk* _chunk = chunkManager->GetChunkAtPosition(_ownerPosition + _diffPosition))
+			else if (Chunk* _chunk = chunkManager->Opti_GetChunk(_ownerPosition + _diffPosition))
 			{
 				rightChunk = _chunk;
 				_chunk->chunkData->leftChunk = ownerChunk;
@@ -261,7 +261,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 				--_size;
 				--i;
 			}
-			else if (Chunk* _chunk = chunkManager->GetChunkAtPosition(_ownerPosition + _diffPosition))
+			else if (Chunk* _chunk = chunkManager->Opti_GetChunk(_ownerPosition + _diffPosition))
 			{
 				downChunk = _chunk;
 				_chunk->chunkData->upChunk = ownerChunk;
@@ -279,7 +279,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 				--_size;
 				--i;
 			}
-			else if (Chunk* _chunk = chunkManager->GetChunkAtPosition(_ownerPosition + _diffPosition))
+			else if (Chunk* _chunk = chunkManager->Opti_GetChunk(_ownerPosition + _diffPosition))
 			{
 				upChunk = _chunk;
 				_chunk->chunkData->downChunk = ownerChunk;
@@ -298,7 +298,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 				--_size;
 				--i;
 			}
-			else if (Chunk* _chunk = chunkManager->GetChunkAtPosition(_ownerPosition + _diffPosition))
+			else if (Chunk* _chunk = chunkManager->Opti_GetChunk(_ownerPosition + _diffPosition))
 			{
 				backChunk = _chunk;
 				_chunk->chunkData->frontChunk = ownerChunk;
@@ -316,7 +316,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 				--_size;
 				--i;
 			}
-			else if (Chunk* _chunk = chunkManager->GetChunkAtPosition(_ownerPosition + _diffPosition))
+			else if (Chunk* _chunk = chunkManager->Opti_GetChunk(_ownerPosition + _diffPosition))
 			{
 				frontChunk = _chunk;
 				_chunk->chunkData->backChunk = ownerChunk;

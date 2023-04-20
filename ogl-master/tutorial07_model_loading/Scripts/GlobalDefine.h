@@ -6,6 +6,9 @@
 #define Chunk_Zero_World_Height (0)
 #define Chunk_Max_World_Height (16)
 
+constexpr size_t Chunk_Min_Limit_World_Height = (Chunk_Min_World_Height + 1);
+constexpr size_t Chunk_Max_Limit_World_Height = (Chunk_Max_World_Height - 1);
+
 /*If this function can be use in tread*/
 #define Main_Thread
 #define Threaded
@@ -21,6 +24,9 @@
 #define Render_Distance_Min (2)
 #define Render_Distance_Current (5)
 #define Render_Distance_Max (16)
+
+constexpr size_t Render_Distance_Total = ((Render_Distance_Current * 2) - 1);
+constexpr size_t Render_Distance_Total_Limit = (Render_Distance_Total - 1);
 
 #define Block_Total_Shapes (36)
 #define Block_Total_Possible_Shapes (64)

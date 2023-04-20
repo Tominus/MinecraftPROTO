@@ -283,7 +283,14 @@ Threaded void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chun
 		}
 	}
 
-	//SetAllSideChunkForUpdate(_chunkData);
+	//Check if has render
+	if (_currentRenderDatas.size() < 1)
+	{
+		_chunkRender->bHasRender = false;
+	}
+
+
+	//SetAllSideChunkForUpdate(_chunkData); //deprecated
 }
 
 void Chunk_Render_Generator::GenerateChunkCGRender(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas)

@@ -43,6 +43,8 @@ public:
 	inline Perlin_Noise* GetPerlinNoise() const { return perlinNoise; }
 	inline Shaders_Manager* GetShadersManager() const { return shaderManager; }
 
+	inline GLFWwindow* GetWindow() const { return window; }
+
 	inline const float& GetDeltaTime() const { return deltaTime; }
 	inline const float& GetGameTime() const { return gameTime; }
 
@@ -54,6 +56,8 @@ private:
 	Debug_World* debugWorld;
 	Perlin_Noise* perlinNoise;
 	Shaders_Manager* shaderManager;
+
+	GLFWwindow* window;
 
 	float deltaTime;
 	float gameTime;

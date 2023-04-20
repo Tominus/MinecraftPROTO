@@ -88,7 +88,9 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData)
 			{
 				if (_blocksXY[z]->blockType != EBlock_Type::Air)
 				{
-					_ownerChunkRender->bHasRender = true;
+					_ownerChunkRender->bHasRender = true; 
+					// It is used in Render_Generator to check if it has more than 0 render shape
+
 					GenerateChunkSideData(_ownerChunk);
 					return;
 				}
@@ -332,9 +334,9 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 
 	WaitForSingleObject(mutex_ChunkManager, INFINITE);
 
-	if (_ownerChunkHeight > Chunk_Zero_World_Height)
+	if (_ownerChunkHeight > Chunk_Min_Limit_World_Height)
 	{
-		if (Chunk* _downChunk = chunksManager->GetChunkAtPosition(_downPosition))
+		if (Chunk* _downChunk = chunksManager->Opti_GetChunk(_downPosition))
 		{
 			Chunk_Data* _downChunkData = _downChunk->chunkData;
 			_downChunkData->upChunk = _ownerChunk;
@@ -354,9 +356,9 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 			_needToWait = true;
 		}
 	}
-	if (_ownerChunkHeight < Chunk_Max_World_Height)
+	if (_ownerChunkHeight < Chunk_Max_Limit_World_Height)
 	{
-		if (Chunk* _upChunk = chunksManager->GetChunkAtPosition(_upPosition))
+		if (Chunk* _upChunk = chunksManager->Opti_GetChunk(_upPosition))
 		{
 			Chunk_Data* _upChunkData = _upChunk->chunkData;
 			_upChunkData->downChunk = _ownerChunk;
@@ -377,7 +379,7 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 		}
 	}
 
-	if (Chunk* _leftChunk = chunksManager->GetChunkAtPosition(_leftPosition))
+	if (Chunk* _leftChunk = chunksManager->Opti_GetChunk(_leftPosition))
 	{
 		Chunk_Data* _leftChunkData = _leftChunk->chunkData;
 		_leftChunkData->rightChunk = _ownerChunk;
@@ -398,7 +400,7 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	}
 
 
-	if (Chunk* _rightChunk = chunksManager->GetChunkAtPosition(_rightPosition))
+	if (Chunk* _rightChunk = chunksManager->Opti_GetChunk(_rightPosition))
 	{
 		Chunk_Data* _rightChunkData = _rightChunk->chunkData;
 		_rightChunkData->leftChunk = _ownerChunk;
@@ -419,7 +421,7 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	}
 
 
-	if (Chunk* _backChunk = chunksManager->GetChunkAtPosition(_backPosition))
+	if (Chunk* _backChunk = chunksManager->Opti_GetChunk(_backPosition))
 	{
 		Chunk_Data* _backChunkData = _backChunk->chunkData;
 		_backChunkData->frontChunk = _ownerChunk;
@@ -440,7 +442,7 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	}
 
 
-	if (Chunk* _frontChunk = chunksManager->GetChunkAtPosition(_frontPosition))
+	if (Chunk* _frontChunk = chunksManager->Opti_GetChunk(_frontPosition))
 	{
 		Chunk_Data* _frontChunkData = _frontChunk->chunkData;
 		_frontChunkData->backChunk = _ownerChunk;

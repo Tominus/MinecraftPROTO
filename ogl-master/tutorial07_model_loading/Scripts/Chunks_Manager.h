@@ -60,76 +60,20 @@ private:
 
 	void DeleteChunksOutOfRange(std::vector<Chunk*>& _chunkInRange, size_t _worldChunkSize);
 
+	void Opti_CheckRenderDistance();
+	bool Opti_CheckIfNoChunkLoaded(glm::vec3 _playerPositionChunkRelative);
+	
+
 public:
-	inline Chunk* GetChunkAtPosition(const glm::vec3& _position) const
-	{
-		WaitForSingleObject(mutex, INFINITE);
+	// Return if the chunk have been added to array
+	bool Opti_AddChunk(Chunk* _chunk);
 
-		const size_t& _max = worldChunks.size();
-		for (size_t i = 0; i < _max; ++i)
-		{
-			Chunk* _chunk = worldChunks[i];
-			if (_position == _chunk->chunkPosition)
-			{
-				ReleaseMutex(mutex);
-				return _chunk;
-			}
-		}
-		ReleaseMutex(mutex);
-		return nullptr;
-	}
+	// Return the chunk at position if existing
+	Chunk* Opti_GetChunk(const glm::vec3& _position);
 
-	inline Chunk* GetFirstChunkAroundPosition(const glm::vec3& _position) const
-	{
-		const glm::vec3& _downPosition =  _position + glm::vec3(0.f, -1.f, 0.f);
-		const glm::vec3& _upPosition =    _position + glm::vec3(0.f, 1.f, 0.f);
-		const glm::vec3& _leftPosition =  _position + glm::vec3(-1.f, 0.f, 0.f);
-		const glm::vec3& _rightPosition = _position + glm::vec3(1.f, 0.f, 0.f);
-		const glm::vec3& _backPosition =  _position + glm::vec3(0.f, 0.f, -1.f);
-		const glm::vec3& _frontPosition = _position + glm::vec3(0.f, 0.f, 1.f);
+	// Return the first encouter chunk around position
+	Chunk* Opti_GetFirstChunkAroundPosition(const glm::vec3& _position);
 
-		WaitForSingleObject(mutex, INFINITE);
-
-		const size_t& _max = worldChunks.size();
-		for (size_t i = 0; i < _max; ++i)
-		{
-			Chunk* _chunk = worldChunks[i];
-			const glm::vec3& _chunkPosition = _chunk->chunkPosition;
-			
-			if (_chunkPosition == _downPosition)
-			{
-				ReleaseMutex(mutex);
-				return _chunk;
-			}
-			if (_chunkPosition == _upPosition)
-			{
-				ReleaseMutex(mutex);
-				return _chunk;
-			}
-			if (_chunkPosition == _leftPosition)
-			{
-				ReleaseMutex(mutex);
-				return _chunk;
-			}
-			if (_chunkPosition == _rightPosition)
-			{
-				ReleaseMutex(mutex);
-				return _chunk;
-			}
-			if (_chunkPosition == _backPosition)
-			{
-				ReleaseMutex(mutex);
-				return _chunk;
-			}
-			if (_chunkPosition == _frontPosition)
-			{
-				ReleaseMutex(mutex);
-				return _chunk;
-			}
-		}
-		ReleaseMutex(mutex);
-		return nullptr;
-	}
 
 	inline bool GetIsChunkAtPositionBeingGenerated(const glm::vec3& _position) const
 	{
@@ -171,6 +115,11 @@ public:
 
 private:
 	std::vector<Chunk*> worldChunks;
+
+	Chunk**** opti_worldChunks;
+	size_t opti_worldChunksCount;
+	glm::vec3 opti_worldChunksOffset;
+
 	std::vector<Chunk*> worldChunksToRender;
 
 	Chunk_Data_Generator* chunkDataGenerator;

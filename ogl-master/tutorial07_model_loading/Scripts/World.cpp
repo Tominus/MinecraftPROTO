@@ -19,6 +19,8 @@ World::World()
 	perlinNoise = nullptr;
 	shaderManager = nullptr;
 
+	window = nullptr;
+
 	gameTime = 0.f;
 	tickTime = 0.f;
 	fpsTime = 0.f;
@@ -36,6 +38,8 @@ World::~World()
 
 void World::InitWorld(GLFWwindow* _window)
 {
+	window = _window;
+
 	shaderManager = &Shaders_Manager::Instance();
 	shaderManager->Initialize();
 
