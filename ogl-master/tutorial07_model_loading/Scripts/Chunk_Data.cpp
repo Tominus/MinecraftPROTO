@@ -154,6 +154,7 @@ Threaded void Chunk_Data::AddOtherSideChunk(Chunk_Data*& _otherChunkData, const 
 	{
 		_otherChunkData->bHasFinishWaitSideChunk = true;
 		chunkManager->onChunkInitialized.RemoveDynamic(_otherChunkData, &Chunk_Data::AddSideChunk);
+		chunkManager->onChunkDestroyed.RemoveDynamic(_otherChunkData, &Chunk_Data::RemoveSideChunk);
 	}
 }
 
@@ -174,6 +175,7 @@ void Chunk_Data::AddGeneratedSideChunk(const glm::vec3& _otherPosition)
 	{
 		bHasFinishWaitSideChunk = true;
 		chunkManager->onChunkInitialized.RemoveDynamic(this, &Chunk_Data::AddSideChunk);
+		chunkManager->onChunkDestroyed.RemoveDynamic(this, &Chunk_Data::RemoveSideChunk);
 	}
 }
 
@@ -329,5 +331,48 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 
 	ReleaseMutex(mutex_ChunkManager);
 
-	return _size == 0;
+	if (_size == 0)
+	{
+		chunkManager->onChunkInitialized.RemoveDynamic(this, &Chunk_Data::AddSideChunk);
+		chunkManager->onChunkDestroyed.RemoveDynamic(this, &Chunk_Data::RemoveSideChunk);
+		return true;
+	}
+	return false;
+}
+
+void Chunk_Data::PreDelete()
+{
+	if (downChunk)
+	{
+		downChunk->chunkData->upChunk = nullptr;
+		downChunk = nullptr;
+	}
+	if (upChunk)
+	{
+		upChunk->chunkData->downChunk = nullptr;
+		upChunk = nullptr;
+	}
+	if (leftChunk)
+	{
+		leftChunk->chunkData->rightChunk = nullptr;
+		leftChunk = nullptr;
+	}
+	if (rightChunk)
+	{
+		rightChunk->chunkData->leftChunk = nullptr;
+		rightChunk = nullptr;
+	}
+	if (backChunk)
+	{
+		backChunk->chunkData->frontChunk = nullptr;
+		backChunk = nullptr;
+	}
+	if (frontChunk)
+	{
+		frontChunk->chunkData->backChunk = nullptr;
+		frontChunk = nullptr;
+	}
+
+	chunkManager->onChunkInitialized.RemoveDynamic(this, &Chunk_Data::AddSideChunk);
+	chunkManager->onChunkDestroyed.RemoveDynamic(this, &Chunk_Data::RemoveSideChunk);
 }

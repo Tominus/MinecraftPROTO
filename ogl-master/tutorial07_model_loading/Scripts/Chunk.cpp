@@ -66,3 +66,8 @@ void Chunk::UpdateChunkSideRender()
 {
 	chunkRenderGenerator->UpdateChunkSideRender(this);
 }
+
+void Chunk::PreDeleteChunk()
+{
+	chunkData->PreDelete();
+}

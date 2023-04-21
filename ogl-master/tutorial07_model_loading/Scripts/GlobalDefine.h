@@ -14,7 +14,7 @@ constexpr size_t Chunk_Max_Limit_World_Height = (Chunk_Max_World_Height - 1);
 #define Threaded
 #define Thread_Func unsigned long(__stdcall*)(void*)
 #define Thread_Used_Qty (16)
-#define Thread_Max_ChunkCreation (16)
+#define Thread_Max_ChunkCreation (64)
 
 #define Max_FPS (60)
 #define Tick_Time (0.05f)

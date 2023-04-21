@@ -320,9 +320,9 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	WaitForSingleObject(mutex_ChunkManager, INFINITE);
 	Chunk*& _ownerChunk = _chunkData->ownerChunk;
 	glm::vec3 _ownerChunkPosition(_ownerChunk->chunkPosition);
-	float _ownerChunkHeight =  _ownerChunkPosition.y;
 	ReleaseMutex(mutex_ChunkManager);
 
+	float _ownerChunkHeight =  _ownerChunkPosition.y;
 	const glm::vec3& _downPosition =  _ownerChunkPosition + glm::vec3(0, -1, 0);
 	const glm::vec3& _upPosition =    _ownerChunkPosition + glm::vec3(0, 1, 0);
 	const glm::vec3& _leftPosition =  _ownerChunkPosition + glm::vec3(-1, 0, 0);

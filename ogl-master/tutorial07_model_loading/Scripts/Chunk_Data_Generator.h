@@ -46,15 +46,6 @@ private:
 		}
 	}
 
-	/*if (_noiseHeight < _blockHeight)
-			{
-				return new Block(EBlock_Type::Air);
-			}
-			else
-			{
-				return new Block((EBlock_Type)(rand() % 4 + 2));
-			}*/
-
 	Threaded void SetSideChunks(Chunk_Data*& _chunkData) const;
 
 private:

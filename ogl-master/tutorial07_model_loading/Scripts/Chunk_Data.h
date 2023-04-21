@@ -27,6 +27,8 @@ private:
 
 	bool CheckChunkToWaitEmpty();
 
+	void PreDelete();
+
 public:
 	inline Chunk* GetOwnerChunk() const { return ownerChunk; }
 

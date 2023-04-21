@@ -18,10 +18,9 @@
 */
 
 /* 
-* - ??? same than opti_worldChunks but with State enum : None, IsGenerating, Genered 
-* - Detach from everything chunk that have to be deleted, and delete them gradually
+* - same than opti_worldChunks but with State enum : None, IsGenerating, Genered 
+* - Detach from everything chunk that have to be deleted, and delete them in another thread
 * - mutex priority
-* - chunk position optimized
 * - stock in chunk there array index and decrement them when array is erased (probably more opti)
 * - save data
 * - test destroy block

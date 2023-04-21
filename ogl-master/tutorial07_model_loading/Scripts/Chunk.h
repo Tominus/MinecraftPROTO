@@ -30,6 +30,8 @@ private:
 	void GenerateCGRender();
 	void UpdateChunkSideRender();
 
+	void PreDeleteChunk();
+
 public:
 	/*Return the position of the chunk.*/
 	inline const glm::vec3& GetChunkPosition() const { return chunkPosition; }
