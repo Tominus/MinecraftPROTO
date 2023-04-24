@@ -9,6 +9,7 @@ class Perlin_Noise
 {
 
 	friend class World;
+	friend class MainGame;
 	friend class Chunk_Data_Generator;
 
 private:
@@ -16,10 +17,10 @@ private:
 	~Perlin_Noise();
 
 public:
-	inline static Perlin_Noise& Instance()
+	inline static Perlin_Noise* Instance()
 	{
-		static Perlin_Noise perlinNoise;
-		return perlinNoise;
+		static Perlin_Noise* _perlinNoise = new Perlin_Noise();
+		return _perlinNoise;
 	}
 
 private:

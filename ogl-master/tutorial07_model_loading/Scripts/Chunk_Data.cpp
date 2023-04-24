@@ -8,7 +8,7 @@
 
 Chunk_Data::Chunk_Data(Chunk* _ownerChunk)
 {
-	chunkManager = World::Instance().GetChunksManager();
+	chunkManager = World::Instance()->GetChunksManager();
 	mutex_ChunkManager = chunkManager->mutex;
 	ownerChunk = _ownerChunk;
 	

@@ -18,7 +18,7 @@
 
 Chunks_Manager::Chunks_Manager()
 {
-	programID = Shaders_Manager::Instance().GetProgramID();
+	programID = Shaders_Manager::Instance()->GetProgramID();
 	
 	mutex = CreateMutex(0, false, 0);
 	mutex_DeleteChunk = CreateMutex(0, false, 0);
@@ -26,13 +26,13 @@ Chunks_Manager::Chunks_Manager()
 
 	chunkDataGenerator = new Chunk_Data_Generator(this);
 	chunkRenderGenerator = new Chunk_Render_Generator(this);
-	threadManager = &Thread_Manager::Instance();
+	threadManager = Thread_Manager::Instance();
 
 	renderDistance = Render_Distance_Current;
 	renderMaxDistance = renderDistance - 1;
 
 	opti_worldChunks = nullptr;
-	opti_worldChunksOffset.x = opti_worldChunksOffset.z = -renderMaxDistance;
+	opti_worldChunksOffset.x = opti_worldChunksOffset.z = -(float)renderMaxDistance;
 	opti_worldChunksCount = 0;
 	opti_threadCount = 0;
 }
@@ -122,7 +122,7 @@ void Chunks_Manager::InitChunkDelete()
 {
 	if (Thread* _thread = threadManager->CreateThread())
 	{
-		SThread_DeleteChunk_Ptr _data = new SThread_DeleteChunk(_thread, mutex_DeleteChunk, &bInterruptThread_NotSafe, &worldChunksToDelete);
+		SThread_DeleteChunk_Ptr _data = new SThread_DeleteChunk(_thread, this, mutex_DeleteChunk, &bInterruptThread_NotSafe, &worldChunksToDelete);
 		_thread->CreateThreadFunction(true, DeleteChunk, _data);
 	}
 	else
@@ -162,7 +162,7 @@ Threaded void __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 
 	while (_hasFinish == false)
 	{
-		Sleep(16);
+		Sleep(4);
 
 		WaitForSingleObject(_mutex, INFINITE);
 		_hasFinish = _chunkData->CheckChunkToWaitEmpty();
@@ -196,12 +196,12 @@ Threaded void __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 	_thisThread->OnFinished.Invoke(_thisThread);
 
 	delete _data;
-	_data = nullptr;
 }
 
 Threaded void __stdcall Chunks_Manager::DeleteChunk(SThread_DeleteChunk_Ptr _data)
 {
 	Thread* _thisThread = _data->thisThread;
+	Chunks_Manager* _thisPtr = _data->thisPtr;
 	bool* _bThisInterruptThread = _data->thisbInterruptThread;
 	HANDLE _mutex_DeleteChunk = _data->thisMutex_DeleteChunk;
 	std::vector<Chunk*>& _thisWorldChunksToDelete = *_data->thisWorldChunksToDelete;
@@ -210,9 +210,32 @@ Threaded void __stdcall Chunks_Manager::DeleteChunk(SThread_DeleteChunk_Ptr _dat
 	bool _bInterruptThread = *_bThisInterruptThread;
 	ReleaseMutex(_mutex_DeleteChunk);
 
+	//Loop Optimized for Game
+	while (_bInterruptThread == false)
+	{
+		WaitForSingleObject(_mutex_DeleteChunk, INFINITE);
+
+		const size_t& _toDeleteSize = _thisWorldChunksToDelete.size();
+		if (_toDeleteSize)
+		{
+			Chunk*& _chunk = _thisWorldChunksToDelete[0];
+			delete _chunk;
+			_chunk = nullptr;
+
+			_thisWorldChunksToDelete.erase(_thisWorldChunksToDelete.begin());
+		}
+
+		_bInterruptThread = *_bThisInterruptThread;
+
+		ReleaseMutex(_mutex_DeleteChunk);
+
+		Sleep(4);
+	}
+
 	bool _hasFinishDelete = false;
 
-	while (_bInterruptThread == false || _hasFinishDelete == false)
+	//Loop when Exit
+	while (_hasFinishDelete == false)
 	{
 		WaitForSingleObject(_mutex_DeleteChunk, INFINITE);
 
@@ -226,9 +249,10 @@ Threaded void __stdcall Chunks_Manager::DeleteChunk(SThread_DeleteChunk_Ptr _dat
 			_thisWorldChunksToDelete.erase(_thisWorldChunksToDelete.begin());
 		}
 		else
-			_hasFinishDelete = true;
-
-		_bInterruptThread = *_bThisInterruptThread;
+		{
+			if (_thisPtr->chunkBeingGenerating.size() == 0)
+				_hasFinishDelete = true;
+		}
 
 		ReleaseMutex(_mutex_DeleteChunk);
 	}
@@ -236,7 +260,6 @@ Threaded void __stdcall Chunks_Manager::DeleteChunk(SThread_DeleteChunk_Ptr _dat
 	_thisThread->OnFinished.Invoke(_thisThread);
 
 	delete _data;
-	_data = nullptr;
 }
 
 void Chunks_Manager::AddStartingWorldBaseChunk()
@@ -405,8 +428,69 @@ void Chunks_Manager::Opti_CheckRenderDistance()
 	const glm::vec3& _playerPosition = getPosition() - glm::vec3(8.f);
 	glm::vec3 _playerPositionChunkRelative(round(_playerPosition.x / 16.f), 0.f, round(_playerPosition.z / 16.f));
 
+	Opti_RecenterWorldChunksArray(_playerPositionChunkRelative);
+
 	if (Opti_CheckIfNoChunkLoaded(_playerPositionChunkRelative))return;
 
+	std::vector<Thread*> _threadToActivate;
+	size_t _totalCreatedChunk = 0;
+
+	for (int y = Chunk_Max_Limit_World_Height; y > Chunk_Min_World_Height; --y)
+	{
+		_playerPositionChunkRelative.y += y;
+
+		for (int x = -renderMaxDistance; x < renderDistance; ++x)
+		{
+			_playerPositionChunkRelative.x += x;
+
+			for (int z = -renderMaxDistance; z < renderDistance; ++z)
+			{
+				_playerPositionChunkRelative.z += z;
+
+				if (!Opti_GetChunk(_playerPositionChunkRelative))
+				{
+					if (!GetIsChunkAtPositionBeingGenerated(_playerPositionChunkRelative))
+					{
+						if (Opti_GetFirstChunkAroundPosition(_playerPositionChunkRelative))
+						{
+							if (Thread* _thread = threadManager->CreateThread())
+							{
+								SThread_AddChunk_Ptr _data = new SThread_AddChunk(_thread, this, chunkDataGenerator, chunkRenderGenerator, _playerPositionChunkRelative);
+								_threadToActivate.push_back(_thread);
+
+								_thread->CreateThreadFunction(false, AddChunk, _data);
+								chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
+								++_totalCreatedChunk;
+								++opti_threadCount;
+
+								if (_totalCreatedChunk > Thread_Max_ChunkCreation || opti_threadCount > Thread_Max_ChunkCreation)
+								{
+									y = Chunk_Min_World_Height;
+									x = renderDistance;
+									break;
+								}
+							}
+						}
+					}
+				}
+
+				_playerPositionChunkRelative.z -= z;
+			}
+
+			_playerPositionChunkRelative.x -= x;
+		}
+
+		_playerPositionChunkRelative.y -= y;
+	}
+
+	for (size_t i = 0; i < _totalCreatedChunk; ++i)
+	{
+		_threadToActivate[i]->Execute();
+	}
+}
+
+void Chunks_Manager::Opti_RecenterWorldChunksArray(const glm::vec3& _playerPositionChunkRelative)
+{
 	const glm::vec3& _worldMiddleChunkPosition = opti_worldChunksOffset + glm::vec3(renderMaxDistance, 0, renderMaxDistance);
 
 	if (_playerPositionChunkRelative.x != _worldMiddleChunkPosition.x || _playerPositionChunkRelative.z != _worldMiddleChunkPosition.z)
@@ -461,13 +545,13 @@ void Chunks_Manager::Opti_CheckRenderDistance()
 		}
 
 		//Move every chunks
-		bool _isXMin = _moveOffsetMinX > -1;
-		int _toAddX = _isXMin ? 1 : -1;
-		int _xStartOffset = _isXMin ? _moveOffsetMinX : _moveOffsetMaxX;
-		bool _isZMin = _moveOffsetMinZ > -1;
-		int _toAddZ = _isZMin ? 1 : -1;
-		int _zStartOffset = _isZMin ? _moveOffsetMinZ : _moveOffsetMaxZ;
-		
+		const bool& _isXMin = _moveOffsetMinX > -1;
+		const int& _toAddX = _isXMin ? 1 : -1;
+		const int& _xStartOffset = _isXMin ? _moveOffsetMinX : _moveOffsetMaxX;
+		const bool& _isZMin = _moveOffsetMinZ > -1;
+		const int& _toAddZ = _isZMin ? 1 : -1;
+		const int& _zStartOffset = _isZMin ? _moveOffsetMinZ : _moveOffsetMaxZ;
+
 		for (int x = _xStartOffset; x < Render_Distance_Total && x > -1; x += _toAddX)
 		{
 			for (int y = 0; y < Chunk_Max_World_Height; ++y)
@@ -483,63 +567,6 @@ void Chunks_Manager::Opti_CheckRenderDistance()
 
 		opti_worldChunksOffset.x += _moveOffsetMinX;
 		opti_worldChunksOffset.z += _moveOffsetMinZ;
-	}
-
-	std::vector<Thread*> _threadToActivate;
-	size_t _totalCreatedChunk = 0;
-
-	for (int y = Chunk_Max_Limit_World_Height; y > Chunk_Min_World_Height; --y)
-	{
-		_playerPositionChunkRelative.y += y;
-
-		for (int x = -renderMaxDistance; x < renderDistance; ++x)
-		{
-			_playerPositionChunkRelative.x += x;
-
-			for (int z = -renderMaxDistance; z < renderDistance; ++z)
-			{
-				_playerPositionChunkRelative.z += z;
-
-				if (!Opti_GetChunk(_playerPositionChunkRelative))
-				{
-					if (!GetIsChunkAtPositionBeingGenerated(_playerPositionChunkRelative))
-					{
-						if (Opti_GetFirstChunkAroundPosition(_playerPositionChunkRelative))
-						{
-							if (Thread* _thread = threadManager->CreateThread())
-							{
-								SThread_AddChunk_Ptr _data = new SThread_AddChunk(_thread, this, chunkDataGenerator, chunkRenderGenerator, _playerPositionChunkRelative);
-								_threadToActivate.push_back(_thread);
-
-								_thread->CreateThreadFunction(false, AddChunk, _data);
-								chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
-								++_totalCreatedChunk;
-								++opti_threadCount;
-
-								if (_totalCreatedChunk > Thread_Max_ChunkCreation || opti_threadCount > Thread_Max_ChunkCreation)
-								{
-									y = Chunk_Min_World_Height;
-									x = renderDistance;
-									break;
-								}
-							}
-						}
-					}
-				}
-
-				_playerPositionChunkRelative.z -= z;
-			}
-
-			_playerPositionChunkRelative.x -= x;
-		}
-
-		_playerPositionChunkRelative.y -= y;
-	}
-
-
-	for (size_t i = 0; i < _totalCreatedChunk; ++i)
-	{
-		_threadToActivate[i]->Execute();
 	}
 }
 
@@ -561,6 +588,7 @@ bool Chunks_Manager::Opti_CheckIfNoChunkLoaded(glm::vec3 _playerPositionChunkRel
 
 			if (Thread* _thread = threadManager->CreateThread())
 			{
+				++opti_threadCount;
 				SThread_AddChunk_Ptr _data = new SThread_AddChunk(_thread, this, chunkDataGenerator, chunkRenderGenerator, _playerPositionChunkRelative);
 				chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
 
@@ -570,101 +598,4 @@ bool Chunks_Manager::Opti_CheckIfNoChunkLoaded(glm::vec3 _playerPositionChunkRel
 		return true;
 	}
 	return false;
-}
-
-bool Chunks_Manager::Opti_AddChunk(Chunk* _chunk)
-{
-	WaitForSingleObject(mutex, INFINITE);
-	const glm::ivec3& _offset = _chunk->chunkPosition - opti_worldChunksOffset;
-	
-	if (_offset.x < 0 || _offset.x >= Render_Distance_Total || _offset.z < 0 || _offset.z >= Render_Distance_Total)
-	{
-		ReleaseMutex(mutex);
-		return false;
-	}
-	
-	opti_worldChunks[_offset.x][_offset.y][_offset.z] = _chunk;
-	++opti_worldChunksCount;
-
-	ReleaseMutex(mutex);
-	return true;
-}
-
-Chunk* Chunks_Manager::Opti_GetChunk(const glm::vec3& _position)
-{
-	Chunk* _chunk = nullptr;
-
-	WaitForSingleObject(mutex, INFINITE);
-	const glm::ivec3& _offset = _position - opti_worldChunksOffset;
-
-	if (_offset.x > -1 && _offset.x < Render_Distance_Total && _offset.z > -1 && _offset.z < Render_Distance_Total)
-	{
-		_chunk = opti_worldChunks[_offset.x][_offset.y][_offset.z];
-	}
-
-	ReleaseMutex(mutex);
-	return _chunk;
-}
-
-Chunk* Chunks_Manager::Opti_GetFirstChunkAroundPosition(const glm::vec3& _position)
-{
-	WaitForSingleObject(mutex, INFINITE);
-	const glm::ivec3& _offset = _position - opti_worldChunksOffset;
-
-	if (_offset.x > -2 && _offset.x <= Render_Distance_Total && _offset.z > -2 && _offset.z <= Render_Distance_Total)
-	{
-
-		if (_offset.x > 0)
-		{
-			if (Chunk* _chunk = opti_worldChunks[_offset.x - 1][_offset.y][_offset.z])
-			{
-				ReleaseMutex(mutex);
-				return _chunk;
-			}
-		}
-		if (_offset.y > 0)
-		{
-			if (Chunk* _chunk = opti_worldChunks[_offset.x][_offset.y - 1][_offset.z])
-			{
-				ReleaseMutex(mutex);
-				return _chunk;
-			}
-		}
-		if (_offset.z > 0)
-		{
-			if (Chunk* _chunk = opti_worldChunks[_offset.x][_offset.y][_offset.z - 1])
-			{
-				ReleaseMutex(mutex);
-				return _chunk;
-			}
-		}
-		if (_offset.x < Render_Distance_Total_Limit)
-		{
-			if (Chunk* _chunk = opti_worldChunks[_offset.x + 1][_offset.y][_offset.z])
-			{
-				ReleaseMutex(mutex);
-				return _chunk;
-			}
-		}
-		if (_offset.y < Chunk_Max_Limit_World_Height)
-		{
-			if (Chunk* _chunk = opti_worldChunks[_offset.x][_offset.y + 1][_offset.z])
-			{
-				ReleaseMutex(mutex);
-				return _chunk;
-			}
-		}
-		if (_offset.z < Render_Distance_Total_Limit)
-		{
-			if (Chunk* _chunk = opti_worldChunks[_offset.x][_offset.y][_offset.z + 1])
-			{
-				ReleaseMutex(mutex);
-				return _chunk;
-			}
-		}
-
-	}
-
-	ReleaseMutex(mutex);
-	return nullptr;
 }

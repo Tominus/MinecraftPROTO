@@ -15,14 +15,26 @@ GLFWwindow* window;
 #include <common/objloader.hpp>
 #include <time.h>
 
+#include "GlobalDefine.h"
 #include "MainGame.h"
+
+#if ENABLE_DEBUG_MEMORY_LEAK
+#define _CRTDBG_MAP_ALLOC
+#endif ENABLE_DEBUG_MEMORY_LEAK
 
 int main( void )
 {
 	srand(time(NULL));
-	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	
-	//_CrtSetBreakAlloc(28616);
+
+#if ENABLE_DEBUG_MEMORY_LEAK
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+#if ENABLE_DEBUG_BREAK_ALLOC
+	_CrtSetBreakAlloc(BREAK_ALLOC);
+#endif ENABLE_DEBUG_BREAK_ALLOC
+
+#endif ENABLE_DEBUG_MEMORY_LEAK
+
 	
 	if( !glfwInit() )
 	{
@@ -77,6 +89,10 @@ int main( void )
 	delete _mainGame;
 
 	glfwTerminate();
+
+#if ENABLE_DEBUG_MEMORY_LEAK
+	_CrtDumpMemoryLeaks();
+#endif ENABLE_DEBUG_MEMORY_LEAK
 	
 	return 0;
 }

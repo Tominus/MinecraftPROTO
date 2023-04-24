@@ -40,7 +40,7 @@ void World::InitWorld(GLFWwindow* _window)
 {
 	window = _window;
 
-	shaderManager = &Shaders_Manager::Instance();
+	shaderManager = Shaders_Manager::Instance();
 	shaderManager->Initialize();
 
 	debugWorld = new Debug_World(_window);
@@ -57,7 +57,7 @@ void World::InitWorld(GLFWwindow* _window)
 
 	chunksManager = new Chunks_Manager();
 
-	perlinNoise = &Perlin_Noise::Instance();
+	perlinNoise = Perlin_Noise::Instance();
 }
 
 void World::Start()

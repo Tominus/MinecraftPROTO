@@ -9,7 +9,7 @@ Blocks_Global_Datas::Blocks_Global_Datas()
 	blockDatas = nullptr;
 	blockDatasSize = (size_t)EBlock_Type::BLOCK_TYPE_MAX_NUMBER;
 
-	World* _world = &World::Instance();
+	World* _world = World::Instance();
 	blocksGlobalShapes = _world->GetBlocksGlobalShapes();
 }
 

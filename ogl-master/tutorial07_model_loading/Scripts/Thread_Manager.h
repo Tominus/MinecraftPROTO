@@ -21,9 +21,9 @@ private:
 	~Thread_Manager();
 
 public:
-	inline static Thread_Manager& Instance()
+	inline static Thread_Manager* Instance()
 	{
-		static Thread_Manager instance;
+		static Thread_Manager* instance = new Thread_Manager();
 		return instance;
 	}
 

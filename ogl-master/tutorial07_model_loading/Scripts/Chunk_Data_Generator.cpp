@@ -13,7 +13,7 @@
 
 Chunk_Data_Generator::Chunk_Data_Generator(Chunks_Manager* _chunksManager)
 {
-	perlinNoise = &Perlin_Noise::Instance();
+	perlinNoise = Perlin_Noise::Instance();
 	chunksManager = _chunksManager;
 	mutex_ChunkManager = _chunksManager->mutex;
 	mutex_ChunkDataGenerator = CreateMutex(0, false, 0);
@@ -323,12 +323,12 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	ReleaseMutex(mutex_ChunkManager);
 
 	float _ownerChunkHeight =  _ownerChunkPosition.y;
-	const glm::vec3& _downPosition =  _ownerChunkPosition + glm::vec3(0, -1, 0);
-	const glm::vec3& _upPosition =    _ownerChunkPosition + glm::vec3(0, 1, 0);
-	const glm::vec3& _leftPosition =  _ownerChunkPosition + glm::vec3(-1, 0, 0);
-	const glm::vec3& _rightPosition = _ownerChunkPosition + glm::vec3(1, 0, 0);
-	const glm::vec3& _backPosition =  _ownerChunkPosition + glm::vec3(0, 0, -1);
-	const glm::vec3& _frontPosition = _ownerChunkPosition + glm::vec3(0, 0, 1);
+	const glm::vec3& _downPosition =  _ownerChunkPosition + glm::vec3(0.f, -1.f, 0.f);
+	const glm::vec3& _upPosition =    _ownerChunkPosition + glm::vec3(0.f, 1.f, 0.f);
+	const glm::vec3& _leftPosition =  _ownerChunkPosition + glm::vec3(-1.f, 0.f, 0.f);
+	const glm::vec3& _rightPosition = _ownerChunkPosition + glm::vec3(1.f, 0.f, 0.f);
+	const glm::vec3& _backPosition =  _ownerChunkPosition + glm::vec3(0.f, 0.f, -1.f);
+	const glm::vec3& _frontPosition = _ownerChunkPosition + glm::vec3(0.f, 0.f, 1.f);
 
 	bool _needToWait = false;
 

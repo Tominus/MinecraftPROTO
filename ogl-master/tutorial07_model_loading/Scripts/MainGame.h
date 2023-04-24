@@ -4,6 +4,7 @@
 #include <glfw3.h>
 
 class Thread_Manager;
+class World;
 
 class MainGame
 {
@@ -17,4 +18,5 @@ public:
 private:
 	GLFWwindow* window; //TODO Window class
 	Thread_Manager* threadManager;
+	World* world;
 };

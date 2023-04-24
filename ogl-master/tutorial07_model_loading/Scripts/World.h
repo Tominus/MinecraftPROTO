@@ -30,9 +30,9 @@ private:
 	void Exit();
 
 public:
-	inline static World& Instance()
+	inline static World* Instance()
 	{
-		static World _world;
+		static World* _world = new World();
 		return _world;
 	}
 

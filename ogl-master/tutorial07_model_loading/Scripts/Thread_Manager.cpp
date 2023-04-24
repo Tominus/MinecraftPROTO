@@ -30,7 +30,7 @@ Thread_Manager::Thread_Manager()
 
 Thread_Manager::~Thread_Manager()
 {
-	
+	ReleaseMutex(mutex);
 }
 
 Thread* Thread_Manager::CreateThread()

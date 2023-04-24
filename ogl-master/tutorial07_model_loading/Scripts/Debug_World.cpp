@@ -12,7 +12,7 @@ Debug_World::Debug_World(GLFWwindow* _window)
 {
 	window = _window;
 
-	Shaders_Manager* _shadersManager = &Shaders_Manager::Instance();
+	Shaders_Manager* _shadersManager = Shaders_Manager::Instance();
 	matrixID_Debug = _shadersManager->GetMatrixID_Debug();
 	matrixID_Color_Debug = _shadersManager->GetMatrixID_Color_Debug();
 	programID_Debug = _shadersManager->GetProgramID_Debug();

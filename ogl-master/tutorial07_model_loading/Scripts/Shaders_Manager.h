@@ -7,6 +7,7 @@ class Shaders_Manager
 {
 	
 	friend class World;
+	friend class MainGame;
 
 private:
 	Shaders_Manager();
@@ -15,9 +16,9 @@ private:
 	void Initialize();
 
 public:
-	inline static Shaders_Manager& Instance()
+	inline static Shaders_Manager* Instance()
 	{
-		static Shaders_Manager _shaderManager;
+		static Shaders_Manager* _shaderManager = new Shaders_Manager();
 		return _shaderManager;
 	}
 

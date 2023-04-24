@@ -30,7 +30,7 @@ public:
 
 		if (_processorNumber->Number == '\0')
 		{
-			_processorNumber->Number = GetActiveProcessorCount(0) - 1;
+			_processorNumber->Number = (BYTE)(GetActiveProcessorCount(0) - 1);
 			if (!SetThreadIdealProcessorEx(currentThread, _processorNumber, _processorNumber))
 				throw std::exception("[Thread::CreateThreadFunction] -> Can't set Thread ideal proc");
 		}

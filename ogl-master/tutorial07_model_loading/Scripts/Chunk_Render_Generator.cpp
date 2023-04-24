@@ -18,7 +18,7 @@
 
 Chunk_Render_Generator::Chunk_Render_Generator(Chunks_Manager* _chunksManager)
 {
-	world = &World::Instance();
+	world = World::Instance();
 	matrixID = world->GetShadersManager()->GetMatrixID();
 	textureLoader = world->GetTextureLoader();
 	blockGlobalShapes = world->GetBlocksGlobalShapes();
