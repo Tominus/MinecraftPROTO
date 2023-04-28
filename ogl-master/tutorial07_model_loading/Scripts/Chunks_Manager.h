@@ -19,6 +19,7 @@ class Thread_Manager;
 class Chunk_Data_Generator;
 class Chunk_Render_Generator;
 class Blocks_Global_Datas;
+class Chunk_Pool_Manager;
 
 class Chunks_Manager
 {
@@ -35,7 +36,7 @@ private:
 	void StartChunkManager();
 	void InitWorldChunksArray();
 
-	static void WINAPI AddChunk(SThread_AddChunk_Ptr _data);
+	static int WINAPI AddChunk(SThread_AddChunk_Ptr _data);
 
 	void DeleteChunks();
 	
@@ -207,6 +208,7 @@ private:
 	std::vector<Chunk*> worldChunksToRender;
 	std::vector<Chunk*> worldChunksToDelete;
 
+	Chunk_Pool_Manager* chunkPoolManager;
 	Chunk_Data_Generator* chunkDataGenerator;
 	Chunk_Render_Generator* chunkRenderGenerator;
 	Thread_Manager* threadManager;

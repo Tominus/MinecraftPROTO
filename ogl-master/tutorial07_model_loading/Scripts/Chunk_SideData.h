@@ -7,6 +7,7 @@ class Chunk_SideData
 	friend class Chunk;
 	friend class Chunk_Data_Generator;
 	friend class Chunk_Render_Generator;
+	friend class Chunk_Pool_Manager;
 
 private:
 	Chunk_SideData();

@@ -14,6 +14,7 @@ class Chunk_Data
 	friend class Chunk_Data_Generator;
 	friend class Chunk_Render_Generator;
 	friend class Chunks_Manager;
+	friend class Chunk_Pool_Manager;
 
 private:
 	Chunk_Data(Chunk* _ownerChunk);

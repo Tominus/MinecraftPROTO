@@ -8,6 +8,16 @@
 #include "Chunk_Render_Generator.h"
 #include "Thread_Structs.h"
 
+Chunk::Chunk(Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator)
+{
+	chunkDataGenerator = _chunkDataGenerator;
+	chunkRenderGenerator = _chunkRenderGenerator;
+	handle_AddChunk = nullptr;
+	chunkData = nullptr;
+	chunkRender = nullptr;
+	chunkSideData = nullptr;
+}
+
 Chunk::Chunk(SThread_AddChunk* _data, Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator, const glm::vec3& _position)
 {
 	chunkPosition = _position;

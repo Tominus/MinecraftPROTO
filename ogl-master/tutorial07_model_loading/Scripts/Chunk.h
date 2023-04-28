@@ -17,8 +17,11 @@ class Chunk
 	friend class Chunk_Render;
 	friend class Chunk_Data_Generator;
 	friend class Chunk_Render_Generator;
+	friend class Chunk_Pool_Manager;
 
 private:
+	Chunk() = delete;
+	Chunk(Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator);
 	Chunk(SThread_AddChunk* _data, Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator, const glm::vec3& _position);
 	~Chunk();
 

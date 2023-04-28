@@ -79,6 +79,8 @@ add_executable(tutorial07_model_loading
 	tutorial07_model_loading/Scripts/Chunk_Data.h
 	tutorial07_model_loading/Scripts/Chunk_Data_Generator.cpp
 	tutorial07_model_loading/Scripts/Chunk_Data_Generator.h
+	tutorial07_model_loading/Scripts/Chunk_Pool_Manager.cpp
+	tutorial07_model_loading/Scripts/Chunk_Pool_Manager.h
 	tutorial07_model_loading/Scripts/Chunk_Render.cpp
 	tutorial07_model_loading/Scripts/Chunk_Render.h
 	tutorial07_model_loading/Scripts/Chunk_Render_Generator.cpp

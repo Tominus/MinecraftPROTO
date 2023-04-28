@@ -6,6 +6,7 @@
 #include "Chunk_Render.h"
 #include "Chunk_Data_Generator.h"
 #include "Chunk_Render_Generator.h"
+#include "Chunk_Pool_Manager.h"
 #include <common/controls.hpp>
 #include "Thread_Manager.h"
 #include "Thread.h"
@@ -20,6 +21,7 @@ Chunks_Manager::Chunks_Manager()
 
 	chunkDataGenerator = new Chunk_Data_Generator(this);
 	chunkRenderGenerator = new Chunk_Render_Generator(this);
+	chunkPoolManager = new Chunk_Pool_Manager(chunkDataGenerator, chunkRenderGenerator);
 	threadManager = Thread_Manager::Instance();
 
 	renderDistance = Render_Distance_Current;
@@ -80,6 +82,7 @@ Chunks_Manager::~Chunks_Manager()
 
 	delete chunkDataGenerator;
 	delete chunkRenderGenerator;
+	delete chunkPoolManager;
 }
 
 void Chunks_Manager::StartChunkManager()
@@ -92,6 +95,7 @@ void Chunks_Manager::StartChunkManager()
 	onTick.AddDynamic(this, &Chunks_Manager::Opti_CheckRenderDistance);
 	onTick.AddDynamic(this, &Chunks_Manager::CheckUpdateChunkSideRender);
 
+	chunkPoolManager->InitializeAllChunkData();
 	InitWorldChunksArray();
 }
 
@@ -116,12 +120,12 @@ void Chunks_Manager::InitWorldChunksArray()
 	}
 }
 
-Threaded void __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
+Threaded int __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 {
 	Thread* _thisThread = _data->thisThread;
 	Chunks_Manager* _thisPtr = _data->thisPtr;
 	HANDLE _mutex = _thisPtr->mutex;
-	
+
 	Chunk* _chunk = new Chunk(_data, _data->chunkDataGenerator, _data->chunkRenderGenerator, _data->playerPositionChunkRelative);
 
 	//---Init
@@ -159,7 +163,7 @@ Threaded void __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 			delete _chunk;
 			ReleaseMutex(_mutex);
 			_thisThread->OnFinished.Invoke(_thisThread);
-			return;
+			return 2;
 		}
 		ReleaseMutex(_mutex);
 	}
@@ -179,6 +183,7 @@ Threaded void __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 	ReleaseMutex(_mutex);
 
 	_thisThread->OnFinished.Invoke(_thisThread);
+	return 1;
 }
 
 void Chunks_Manager::DeleteChunks()
