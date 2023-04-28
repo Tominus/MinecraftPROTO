@@ -26,7 +26,7 @@ private:
 	~Chunk_Data_Generator();
 
 	/*Generate all existing block randomly.*/
-	void GenerateNewChunkData(Chunk_Data*& _chunkData);
+	void GenerateNewChunkData(Chunk_Data* _chunkData);
 	void GenerateChunkSideData(Chunk* _chunk);
 
 	inline Block* GenerateBlock(const glm::vec3& _blockPosition)

@@ -20,7 +20,7 @@ private:
 	~Chunk_Data();
 
 	void AddSideChunk(Chunk* _chunk);
-	void AddOtherSideChunk(Chunk_Data*& _otherChunkData, const glm::vec3& _ownerPosition);
+	void AddOtherSideChunk(Chunk_Data* _otherChunkData, const glm::vec3& _ownerPosition);
 	void AddGeneratedSideChunk(const glm::vec3& _otherPosition);
 
 	void RemoveSideChunk(Chunk* _chunk);

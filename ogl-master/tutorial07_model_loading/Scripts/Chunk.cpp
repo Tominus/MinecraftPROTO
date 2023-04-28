@@ -6,8 +6,9 @@
 #include "Chunk_SideData.h"
 #include "Chunk_Data_Generator.h"
 #include "Chunk_Render_Generator.h"
+#include "Thread_Structs.h"
 
-Chunk::Chunk(Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator, const glm::vec3& _position)
+Chunk::Chunk(SThread_AddChunk* _data, Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator, const glm::vec3& _position)
 {
 	chunkPosition = _position;
 	worldPosition = _position * (float)Chunk_Size;
@@ -18,12 +19,16 @@ Chunk::Chunk(Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* 
 	chunkData = nullptr;
 	chunkRender = nullptr;
 	chunkSideData = nullptr;
+
+	handle_AddChunk = _data;
 }
 
 Chunk::~Chunk()
 {
+	delete handle_AddChunk;
 	delete chunkData;
 	delete chunkRender;
+	delete chunkSideData;
 }
 
 void Chunk::Init()
@@ -45,11 +50,8 @@ void Chunk::InitChunkRender()
 
 void Chunk::FinishInit()
 {
-	if (chunkSideData)
-	{
-		delete chunkSideData;
-		chunkSideData = nullptr;
-	}
+	delete chunkSideData;
+	chunkSideData = nullptr;
 }
 
 void Chunk::Render() const
@@ -70,4 +72,10 @@ void Chunk::UpdateChunkSideRender()
 void Chunk::PreDeleteChunk()
 {
 	chunkData->PreDelete();
+}
+
+void Chunk::DeleteHandle()
+{
+	delete handle_AddChunk;
+	handle_AddChunk = nullptr;
 }

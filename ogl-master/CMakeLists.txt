@@ -101,10 +101,11 @@ add_executable(tutorial07_model_loading
 	tutorial07_model_loading/Scripts/Side.h
 	tutorial07_model_loading/Scripts/TextureLoader.cpp
 	tutorial07_model_loading/Scripts/TextureLoader.h
-	tutorial07_model_loading/Scripts/Thread_Manager.cpp
-	tutorial07_model_loading/Scripts/Thread_Manager.h
 	tutorial07_model_loading/Scripts/Thread.cpp
 	tutorial07_model_loading/Scripts/Thread.h
+	tutorial07_model_loading/Scripts/Thread_Manager.cpp
+	tutorial07_model_loading/Scripts/Thread_Manager.h
+	tutorial07_model_loading/Scripts/Thread_Structs.h
 	tutorial07_model_loading/Scripts/TODO.h
 	tutorial07_model_loading/Scripts/World.cpp
 	tutorial07_model_loading/Scripts/World.h

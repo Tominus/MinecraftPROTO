@@ -10,6 +10,8 @@
 #include "Action.h"
 #include "Chunk.h"
 
+#include "Thread_Structs.h"
+
 class Chunks_Manager;
 class Chunk;
 class Thread;
@@ -17,50 +19,6 @@ class Thread_Manager;
 class Chunk_Data_Generator;
 class Chunk_Render_Generator;
 class Blocks_Global_Datas;
-
-typedef struct SThread_AddChunk
-{
-	Thread* thisThread = nullptr;
-	Chunks_Manager* thisPtr = nullptr;
-	Chunk_Data_Generator* chunkDataGenerator = nullptr;
-	Chunk_Render_Generator* chunkRenderGenerator = nullptr;
-	glm::vec3 playerPositionChunkRelative;
-
-	SThread_AddChunk() = default;
-	SThread_AddChunk(Thread* _thisThread, Chunks_Manager* _thisPtr,
-		Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator,
-		const glm::vec3& _playerPositionChunkRelative)
-	{
-		thisThread = _thisThread;
-		thisPtr = _thisPtr;
-		chunkDataGenerator = _chunkDataGenerator;
-		chunkRenderGenerator = _chunkRenderGenerator;
-		playerPositionChunkRelative = _playerPositionChunkRelative;
-	}
-
-} SThread_AddChunk, *SThread_AddChunk_Ptr;
-
-typedef struct SThread_DeleteChunk
-{
-	Thread* thisThread = nullptr;
-	Chunks_Manager* thisPtr = nullptr;
-	bool* thisbInterruptThread = nullptr;
-	HANDLE thisMutex_DeleteChunk;
-	std::vector<Chunk*>* thisWorldChunksToDelete = nullptr;
-
-	SThread_DeleteChunk() = default;
-	SThread_DeleteChunk(Thread* _thisThread, Chunks_Manager* _thisPtr,
-		HANDLE _thisMutex_DeleteChunk, bool* _thisbInterruptThread,
-		std::vector<Chunk*>* _thisWorldChunksToDelete)
-	{
-		thisThread = _thisThread;
-		thisPtr = _thisPtr;
-		thisMutex_DeleteChunk = _thisMutex_DeleteChunk;
-		thisbInterruptThread = _thisbInterruptThread;
-		thisWorldChunksToDelete = _thisWorldChunksToDelete;
-	}
-
-} SThread_DeleteChunk, *SThread_DeleteChunk_Ptr;
 
 class Chunks_Manager
 {
@@ -76,10 +34,10 @@ private:
 private:
 	void StartChunkManager();
 	void InitWorldChunksArray();
-	void InitChunkDelete();
 
 	static void WINAPI AddChunk(SThread_AddChunk_Ptr _data);
-	static void WINAPI DeleteChunk(SThread_DeleteChunk_Ptr _data);
+
+	void DeleteChunks();
 	
 	void AddStartingWorldBaseChunk();
 	void AddWaitingForSideUpdateChunk(Chunk* _chunk);
@@ -137,7 +95,7 @@ public:
 		return _chunk;
 	}
 
-	// Return the first encouter chunk around position
+	// Return the first encounter chunk around position
 	inline Chunk* Opti_GetFirstChunkAroundPosition(const glm::vec3& _position)
 	{
 		WaitForSingleObject(mutex, INFINITE);
@@ -201,7 +159,6 @@ public:
 		return nullptr;
 	}
 
-
 	inline bool GetIsChunkAtPositionBeingGenerated(const glm::vec3& _position) const
 	{
 		WaitForSingleObject(mutex, INFINITE);
@@ -218,6 +175,7 @@ public:
 		ReleaseMutex(mutex);
 		return false;
 	}
+
 	inline Chunk* GetChunkBeingGeneratedAtPosition(const glm::vec3& _position) const
 	{
 		WaitForSingleObject(mutex, INFINITE);
@@ -267,7 +225,6 @@ private:
 	Action<Chunk*> onChunkDestroyed;
 
 	mutable HANDLE mutex;
-	mutable HANDLE mutex_DeleteChunk;
 
 	GLuint programID;
 

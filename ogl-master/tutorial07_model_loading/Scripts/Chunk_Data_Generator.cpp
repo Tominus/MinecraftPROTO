@@ -27,16 +27,15 @@ Chunk_Data_Generator::~Chunk_Data_Generator()
 	ReleaseMutex(mutex_ChunkDataGenerator);
 }
 
-void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data*& _chunkData)
+void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data* _chunkData)
 {
 	WaitForSingleObject(mutex_ChunkDataGenerator, INFINITE);
 	Chunk* _ownerChunk = _chunkData->ownerChunk;
 	Chunk_Render* _ownerChunkRender = _ownerChunk->chunkRender;
 	glm::vec3 _chunkWorldPosition(_ownerChunk->worldPosition);
 	ReleaseMutex(mutex_ChunkDataGenerator);
-
+	
 	Block****& _blocks = _chunkData->blocks;
-
 
 	if (/*Exist in file*/false)
 	{
@@ -322,7 +321,7 @@ Threaded void Chunk_Data_Generator::SetSideChunks(Chunk_Data*& _chunkData) const
 	glm::vec3 _ownerChunkPosition(_ownerChunk->chunkPosition);
 	ReleaseMutex(mutex_ChunkManager);
 
-	float _ownerChunkHeight =  _ownerChunkPosition.y;
+	float _ownerChunkHeight = _ownerChunkPosition.y;
 	const glm::vec3& _downPosition =  _ownerChunkPosition + glm::vec3(0.f, -1.f, 0.f);
 	const glm::vec3& _upPosition =    _ownerChunkPosition + glm::vec3(0.f, 1.f, 0.f);
 	const glm::vec3& _leftPosition =  _ownerChunkPosition + glm::vec3(-1.f, 0.f, 0.f);

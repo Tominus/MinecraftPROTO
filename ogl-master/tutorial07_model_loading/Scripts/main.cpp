@@ -22,11 +22,16 @@ GLFWwindow* window;
 #define _CRTDBG_MAP_ALLOC
 #endif ENABLE_DEBUG_MEMORY_LEAK
 
+#if ENABLE_DEBUG_NEW_OVERRIDE
+#define new new( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#endif ENABLE_DEBUG_NEW_OVERRIDE
+
 int main( void )
 {
 	srand(time(NULL));
 
 #if ENABLE_DEBUG_MEMORY_LEAK
+
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 #if ENABLE_DEBUG_BREAK_ALLOC
@@ -34,7 +39,6 @@ int main( void )
 #endif ENABLE_DEBUG_BREAK_ALLOC
 
 #endif ENABLE_DEBUG_MEMORY_LEAK
-
 	
 	if( !glfwInit() )
 	{

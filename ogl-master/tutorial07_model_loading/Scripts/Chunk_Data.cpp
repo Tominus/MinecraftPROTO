@@ -31,9 +31,9 @@ Chunk_Data::~Chunk_Data()
 	if (upChunk)
 		upChunk->chunkData->downChunk = nullptr;
 	if (leftChunk)
-  		leftChunk->chunkData->rightChunk = nullptr;
+		leftChunk->chunkData->rightChunk = nullptr;
 	if (rightChunk)
- 		rightChunk->chunkData->leftChunk = nullptr;
+		rightChunk->chunkData->leftChunk = nullptr;
 	if (backChunk)
 		backChunk->chunkData->frontChunk = nullptr;
 	if (frontChunk)
@@ -42,9 +42,11 @@ Chunk_Data::~Chunk_Data()
 	for (size_t x = 0; x < Chunk_Size; ++x)
 	{
 		Block*** _x = blocks[x];
+
 		for (size_t y = 0; y < Chunk_Size; ++y)
 		{
 			Block** _y = _x[y];
+
 			for (size_t z = 0; z < Chunk_Size; ++z)
 				delete _y[z];
 			delete[] _y;
@@ -135,7 +137,7 @@ void Chunk_Data::AddSideChunk(Chunk* _chunk)
 	ReleaseMutex(mutex_ChunkManager);
 }
 
-Threaded void Chunk_Data::AddOtherSideChunk(Chunk_Data*& _otherChunkData, const glm::vec3& _ownerPosition)
+Threaded void Chunk_Data::AddOtherSideChunk(Chunk_Data* _otherChunkData, const glm::vec3& _ownerPosition)
 {
 	std::vector<glm::vec3>& _chunkPositionToWait = _otherChunkData->chunkPositionToWait;
 

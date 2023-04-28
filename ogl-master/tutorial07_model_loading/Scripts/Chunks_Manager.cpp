@@ -11,17 +11,11 @@
 #include "Thread.h"
 #include "Shaders_Manager.h"
 
-#include <Windows.h>
-#include <stdio.h>
-#include <array>
-
-
 Chunks_Manager::Chunks_Manager()
 {
 	programID = Shaders_Manager::Instance()->GetProgramID();
 	
 	mutex = CreateMutex(0, false, 0);
-	mutex_DeleteChunk = CreateMutex(0, false, 0);
 	bInterruptThread_NotSafe = false;
 
 	chunkDataGenerator = new Chunk_Data_Generator(this);
@@ -45,6 +39,12 @@ Chunks_Manager::~Chunks_Manager()
 
 	WaitForSingleObject(mutex, INFINITE);
 
+	const size_t& _size = worldChunksToDelete.size();
+	for (size_t i = 0; i < _size; ++i)
+	{
+		delete worldChunksToDelete[i];
+	}
+
 	if (opti_worldChunks)
 	{
 		for (size_t x = 0; x < Render_Distance_Total; ++x)
@@ -57,7 +57,6 @@ Chunks_Manager::~Chunks_Manager()
 
 				for (size_t z = 0; z < Render_Distance_Total; ++z)
 					delete _chunksY[z];
-
 				delete[] _chunksY;
 			}
 			delete[] _chunksX;
@@ -67,7 +66,6 @@ Chunks_Manager::~Chunks_Manager()
 	ReleaseMutex(mutex);
 
 	CloseHandle(mutex);
-	CloseHandle(mutex_DeleteChunk);
 
 	onUpdate.Clear();
 	onTick.Clear();
@@ -87,6 +85,7 @@ Chunks_Manager::~Chunks_Manager()
 void Chunks_Manager::StartChunkManager()
 {
 	onUpdate.AddDynamic(this, &Chunks_Manager::UpdateRender);
+	onUpdate.AddDynamic(this, &Chunks_Manager::DeleteChunks);
 
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateNewChunkRender);
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateChunkPosition);
@@ -94,7 +93,6 @@ void Chunks_Manager::StartChunkManager()
 	onTick.AddDynamic(this, &Chunks_Manager::CheckUpdateChunkSideRender);
 
 	InitWorldChunksArray();
-	InitChunkDelete();
 }
 
 void Chunks_Manager::InitWorldChunksArray()
@@ -118,24 +116,13 @@ void Chunks_Manager::InitWorldChunksArray()
 	}
 }
 
-void Chunks_Manager::InitChunkDelete()
-{
-	if (Thread* _thread = threadManager->CreateThread())
-	{
-		SThread_DeleteChunk_Ptr _data = new SThread_DeleteChunk(_thread, this, mutex_DeleteChunk, &bInterruptThread_NotSafe, &worldChunksToDelete);
-		_thread->CreateThreadFunction(true, DeleteChunk, _data);
-	}
-	else
-		throw new std::exception("[Chunks_Manager::InitChunkDelete] -> Impossible to create chunk delete");
-}
-
 Threaded void __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
-{	
+{
 	Thread* _thisThread = _data->thisThread;
 	Chunks_Manager* _thisPtr = _data->thisPtr;
 	HANDLE _mutex = _thisPtr->mutex;
-
-	Chunk* _chunk = new Chunk(_data->chunkDataGenerator, _data->chunkRenderGenerator, _data->playerPositionChunkRelative);
+	
+	Chunk* _chunk = new Chunk(_data, _data->chunkDataGenerator, _data->chunkRenderGenerator, _data->playerPositionChunkRelative);
 
 	//---Init
 	_chunk->Init();
@@ -169,16 +156,14 @@ Threaded void __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 		if (_thisPtr->bInterruptThread_NotSafe)
 		{
 			_chunk->FinishInit();
-
 			delete _chunk;
-			delete _data;
 			ReleaseMutex(_mutex);
 			_thisThread->OnFinished.Invoke(_thisThread);
 			return;
 		}
 		ReleaseMutex(_mutex);
 	}
-
+	
 	if (_hasRender)
 	{
 		//---Render
@@ -194,72 +179,16 @@ Threaded void __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 	ReleaseMutex(_mutex);
 
 	_thisThread->OnFinished.Invoke(_thisThread);
-
-	delete _data;
 }
 
-Threaded void __stdcall Chunks_Manager::DeleteChunk(SThread_DeleteChunk_Ptr _data)
+void Chunks_Manager::DeleteChunks()
 {
-	Thread* _thisThread = _data->thisThread;
-	Chunks_Manager* _thisPtr = _data->thisPtr;
-	bool* _bThisInterruptThread = _data->thisbInterruptThread;
-	HANDLE _mutex_DeleteChunk = _data->thisMutex_DeleteChunk;
-	std::vector<Chunk*>& _thisWorldChunksToDelete = *_data->thisWorldChunksToDelete;
-
-	WaitForSingleObject(_mutex_DeleteChunk, INFINITE);
-	bool _bInterruptThread = *_bThisInterruptThread;
-	ReleaseMutex(_mutex_DeleteChunk);
-
-	//Loop Optimized for Game
-	while (_bInterruptThread == false)
+	const size_t& _size = worldChunksToDelete.size();
+	if (_size)
 	{
-		WaitForSingleObject(_mutex_DeleteChunk, INFINITE);
-
-		const size_t& _toDeleteSize = _thisWorldChunksToDelete.size();
-		if (_toDeleteSize)
-		{
-			Chunk*& _chunk = _thisWorldChunksToDelete[0];
-			delete _chunk;
-			_chunk = nullptr;
-
-			_thisWorldChunksToDelete.erase(_thisWorldChunksToDelete.begin());
-		}
-
-		_bInterruptThread = *_bThisInterruptThread;
-
-		ReleaseMutex(_mutex_DeleteChunk);
-
-		Sleep(4);
+		delete worldChunksToDelete[0];
+		worldChunksToDelete.erase(worldChunksToDelete.begin());
 	}
-
-	bool _hasFinishDelete = false;
-
-	//Loop when Exit
-	while (_hasFinishDelete == false)
-	{
-		WaitForSingleObject(_mutex_DeleteChunk, INFINITE);
-
-		const size_t& _toDeleteSize = _thisWorldChunksToDelete.size();
-		if (_toDeleteSize)
-		{
-			Chunk*& _chunk = _thisWorldChunksToDelete[0];
-			delete _chunk;
-			_chunk = nullptr;
-
-			_thisWorldChunksToDelete.erase(_thisWorldChunksToDelete.begin());
-		}
-		else
-		{
-			if (_thisPtr->chunkBeingGenerating.size() == 0)
-				_hasFinishDelete = true;
-		}
-
-		ReleaseMutex(_mutex_DeleteChunk);
-	}
-
-	_thisThread->OnFinished.Invoke(_thisThread);
-
-	delete _data;
 }
 
 void Chunks_Manager::AddStartingWorldBaseChunk()
@@ -349,6 +278,8 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 	while (_size > 0)
 	{
 		Chunk* _chunk = chunkWaitingForCGgen[0];
+		_chunk->DeleteHandle();
+
 		Chunk_Render* _chunkRender = _chunk->chunkRender;
 		const bool& _hasRender = _chunkRender->bHasRender;
 		--opti_threadCount;
@@ -377,10 +308,8 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 		else
 		{
 			//Put this chunk to the delete list
-			WaitForSingleObject(mutex_DeleteChunk, INFINITE);
 			_chunk->PreDeleteChunk();
 			worldChunksToDelete.push_back(_chunk);
-			ReleaseMutex(mutex_DeleteChunk);
 		}
 	}
 }
@@ -533,11 +462,9 @@ void Chunks_Manager::Opti_RecenterWorldChunksArray(const glm::vec3& _playerPosit
 								}
 							}
 
-							WaitForSingleObject(mutex_DeleteChunk, INFINITE);
 							_chunk->PreDeleteChunk();
 							worldChunksToDelete.push_back(_chunk);
 							_chunk = nullptr;
-							ReleaseMutex(mutex_DeleteChunk);
 						}
 					}
 				}

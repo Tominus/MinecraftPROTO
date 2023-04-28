@@ -17,9 +17,9 @@
 * ...
 */
 
-/* 
-* - same than opti_worldChunks but with State enum : None, IsGenerating, Genered 
-* - Detach from everything chunk that have to be deleted, and delete them in another thread
+/*
+* - ? faire une pool de chunk créé sur le main thread et récupéré par les threads
+* - same than opti_worldChunks but with State enum : None, IsGenerating, Genered
 * - mutex priority
 * - stock in chunk there array index and decrement them when array is erased (probably more opti)
 * - save data
@@ -31,20 +31,6 @@
 * - generation
 * 
 * - toujours load les chunks sous le player
-*/
-
-/* Store Chunk in there position instead of an array
-* Impossible cause negative value exist
-* soluce :
-* int negativeOffsetX
-* //int negativeOffsetY doesn't exist cause world height is predetermined
-* int negativeOffsetZ
-* Triple vect
-* 
-* if we have a new chunk with negative value
-* we increment the correspondant offset
-* and we redo the Triple vect.
-* Or use [][][] instead
 */
 
 /* Update Render every frame.

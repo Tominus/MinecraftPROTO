@@ -8,6 +8,8 @@ class Chunk_SideData;
 class Chunk_Data_Generator;
 class Chunk_Render_Generator;
 
+struct SThread_AddChunk;
+
 class Chunk
 {
 	friend class Chunk_Data;
@@ -17,7 +19,7 @@ class Chunk
 	friend class Chunk_Render_Generator;
 
 private:
-	Chunk(Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator, const glm::vec3& _position);
+	Chunk(SThread_AddChunk* _data, Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator, const glm::vec3& _position);
 	~Chunk();
 
 	void Init();
@@ -31,6 +33,7 @@ private:
 	void UpdateChunkSideRender();
 
 	void PreDeleteChunk();
+	void DeleteHandle();
 
 public:
 	/*Return the position of the chunk.*/
@@ -48,6 +51,8 @@ private:
 
 	Chunk_Data_Generator* chunkDataGenerator;
 	Chunk_Render_Generator* chunkRenderGenerator;
+
+	SThread_AddChunk* handle_AddChunk;
 
 	glm::vec3 chunkPosition;
 	glm::vec3 worldPosition;
