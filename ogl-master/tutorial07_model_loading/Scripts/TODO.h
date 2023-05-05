@@ -19,6 +19,8 @@
 
 /*
 * - ? faire une pool de chunk créé sur le main thread et récupéré par les threads
+* - Retirer tout les *Chunk_data, Chunk_render... car aucun new est autorisé en dehors du main thread
+* 
 * - same than opti_worldChunks but with State enum : None, IsGenerating, Genered
 * - mutex priority
 * - stock in chunk there array index and decrement them when array is erased (probably more opti)

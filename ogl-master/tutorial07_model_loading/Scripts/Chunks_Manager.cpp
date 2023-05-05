@@ -21,7 +21,7 @@ Chunks_Manager::Chunks_Manager()
 
 	chunkDataGenerator = new Chunk_Data_Generator(this);
 	chunkRenderGenerator = new Chunk_Render_Generator(this);
-	chunkPoolManager = new Chunk_Pool_Manager(chunkDataGenerator, chunkRenderGenerator);
+	chunkPoolManager = new Chunk_Pool_Manager(this, chunkDataGenerator, chunkRenderGenerator);
 	threadManager = Thread_Manager::Instance();
 
 	renderDistance = Render_Distance_Current;
@@ -82,6 +82,8 @@ Chunks_Manager::~Chunks_Manager()
 
 	delete chunkDataGenerator;
 	delete chunkRenderGenerator;
+
+	chunkPoolManager->DestroyAllChunkData();
 	delete chunkPoolManager;
 }
 
@@ -92,7 +94,7 @@ void Chunks_Manager::StartChunkManager()
 
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateNewChunkRender);
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateChunkPosition);
-	onTick.AddDynamic(this, &Chunks_Manager::Opti_CheckRenderDistance);
+	//onTick.AddDynamic(this, &Chunks_Manager::Opti_CheckRenderDistance);
 	onTick.AddDynamic(this, &Chunks_Manager::CheckUpdateChunkSideRender);
 
 	chunkPoolManager->InitializeAllChunkData();
@@ -123,10 +125,10 @@ void Chunks_Manager::InitWorldChunksArray()
 Threaded int __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 {
 	Thread* _thisThread = _data->thisThread;
-	Chunks_Manager* _thisPtr = _data->thisPtr;
+	Chunks_Manager* _thisPtr = _data->chunkManager;
 	HANDLE _mutex = _thisPtr->mutex;
 
-	Chunk* _chunk = new Chunk(_data, _data->chunkDataGenerator, _data->chunkRenderGenerator, _data->playerPositionChunkRelative);
+	Chunk* _chunk = _thisPtr->chunkPoolManager->GetChunk();
 
 	//---Init
 	_chunk->Init();
@@ -198,21 +200,7 @@ void Chunks_Manager::DeleteChunks()
 
 void Chunks_Manager::AddStartingWorldBaseChunk()
 {
-	/*const glm::vec3& _playerPosition = getPosition() - glm::vec3(8.f);
-	const glm::vec3 _playerPositionChunkRelative(round(_playerPosition.x / 16.f), 0.f, round(_playerPosition.z / 16.f));
 
-	chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
-
-	Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator, _playerPositionChunkRelative);
-
-	WaitForSingleObject(mutex, INFINITE);
-	chunkWaitingForCGgen.push_back(_chunk);
-	ReleaseMutex(mutex);
-
-	renderDistanceIndex = 1;
-
-	CheckGenerateNewChunkRender();
-	CheckGenerateChunkPosition();*/
 }
 
 void Chunks_Manager::AddWaitingForSideUpdateChunk(Chunk* _chunk)
@@ -389,10 +377,9 @@ void Chunks_Manager::Opti_CheckRenderDistance()
 						{
 							if (Thread* _thread = threadManager->CreateThread())
 							{
-								SThread_AddChunk_Ptr _data = new SThread_AddChunk(_thread, this, chunkDataGenerator, chunkRenderGenerator, _playerPositionChunkRelative);
 								_threadToActivate.push_back(_thread);
 
-								_thread->CreateThreadFunction(false, AddChunk, _data);
+								_thread->CreateThreadFunction(false, AddChunk, nullptr);
 								chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
 								++_totalCreatedChunk;
 								++opti_threadCount;
@@ -521,10 +508,9 @@ bool Chunks_Manager::Opti_CheckIfNoChunkLoaded(glm::vec3 _playerPositionChunkRel
 			if (Thread* _thread = threadManager->CreateThread())
 			{
 				++opti_threadCount;
-				SThread_AddChunk_Ptr _data = new SThread_AddChunk(_thread, this, chunkDataGenerator, chunkRenderGenerator, _playerPositionChunkRelative);
 				chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
 
-				_thread->CreateThreadFunction(true, AddChunk, _data);
+				_thread->CreateThreadFunction(true, AddChunk, nullptr);
 			}
 		}
 		return true;

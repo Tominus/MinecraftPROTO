@@ -2,15 +2,15 @@
 
 #define ENABLE_DEBUG_NEW_OVERRIDE 0
 
-#define ENABLE_DEBUG_MEMORY_LEAK 0
+#define ENABLE_DEBUG_MEMORY_LEAK 1
 #define ENABLE_DEBUG_BREAK_ALLOC 0
-#define BREAK_ALLOC 2909
+#define BREAK_ALLOC 2862
 
 #define Chunk_Size (16)
 #define Chunk_Max_Size (15)
 #define Chunk_Min_World_Height (-1)
 #define Chunk_Zero_World_Height (0)
-#define Chunk_Max_World_Height (16)
+#define Chunk_Max_World_Height (8)
 
 constexpr size_t Chunk_Min_Limit_World_Height = (Chunk_Min_World_Height + 1);
 constexpr size_t Chunk_Max_Limit_World_Height = (Chunk_Max_World_Height - 1);

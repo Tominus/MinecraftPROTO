@@ -39,21 +39,24 @@ Chunk_Data::~Chunk_Data()
 	if (frontChunk)
 		frontChunk->chunkData->backChunk = nullptr;
 
-	for (size_t x = 0; x < Chunk_Size; ++x)
+	if (blocks)
 	{
-		Block*** _x = blocks[x];
-
-		for (size_t y = 0; y < Chunk_Size; ++y)
+		for (size_t x = 0; x < Chunk_Size; ++x)
 		{
-			Block** _y = _x[y];
+			Block*** _x = blocks[x];
 
-			for (size_t z = 0; z < Chunk_Size; ++z)
-				delete _y[z];
-			delete[] _y;
+			for (size_t y = 0; y < Chunk_Size; ++y)
+			{
+				Block** _y = _x[y];
+
+				for (size_t z = 0; z < Chunk_Size; ++z)
+					delete _y[z];
+				delete[] _y;
+			}
+			delete[] _x;
 		}
-		delete[] _x;
+		delete[] blocks;
 	}
-	delete[] blocks;
 }
 
 void Chunk_Data::AddSideChunk(Chunk* _chunk)

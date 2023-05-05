@@ -7,6 +7,7 @@ class Block
 	friend class Chunk_Data_Generator;
 	friend class Chunk_SideData;
 	friend class Chunks_Manager;
+	friend class Chunk_Pool_Manager;
 
 private:
 	Block(const EBlock_Type& _blockType);
