@@ -14,6 +14,8 @@ private:
 	~Chunk_SideData();
 
 private:
+	bool bUseChunkSideData;
+
 	Block*** downBlocks;
 	Block*** upBlocks;
 	Block*** leftBlocks;

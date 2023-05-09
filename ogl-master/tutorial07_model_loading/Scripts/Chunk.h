@@ -25,8 +25,6 @@ private:
 	Chunk(SThread_AddChunk* _data, Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator, const glm::vec3& _position);
 	~Chunk();
 
-	void Init();
-
 	void InitChunkData();
 	void InitChunkRender();
 	void FinishInit();

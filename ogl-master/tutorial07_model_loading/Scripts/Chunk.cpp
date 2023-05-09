@@ -41,13 +41,6 @@ Chunk::~Chunk()
 	delete chunkSideData;
 }
 
-void Chunk::Init()
-{
-	chunkData = new Chunk_Data(this);
-	chunkRender = new Chunk_Render(this);
-	chunkSideData = new Chunk_SideData();
-}
-
 void Chunk::InitChunkData()
 {
 	chunkDataGenerator->GenerateNewChunkData(chunkData);

@@ -20,7 +20,7 @@ Chunk_Render::Chunk_Render(Chunk* _currentChunk)
 
 Chunk_Render::~Chunk_Render()
 {
-	for each (const std::pair<GLuint, SChunk_Render_Data*>&_datas in renderDatas)
+	for each (const std::pair<GLuint, SChunk_Render_Data*>& _datas in renderDatas)
 	{
 		SChunk_Render_Data* _renderBuffer = _datas.second;
 		glDeleteBuffers(1, &_renderBuffer->vertexsBuffer);
@@ -47,8 +47,7 @@ Chunk_Render::~Chunk_Render()
 				SChunk_Render_Shapes** _y = _x[y];
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
-					if (SChunk_Render_Shapes* _shapes = _y[z])
-						delete _shapes;
+					delete _y[z];
 				}
 				delete[] _y;
 			}

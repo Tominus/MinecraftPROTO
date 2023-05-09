@@ -4,6 +4,7 @@
 
 Chunk_SideData::Chunk_SideData()
 {
+	bUseChunkSideData = false;
 	downBlocks = nullptr;
 	upBlocks = nullptr;
 	leftBlocks = nullptr;

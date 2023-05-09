@@ -284,11 +284,7 @@ Threaded void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chun
 	}
 
 	//Check if has render
-	if (_currentRenderDatas.size() < 1)
-	{
-		_chunkRender->bHasRender = false;
-	}
-
+	_chunkRender->bHasRender = _currentRenderDatas.size() > 0;
 
 	//SetAllSideChunkForUpdate(_chunkData); //deprecated
 }

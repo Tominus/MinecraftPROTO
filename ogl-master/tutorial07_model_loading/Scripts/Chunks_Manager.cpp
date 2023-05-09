@@ -96,6 +96,7 @@ void Chunks_Manager::StartChunkManager()
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateChunkPosition);
 	//onTick.AddDynamic(this, &Chunks_Manager::Opti_CheckRenderDistance);
 	onTick.AddDynamic(this, &Chunks_Manager::CheckUpdateChunkSideRender);
+	onTick.AddDynamic(chunkPoolManager, &Chunk_Pool_Manager::Update);
 
 	chunkPoolManager->InitializeAllChunkData();
 	InitWorldChunksArray();
@@ -129,9 +130,6 @@ Threaded int __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 	HANDLE _mutex = _thisPtr->mutex;
 
 	Chunk* _chunk = _thisPtr->chunkPoolManager->GetChunk();
-
-	//---Init
-	_chunk->Init();
 
 	//---Data
 	_chunk->InitChunkData();
@@ -219,6 +217,7 @@ void Chunks_Manager::AddWaitingForSideUpdateChunk(Chunk* _chunk)
 	ReleaseMutex(mutex);
 }
 
+#pragma region Update
 void Chunks_Manager::UpdateChunksManager() const
 {
 	onUpdate.Invoke();
@@ -248,6 +247,7 @@ void Chunks_Manager::UpdateRender()
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 }
+#pragma endregion
 
 void Chunks_Manager::Exit()
 {
@@ -345,6 +345,7 @@ void Chunks_Manager::CheckUpdateChunkSideRender()
 	}
 }
 
+#pragma region Render_Distance
 void Chunks_Manager::Opti_CheckRenderDistance()
 {
 	const glm::vec3& _playerPosition = getPosition() - glm::vec3(8.f);
@@ -517,3 +518,4 @@ bool Chunks_Manager::Opti_CheckIfNoChunkLoaded(glm::vec3 _playerPositionChunkRel
 	}
 	return false;
 }
+#pragma endregion

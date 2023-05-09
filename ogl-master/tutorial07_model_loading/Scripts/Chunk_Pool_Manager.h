@@ -10,6 +10,10 @@ class Chunk_Data_Generator;
 class Chunk_Render_Generator;
 class Chunks_Manager;
 
+struct SChunk_Render_Buffer;
+struct SChunk_Render_Data;
+struct SChunk_Render_Shapes;
+
 class Chunk_Pool_Manager
 {
 
@@ -27,45 +31,55 @@ private:
 	void GenerateChunkData(Chunk_Data* _chunkData);
 	void GenerateChunkRender(Chunk_Render* _chunkRender);
 	void GenerateChunkSideData(Chunk_SideData* _chunkSideData);
+	void GenerateChunkRenderBuffer();
+	void GenerateChunkRenderData();
+	void GenerateChunkRenderShapes();
 
 	void ClearChunkHandle(Chunk* _chunk);
 	void ClearChunkData(Chunk_Data* _chunkData);
 	void ClearChunkRender(Chunk_Render* _chunkRender);
 	void ClearChunkSideData(Chunk_SideData* _chunkSideData);
+
+	void Update();
+	void CheckHasToGenerateNewChunkRenderBuffer();
+	void CheckHasToGenerateNewChunkRenderData();
+	void CheckHasToGenerateNewChunkRenderShapes();
+
+public:
+	void SetHasToGenerateNewChunkRenderBuffer();
+	void SetHasToGenerateNewChunkRenderData();
+	void SetHasToGenerateNewChunkRenderShapes();
 	
-	inline Chunk* GetChunk()
-	{
-		Chunk* _chunk = nullptr;
+public:
+	Chunk* GetChunk();
+	void RetreiveChunk(Chunk* _chunk);
 
-		WaitForSingleObject(mutex_ChunkPool, INFINITE);
-		if (chunkPool.size() > 0)
-		{
-			_chunk = chunkPool.back();
-			chunkPool.pop_back();
-		}
-		ReleaseMutex(mutex_ChunkPool);
+	SChunk_Render_Buffer* GetChunkRenderBuffer();
+	void RetreiveChunkRenderBuffer(SChunk_Render_Buffer* _chunkRenderBuffer);
 
-		return _chunk;
-	}
+	SChunk_Render_Data* GetChunkRenderData();
+	void RetreiveChunkRenderData(SChunk_Render_Data* _chunkRenderData);
 
-	inline void RetreiveChunk(Chunk* _chunk)
-	{
-		ClearChunkHandle(_chunk);
-		ClearChunkData(_chunk->chunkData);
-		ClearChunkRender(_chunk->chunkRender);
-		ClearChunkSideData(_chunk->chunkSideData);
-
-		WaitForSingleObject(mutex_ChunkPool, INFINITE);
-		chunkPool.push_back(_chunk);
-		ReleaseMutex(mutex_ChunkPool);
-	}
+	SChunk_Render_Shapes* GetChunkRenderShapes();
+	void RetreiveChunkRenderShapes(SChunk_Render_Shapes* _chunkRenderShapes);
 
 private:
 	std::vector<Chunk*> chunkPool;
+	std::vector<SChunk_Render_Buffer*> chunkRenderBufferPool;
+	std::vector<SChunk_Render_Data*> chunkRenderDataPool;
+	std::vector<SChunk_Render_Shapes*> chunkRenderShapesPool;
 
 	Chunks_Manager* chunkManager;
 	Chunk_Data_Generator* chunkDataGenerator;
 	Chunk_Render_Generator* chunkRenderGenerator;
 
 	HANDLE mutex_ChunkPool;
+	HANDLE mutex_ChunkRenderBufferPool;
+	HANDLE mutex_ChunkRenderDataPool;
+	HANDLE mutex_ChunkRenderShapesPool;
+	HANDLE mutex_HasToGenerateData;
+
+	bool bHasToGenerateNewChunkRenderBuffer;
+	bool bHasToGenerateNewChunkRenderData;
+	bool bHasToGenerateNewChunkRenderShapes;
 };
