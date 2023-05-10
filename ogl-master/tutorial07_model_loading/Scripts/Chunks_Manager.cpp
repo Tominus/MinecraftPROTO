@@ -22,6 +22,9 @@ Chunks_Manager::Chunks_Manager()
 	chunkDataGenerator = new Chunk_Data_Generator(this);
 	chunkRenderGenerator = new Chunk_Render_Generator(this);
 	chunkPoolManager = new Chunk_Pool_Manager(this, chunkDataGenerator, chunkRenderGenerator);
+	chunkDataGenerator->chunkPoolManager = chunkPoolManager;
+	chunkRenderGenerator->chunkPoolManager = chunkPoolManager;
+
 	threadManager = Thread_Manager::Instance();
 
 	renderDistance = Render_Distance_Current;
@@ -40,13 +43,6 @@ Chunks_Manager::~Chunks_Manager()
 	} while (threadManager->GetHasAllThreadFinished() == false);
 
 	WaitForSingleObject(mutex, INFINITE);
-
-	const size_t& _size = worldChunksToDelete.size();
-	for (size_t i = 0; i < _size; ++i)
-	{
-		delete worldChunksToDelete[i];
-	}
-
 	if (opti_worldChunks)
 	{
 		for (size_t x = 0; x < Render_Distance_Total; ++x)
@@ -90,11 +86,10 @@ Chunks_Manager::~Chunks_Manager()
 void Chunks_Manager::StartChunkManager()
 {
 	onUpdate.AddDynamic(this, &Chunks_Manager::UpdateRender);
-	onUpdate.AddDynamic(this, &Chunks_Manager::DeleteChunks);
 
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateNewChunkRender);
 	onTick.AddDynamic(this, &Chunks_Manager::CheckGenerateChunkPosition);
-	//onTick.AddDynamic(this, &Chunks_Manager::Opti_CheckRenderDistance);
+	onTick.AddDynamic(this, &Chunks_Manager::Opti_CheckRenderDistance);
 	onTick.AddDynamic(this, &Chunks_Manager::CheckUpdateChunkSideRender);
 	onTick.AddDynamic(chunkPoolManager, &Chunk_Pool_Manager::Update);
 
@@ -123,21 +118,23 @@ void Chunks_Manager::InitWorldChunksArray()
 	}
 }
 
-Threaded int __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
+Threaded int __stdcall Chunks_Manager::AddChunk(SThread_AddChunk* _data)
 {
 	Thread* _thisThread = _data->thisThread;
 	Chunks_Manager* _thisPtr = _data->chunkManager;
+	Chunk_Pool_Manager* _chunkPoolManager = _thisPtr->chunkPoolManager;
 	HANDLE _mutex = _thisPtr->mutex;
 
-	Chunk* _chunk = _thisPtr->chunkPoolManager->GetChunk();
+	Chunk* _chunk = _data->chunk;
+	_chunk->SetLocalPosition(_data->playerPositionChunkRelative);
 
 	//---Data
 	_chunk->InitChunkData();
 
-	WaitForSingleObject(_mutex, INFINITE);
 	bool _hasRender = _chunk->chunkRender->bHasRender;
 	Chunk_Data* _chunkData = _chunk->chunkData;
 
+	WaitForSingleObject(_mutex, INFINITE);
 	if (!_thisPtr->bInterruptThread_NotSafe)
 	{
 		_thisPtr->chunkBeingGenerating.push_back(_chunk);
@@ -148,19 +145,19 @@ Threaded int __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 
 	//---Side
 	WaitForSingleObject(_mutex, INFINITE);
-	bool _hasFinish = _chunkData->CheckChunkToWaitEmpty();
+	bool _hasFinishWaitSideChunk = _chunkData->CheckChunkToWaitEmpty();
 	ReleaseMutex(_mutex);
 
-	while (_hasFinish == false)
+	while (_hasFinishWaitSideChunk == false)
 	{
-		Sleep(4);
+		Sleep(16);
 
 		WaitForSingleObject(_mutex, INFINITE);
-		_hasFinish = _chunkData->CheckChunkToWaitEmpty();
+		_hasFinishWaitSideChunk = _chunkData->CheckChunkToWaitEmpty();
 		if (_thisPtr->bInterruptThread_NotSafe)
 		{
-			_chunk->FinishInit();
-			delete _chunk;
+			//Retreive chunkSideData
+			_chunkPoolManager->RetreiveChunk(_chunk);
 			ReleaseMutex(_mutex);
 			_thisThread->OnFinished.Invoke(_thisThread);
 			return 2;
@@ -175,7 +172,7 @@ Threaded int __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 	}
 
 	//---Finish
-	_chunk->FinishInit();
+	//Retreive chunkSideData
 
 	WaitForSingleObject(_mutex, INFINITE);
 	_thisPtr->chunkWaitingForCGgen.push_back(_chunk);
@@ -184,16 +181,6 @@ Threaded int __stdcall Chunks_Manager::AddChunk(SThread_AddChunk_Ptr _data)
 
 	_thisThread->OnFinished.Invoke(_thisThread);
 	return 1;
-}
-
-void Chunks_Manager::DeleteChunks()
-{
-	const size_t& _size = worldChunksToDelete.size();
-	if (_size)
-	{
-		delete worldChunksToDelete[0];
-		worldChunksToDelete.erase(worldChunksToDelete.begin());
-	}
 }
 
 void Chunks_Manager::AddStartingWorldBaseChunk()
@@ -263,6 +250,14 @@ void Chunks_Manager::Exit()
 	ReleaseMutex(mutex);
 }
 
+void Chunks_Manager::PostExitUpdate()
+{
+	if (chunkPoolManager)
+	{
+		chunkPoolManager->Update();
+	}
+}
+
 void Chunks_Manager::CheckGenerateNewChunkRender()
 {
 	size_t _size (chunkWaitingForCGgen.size());
@@ -271,7 +266,6 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 	while (_size > 0)
 	{
 		Chunk* _chunk = chunkWaitingForCGgen[0];
-		_chunk->DeleteHandle();
 
 		Chunk_Render* _chunkRender = _chunk->chunkRender;
 		const bool& _hasRender = _chunkRender->bHasRender;
@@ -301,8 +295,8 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 		else
 		{
 			//Put this chunk to the delete list
-			_chunk->PreDeleteChunk();
-			worldChunksToDelete.push_back(_chunk);
+			chunkPoolManager->RetreiveChunk(_chunk);
+			//worldChunksToDelete.push_back(_chunk);
 		}
 	}
 }
@@ -329,20 +323,11 @@ void Chunks_Manager::CheckGenerateChunkPosition()
 
 void Chunks_Manager::CheckUpdateChunkSideRender()
 {
-	size_t _max = chunkWaitingForGraphicalUpdate.size();
+	/*size_t _max = chunkWaitingForGraphicalUpdate.size();
 	for (size_t i = 0; i < _max; ++i)
 	{
 		Chunk* _chunk = chunkWaitingForGraphicalUpdate[i];
-
-		if (_chunk->chunkRender->bHasFinishGeneration)
-		{
-			_chunk->UpdateChunkSideRender();
-
-			chunkWaitingForGraphicalUpdate.erase(chunkWaitingForGraphicalUpdate.begin() + i);
-			--i;
-			--_max;
-		}
-	}
+	}*/
 }
 
 #pragma region Render_Distance
@@ -376,21 +361,35 @@ void Chunks_Manager::Opti_CheckRenderDistance()
 					{
 						if (Opti_GetFirstChunkAroundPosition(_playerPositionChunkRelative))
 						{
-							if (Thread* _thread = threadManager->CreateThread())
+							if (Chunk* _chunk = chunkPoolManager->GetChunk())
 							{
-								_threadToActivate.push_back(_thread);
-
-								_thread->CreateThreadFunction(false, AddChunk, nullptr);
-								chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
-								++_totalCreatedChunk;
-								++opti_threadCount;
-
-								if (_totalCreatedChunk > Thread_Max_ChunkCreation || opti_threadCount > Thread_Max_ChunkCreation)
+								if (Thread* _thread = threadManager->CreateThread())
 								{
-									y = Chunk_Min_World_Height;
-									x = renderDistance;
-									break;
+									_threadToActivate.push_back(_thread);
+
+									SThread_AddChunk* _handle = _chunk->handle_AddChunk;
+									_handle->playerPositionChunkRelative = _playerPositionChunkRelative;
+									_handle->thisThread = _thread;
+
+									_thread->CreateThreadFunction(false, AddChunk, _handle);
+									chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
+									++_totalCreatedChunk;
+									++opti_threadCount;
+
+									if (_totalCreatedChunk == Thread_Max_ChunkCreation || opti_threadCount == Thread_Max_ChunkCreation)
+									{
+										y = Chunk_Min_World_Height;
+										x = renderDistance;
+										break;
+									}
 								}
+							}
+							else
+							{
+								//Not enought chunk in pool
+								y = Chunk_Min_World_Height;
+								x = renderDistance;
+								break;
 							}
 						}
 					}
@@ -455,8 +454,7 @@ void Chunks_Manager::Opti_RecenterWorldChunksArray(const glm::vec3& _playerPosit
 								}
 							}
 
-							_chunk->PreDeleteChunk();
-							worldChunksToDelete.push_back(_chunk);
+							chunkPoolManager->RetreiveChunk(_chunk);
 							_chunk = nullptr;
 						}
 					}
@@ -506,12 +504,19 @@ bool Chunks_Manager::Opti_CheckIfNoChunkLoaded(glm::vec3 _playerPositionChunkRel
 				_playerPositionChunkRelative.y = Chunk_Max_Limit_World_Height;
 			}
 
-			if (Thread* _thread = threadManager->CreateThread())
+			if (Chunk* _chunk = chunkPoolManager->GetChunk())
 			{
-				++opti_threadCount;
-				chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
+				if (Thread* _thread = threadManager->CreateThread())
+				{
+					++opti_threadCount;
+					chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
 
-				_thread->CreateThreadFunction(true, AddChunk, nullptr);
+					SThread_AddChunk* _handle = _chunk->handle_AddChunk;
+					_handle->playerPositionChunkRelative = _playerPositionChunkRelative;
+					_handle->thisThread = _thread;
+
+					_thread->CreateThreadFunction(true, AddChunk, _handle);
+				}
 			}
 		}
 		return true;

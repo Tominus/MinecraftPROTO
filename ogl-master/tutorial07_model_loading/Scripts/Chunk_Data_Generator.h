@@ -29,7 +29,7 @@ private:
 	void GenerateNewChunkData(Chunk_Data* _chunkData);
 	void GenerateChunkSideData(Chunk* _chunk);
 
-	inline Block* GenerateBlock(const glm::vec3& _blockPosition)
+	inline EBlock_Type GenerateHeight(const glm::vec3& _blockPosition)
 	{
 		//Smooth world
 		double _noise = perlinNoise->CalculateNoise(_blockPosition.x / 2, _blockPosition.z / 2);
@@ -38,11 +38,11 @@ private:
 
 		if (_noise < _blockPosition.y)
 		{
-			return new Block(EBlock_Type::Air);
+			return EBlock_Type::Air;
 		}
 		else
 		{
-			return new Block((EBlock_Type)(rand() % 4 + 2)); //Generate only stone
+			return (EBlock_Type)(rand() % 4 + 2); //Generate only stone
 		}
 	}
 
@@ -57,5 +57,6 @@ private:
 	float fMaxChunkHeight;
 	unsigned randMax;
 	Chunks_Manager* chunksManager;
+	Chunk_Pool_Manager* chunkPoolManager;
 	Perlin_Noise* perlinNoise;
 };

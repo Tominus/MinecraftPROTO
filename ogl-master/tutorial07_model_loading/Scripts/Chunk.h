@@ -25,16 +25,15 @@ private:
 	Chunk(SThread_AddChunk* _data, Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator, const glm::vec3& _position);
 	~Chunk();
 
+	void SetLocalPosition(const glm::vec3& _position);
+
 	void InitChunkData();
 	void InitChunkRender();
-	void FinishInit();
 
 	void Render() const;
 	void GenerateCGRender();
-	void UpdateChunkSideRender();
 
-	void PreDeleteChunk();
-	void DeleteHandle();
+	void PrePoolChunk();
 
 public:
 	/*Return the position of the chunk.*/

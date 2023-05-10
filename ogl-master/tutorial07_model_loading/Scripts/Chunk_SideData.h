@@ -10,11 +10,11 @@ class Chunk_SideData
 	friend class Chunk_Pool_Manager;
 
 private:
-	Chunk_SideData();
+	Chunk_SideData(Chunk_Pool_Manager* _chunkPoolManager);
 	~Chunk_SideData();
 
 private:
-	bool bUseChunkSideData;
+	Chunk_Pool_Manager* chunkPoolManager;
 
 	Block*** downBlocks;
 	Block*** upBlocks;

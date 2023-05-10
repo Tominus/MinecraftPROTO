@@ -25,9 +25,11 @@ private:
 	void InitWorld(GLFWwindow* _window);
 
 	void Start();
-	void Update();
+	void Loop();
 	void Tick();
+	void Update();
 	void Exit();
+	void PostExitUpdate();
 
 public:
 	inline static World* Instance()

@@ -82,4 +82,8 @@ private:
 	bool bHasToGenerateNewChunkRenderBuffer;
 	bool bHasToGenerateNewChunkRenderData;
 	bool bHasToGenerateNewChunkRenderShapes;
+
+	int iTotalBuffer;
+	int iTotalData;
+	int iTotalShapes;
 };

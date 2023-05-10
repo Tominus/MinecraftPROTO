@@ -41,6 +41,12 @@ Chunk::~Chunk()
 	delete chunkSideData;
 }
 
+void Chunk::SetLocalPosition(const glm::vec3& _position)
+{
+	chunkPosition = _position;
+	worldPosition = _position * (float)Chunk_Size;
+}
+
 void Chunk::InitChunkData()
 {
 	chunkDataGenerator->GenerateNewChunkData(chunkData);
@@ -49,12 +55,6 @@ void Chunk::InitChunkData()
 void Chunk::InitChunkRender()
 {
 	chunkRenderGenerator->GenerateNewChunkRender(chunkRender, chunkData);
-}
-
-void Chunk::FinishInit()
-{
-	delete chunkSideData;
-	chunkSideData = nullptr;
 }
 
 void Chunk::Render() const
@@ -67,18 +67,7 @@ void Chunk::GenerateCGRender()
 	chunkRenderGenerator->GenerateChunkCGRender(chunkRender->renderDatas);
 }
 
-void Chunk::UpdateChunkSideRender()
+void Chunk::PrePoolChunk()
 {
-	chunkRenderGenerator->UpdateChunkSideRender(this);
-}
-
-void Chunk::PreDeleteChunk()
-{
-	chunkData->PreDelete();
-}
-
-void Chunk::DeleteHandle()
-{
-	delete handle_AddChunk;
-	handle_AddChunk = nullptr;
+	chunkData->PrePool();
 }

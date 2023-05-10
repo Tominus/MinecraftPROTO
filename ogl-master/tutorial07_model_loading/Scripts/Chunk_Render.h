@@ -1,5 +1,4 @@
 #pragma once
-#include "Side.h"
 
 #include <map>
 #include <vector>
@@ -22,6 +21,13 @@ struct SChunk_Render_Shapes
 		uvs = _uvs;
 		vertexsSize = _vertexsSize;
 	}
+
+	void SetRenderShapes(const glm::vec3 _vertexs[], const glm::vec2 _uvs[], const size_t* _vertexsSize)
+	{
+		vertexs = _vertexs;
+		uvs = _uvs;
+		vertexsSize = _vertexsSize;
+	}
 };
 
 struct SChunk_Render_Buffer
@@ -31,6 +37,12 @@ struct SChunk_Render_Buffer
 
 	SChunk_Render_Buffer() = delete;
 	SChunk_Render_Buffer(const SChunk_Render_Shapes* _shapes, const glm::vec3& _position)
+	{
+		shapes = _shapes;
+		position = _position;
+	}
+
+	void SetRenderBuffer(const SChunk_Render_Shapes* _shapes, const glm::vec3& _position)
 	{
 		shapes = _shapes;
 		position = _position;
@@ -61,7 +73,7 @@ class Chunk_Render
 	friend class Chunk_Pool_Manager;
 
 private:
-	Chunk_Render(Chunk* _ownerChunk);
+	Chunk_Render(Chunk* _ownerChunk, Chunk_Pool_Manager* _chunkPoolManager);
 	~Chunk_Render();
 
 	void Render();
@@ -76,11 +88,11 @@ private:
 	}
 
 private:
+	Chunk_Pool_Manager* chunkPoolManager;
 	Chunk* ownerChunk;
-	glm::vec3 ownerChunkPosition;
+	glm::vec3* ownerChunkPosition;
 
 	GLuint matrixID;
-	ESide sideToUpdate;
 	bool bHasFinishGeneration;
 	bool bHasRender;
 	

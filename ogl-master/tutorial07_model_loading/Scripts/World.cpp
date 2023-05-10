@@ -69,7 +69,7 @@ void World::Start()
 	chunksManager->AddStartingWorldBaseChunk();
 }
 
-void World::Update()
+void World::Loop()
 {
 	const float& _clock = std::clock() / 1000.f;
 	
@@ -86,8 +86,7 @@ void World::Update()
 	//if (fpsTime > Fps_Time)
 	{
 	//	fpsTime -= Fps_Time;
-		chunksManager->UpdateChunksManager();
-		debugWorld->UpdateDebug();
+		Update();
 	}
 }
 
@@ -96,7 +95,18 @@ void World::Tick()
 	chunksManager->TickChunksManager();
 }
 
+void World::Update()
+{
+	chunksManager->UpdateChunksManager();
+	debugWorld->UpdateDebug();
+}
+
 void World::Exit()
 {
 	chunksManager->Exit();
+}
+
+void World::PostExitUpdate()
+{
+	chunksManager->PostExitUpdate();
 }

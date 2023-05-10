@@ -36,9 +36,7 @@ private:
 	void StartChunkManager();
 	void InitWorldChunksArray();
 
-	static int WINAPI AddChunk(SThread_AddChunk_Ptr _data);
-
-	void DeleteChunks();
+	static int WINAPI AddChunk(SThread_AddChunk* _data);
 	
 	void AddStartingWorldBaseChunk();
 	void AddWaitingForSideUpdateChunk(Chunk* _chunk);
@@ -49,6 +47,7 @@ private:
 	void UpdateRender();
 
 	void Exit();
+	void PostExitUpdate();
 
 	void CheckGenerateNewChunkRender();
 	void CheckGenerateChunkPosition();
@@ -206,7 +205,6 @@ private:
 	int opti_threadCount;
 
 	std::vector<Chunk*> worldChunksToRender;
-	std::vector<Chunk*> worldChunksToDelete;
 
 	Chunk_Pool_Manager* chunkPoolManager;
 	Chunk_Data_Generator* chunkDataGenerator;

@@ -17,7 +17,7 @@ class Chunk_Data
 	friend class Chunk_Pool_Manager;
 
 private:
-	Chunk_Data(Chunk* _ownerChunk);
+	Chunk_Data(Chunk* _ownerChunk, Chunk_Pool_Manager* _chunkPoolManager);
 	~Chunk_Data();
 
 	void AddSideChunk(Chunk* _chunk);
@@ -28,7 +28,7 @@ private:
 
 	bool CheckChunkToWaitEmpty();
 
-	void PreDelete();
+	void PrePool();
 
 public:
 	inline Chunk* GetOwnerChunk() const { return ownerChunk; }
@@ -45,6 +45,7 @@ public:
 private:
 	Block**** blocks;
 
+	Chunk_Pool_Manager* chunkPoolManager;
 	Chunks_Manager* chunkManager;
 	HANDLE mutex_ChunkManager;
 	Chunk* ownerChunk;

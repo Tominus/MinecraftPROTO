@@ -6,8 +6,9 @@
 #include "World.h"
 #include "Chunks_Manager.h"
 
-Chunk_Data::Chunk_Data(Chunk* _ownerChunk)
+Chunk_Data::Chunk_Data(Chunk* _ownerChunk, Chunk_Pool_Manager* _chunkPoolManager)
 {
+	chunkPoolManager = _chunkPoolManager;
 	chunkManager = World::Instance()->GetChunksManager();
 	mutex_ChunkManager = chunkManager->mutex;
 	ownerChunk = _ownerChunk;
@@ -345,7 +346,7 @@ bool Chunk_Data::CheckChunkToWaitEmpty()
 	return false;
 }
 
-void Chunk_Data::PreDelete()
+void Chunk_Data::PrePool()
 {
 	if (downChunk)
 	{

@@ -52,7 +52,7 @@ void MainGame::GameLoop()
 		glUniformMatrix4fv(_matrixID, 1, GL_FALSE, &MVP[0][0]);
 
 		//--- Update
-		world->Update();
+		world->Loop();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -64,6 +64,9 @@ void MainGame::GameLoop()
 
 	//---Waiting Thread To Stop there behavior
 	do {
+
+		//Finish every thread that are in a while state
+		world->PostExitUpdate();
 
 	} while (threadManager->GetHasAllThreadFinished() == false);
 }

@@ -7,15 +7,15 @@
 #include <glm/gtx/transform.hpp>
 #include <common/controls.hpp>
 
-Chunk_Render::Chunk_Render(Chunk* _currentChunk)
+Chunk_Render::Chunk_Render(Chunk* _currentChunk, Chunk_Pool_Manager* _chunkPoolManager)
 {
+	chunkPoolManager = _chunkPoolManager;
 	matrixID = 0;
-	sideToUpdate = ESide::None;
 	bHasFinishGeneration = false;
 	bHasRender = false;
 	allBlockShapes = nullptr;
 	ownerChunk = _currentChunk;
-	ownerChunkPosition = ownerChunk->worldPosition;
+	ownerChunkPosition = &ownerChunk->worldPosition;
 }
 
 Chunk_Render::~Chunk_Render()
@@ -65,7 +65,7 @@ void Chunk_Render::Render()
 		
 		glBindTexture(GL_TEXTURE_2D, _data.first);
 
-		const glm::mat4& _MVP = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), ownerChunkPosition) * glm::mat4(1.0f);
+		const glm::mat4& _MVP = getProjectionMatrix() * getViewMatrix() * glm::translate(glm::mat4(), *ownerChunkPosition) * glm::mat4(1.0f);
 		glUniformMatrix4fv(matrixID, 1, GL_FALSE, &_MVP[0][0]);
 		
 		glBindBuffer(GL_ARRAY_BUFFER, _chunkRenderData->vertexsBuffer);

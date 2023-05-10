@@ -2,9 +2,9 @@
 #include "Block.h"
 #include "GlobalDefine.h"
 
-Chunk_SideData::Chunk_SideData()
+Chunk_SideData::Chunk_SideData(Chunk_Pool_Manager* _chunkPoolManager)
 {
-	bUseChunkSideData = false;
+	chunkPoolManager = _chunkPoolManager;
 	downBlocks = nullptr;
 	upBlocks = nullptr;
 	leftBlocks = nullptr;

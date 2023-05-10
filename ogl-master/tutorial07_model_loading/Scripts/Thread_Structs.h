@@ -4,6 +4,7 @@
 
 class Thread;
 class Chunks_Manager;
+class Chunk;
 class Chunk_Data_Generator;
 class Chunk_Render_Generator;
 
@@ -11,14 +12,16 @@ typedef struct SThread_AddChunk
 {
 	Thread* thisThread = nullptr;
 	Chunks_Manager* chunkManager = nullptr;
+	Chunk* chunk = nullptr;
 	glm::vec3 playerPositionChunkRelative;
 
 	SThread_AddChunk() = default;
 
-	SThread_AddChunk(Thread* _thisThread, Chunks_Manager* _chunkManager, const glm::vec3& _playerPositionChunkRelative)
+	SThread_AddChunk(Thread* _thisThread, Chunks_Manager* _chunkManager, Chunk* _chunk, const glm::vec3& _playerPositionChunkRelative)
 	{
 		thisThread = _thisThread;
 		chunkManager = _chunkManager;
+		chunk = _chunk;
 		playerPositionChunkRelative = _playerPositionChunkRelative;
 	}
 

@@ -15,6 +15,7 @@ Chunk_Data_Generator::Chunk_Data_Generator(Chunks_Manager* _chunksManager)
 {
 	perlinNoise = Perlin_Noise::Instance();
 	chunksManager = _chunksManager;
+	chunkPoolManager = nullptr;
 	mutex_ChunkManager = _chunksManager->mutex;
 	mutex_ChunkDataGenerator = CreateMutex(0, false, 0);
 	randMax = (unsigned)EBlock_Type::BLOCK_TYPE_MAX_NUMBER;
@@ -29,11 +30,9 @@ Chunk_Data_Generator::~Chunk_Data_Generator()
 
 void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data* _chunkData)
 {
-	WaitForSingleObject(mutex_ChunkDataGenerator, INFINITE);
 	Chunk* _ownerChunk = _chunkData->ownerChunk;
 	Chunk_Render* _ownerChunkRender = _ownerChunk->chunkRender;
 	glm::vec3 _chunkWorldPosition(_ownerChunk->worldPosition);
-	ReleaseMutex(mutex_ChunkDataGenerator);
 	
 	Block****& _blocks = _chunkData->blocks;
 
@@ -45,27 +44,21 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data* _chunkData)
 	{
 		// Generate New Data
 
-		_blocks = new Block ***[Chunk_Size];
-
 		for (size_t x = 0; x < Chunk_Size; ++x)
 		{
 			Block***& _blocksX = _blocks[x];
-			_blocksX = new Block **[Chunk_Size];
-
 			_chunkWorldPosition.x += x;
 
 			for (size_t y = 0; y < Chunk_Size; ++y)
 			{
 				Block**& _blocksXY = _blocksX[y];
-				_blocksXY = new Block *[Chunk_Size];
-
 				_chunkWorldPosition.y += y;
 
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
 					_chunkWorldPosition.z += z;
 
-					_blocksXY[z] = GenerateBlock(_chunkWorldPosition);
+					_blocksXY[z]->blockType = GenerateHeight(_chunkWorldPosition);
 
 					_chunkWorldPosition.z -= z;
 				}
@@ -87,7 +80,7 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data* _chunkData)
 			{
 				if (_blocksXY[z]->blockType != EBlock_Type::Air)
 				{
-					_ownerChunkRender->bHasRender = true; 
+					_ownerChunkRender->bHasRender = true;
 					// It is used in Render_Generator to check if it has more than 0 render shape
 
 					GenerateChunkSideData(_ownerChunk);
@@ -100,12 +93,10 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data* _chunkData)
 
 void Chunk_Data_Generator::GenerateChunkSideData(Chunk* _chunk)
 {
-	WaitForSingleObject(mutex_ChunkManager, INFINITE);
 	Chunk_SideData* _chunkSideData = _chunk->chunkSideData;
 	glm::vec3 _chunkWorldPosition(_chunk->worldPosition);
 	float _chunkHeightPosition = _chunk->chunkPosition.y;
 	float _ownerChunkHeight = _chunkWorldPosition.y;
-	ReleaseMutex(mutex_ChunkManager);
 
 	//Down Side
 	if (_chunkHeightPosition > fMinChunkHeight)
@@ -116,23 +107,19 @@ void Chunk_Data_Generator::GenerateChunkSideData(Chunk* _chunk)
 		}
 		else
 		{
-			glm::vec3& _downWorldPosition = _chunkWorldPosition + glm::vec3(0.f, -1.f, 0.f);
-
 			Block***& _blocks = _chunkSideData->downBlocks;
-			_blocks = new Block **[Chunk_Size];
+			glm::vec3& _downWorldPosition = _chunkWorldPosition + glm::vec3(0.f, -1.f, 0.f);
 
 			for (size_t x = 0; x < Chunk_Size; ++x)
 			{
 				Block**& _blocksX = _blocks[x];
-				_blocksX = new Block *[Chunk_Size];
-
 				_downWorldPosition.x += x;
 
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
 					_downWorldPosition.z += z;
 
-					_blocksX[z] = GenerateBlock(_downWorldPosition);
+					_blocksX[z]->blockType = GenerateHeight(_downWorldPosition); // Use GenerateHeight + GenerateWorm + GenerateBlock
 
 					_downWorldPosition.z -= z;
 				}
@@ -151,23 +138,19 @@ void Chunk_Data_Generator::GenerateChunkSideData(Chunk* _chunk)
 		}
 		else
 		{
-			glm::vec3& _upWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 16.f, 0.f);
-
 			Block***& _blocks = _chunkSideData->upBlocks;
-			_blocks = new Block **[Chunk_Size];
+			glm::vec3& _upWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 16.f, 0.f);
 
 			for (size_t x = 0; x < Chunk_Size; ++x)
 			{
 				Block**& _blocksX = _blocks[x];
-				_blocksX = new Block *[Chunk_Size];
-
 				_upWorldPosition.x += x;
 
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
 					_upWorldPosition.z += z;
 
-					_blocksX[z] = GenerateBlock(_upWorldPosition);
+					_blocksX[z]->blockType = GenerateHeight(_upWorldPosition);
 
 					_upWorldPosition.z -= z;
 				}
@@ -185,23 +168,19 @@ void Chunk_Data_Generator::GenerateChunkSideData(Chunk* _chunk)
 		}
 		else
 		{
-			glm::vec3& _leftWorldPosition = _chunkWorldPosition + glm::vec3(-1.f, 0.f, 0.f);
-
 			Block***& _blocks = _chunkSideData->leftBlocks;
-			_blocks = new Block **[Chunk_Size];
+			glm::vec3& _leftWorldPosition = _chunkWorldPosition + glm::vec3(-1.f, 0.f, 0.f);
 
 			for (size_t y = 0; y < Chunk_Size; ++y)
 			{
 				Block**& _blocksX = _blocks[y];
-				_blocksX = new Block *[Chunk_Size];
-
 				_leftWorldPosition.y += y;
 
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
 					_leftWorldPosition.z += z;
 
-					_blocksX[z] = GenerateBlock(_leftWorldPosition);
+					_blocksX[z]->blockType = GenerateHeight(_leftWorldPosition);
 
 					_leftWorldPosition.z -= z;
 				}
@@ -219,23 +198,19 @@ void Chunk_Data_Generator::GenerateChunkSideData(Chunk* _chunk)
 		}
 		else
 		{
-			glm::vec3& _rightWorldPosition = _chunkWorldPosition + glm::vec3(16.f, 0.f, 0.f);
-
 			Block***& _blocks = _chunkSideData->rightBlocks;
-			_blocks = new Block **[Chunk_Size];
+			glm::vec3& _rightWorldPosition = _chunkWorldPosition + glm::vec3(16.f, 0.f, 0.f);
 
 			for (size_t y = 0; y < Chunk_Size; ++y)
 			{
 				Block**& _blocksX = _blocks[y];
-				_blocksX = new Block *[Chunk_Size];
-
 				_rightWorldPosition.y += y;
 
 				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
 					_rightWorldPosition.z += z;
 
-					_blocksX[z] = GenerateBlock(_rightWorldPosition);
+					_blocksX[z]->blockType = GenerateHeight(_rightWorldPosition);
 
 					_rightWorldPosition.z -= z;
 				}
@@ -253,23 +228,19 @@ void Chunk_Data_Generator::GenerateChunkSideData(Chunk* _chunk)
 		}
 		else
 		{
-			glm::vec3& _backWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 0.f, -1.f);
-
 			Block***& _blocks = _chunkSideData->backBlocks;
-			_blocks = new Block **[Chunk_Size];
+			glm::vec3& _backWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 0.f, -1.f);
 
 			for (size_t x = 0; x < Chunk_Size; ++x)
 			{
 				Block**& _blocksX = _blocks[x];
-				_blocksX = new Block *[Chunk_Size];
-
 				_backWorldPosition.x += x;
 
 				for (size_t y = 0; y < Chunk_Size; ++y)
 				{
 					_backWorldPosition.y += y;
 
-					_blocksX[y] = GenerateBlock(_backWorldPosition);
+					_blocksX[y]->blockType = GenerateHeight(_backWorldPosition);
 
 					_backWorldPosition.y -= y;
 				}
@@ -287,23 +258,19 @@ void Chunk_Data_Generator::GenerateChunkSideData(Chunk* _chunk)
 		}
 		else
 		{
-			glm::vec3& _frontWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 0.f, 16.f);
-
 			Block***& _blocks = _chunkSideData->frontBlocks;
-			_blocks = new Block **[Chunk_Size];
+			glm::vec3& _frontWorldPosition = _chunkWorldPosition + glm::vec3(0.f, 0.f, 16.f);
 
 			for (size_t x = 0; x < Chunk_Size; ++x)
 			{
 				Block**& _blocksX = _blocks[x];
-				_blocksX = new Block *[Chunk_Size];
-
 				_frontWorldPosition.x += x;
 
 				for (size_t y = 0; y < Chunk_Size; ++y)
 				{
 					_frontWorldPosition.y += y;
 
-					_blocksX[y] = GenerateBlock(_frontWorldPosition);
+					_blocksX[y]->blockType = GenerateHeight(_frontWorldPosition);
 
 					_frontWorldPosition.y -= y;
 				}

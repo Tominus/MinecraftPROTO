@@ -6,6 +6,7 @@
 #include "Blocks_Global_Shapes.h"
 #include "Blocks_Global_Datas.h"
 #include "Chunks_Manager.h"
+#include "Chunk_Pool_Manager.h"
 #include "Chunk.h"
 #include "Chunk_Data.h"
 #include "Chunk_SideData.h"
@@ -25,6 +26,7 @@ Chunk_Render_Generator::Chunk_Render_Generator(Chunks_Manager* _chunksManager)
 	blocksGlobalDatas = world->GetBlocksGlobalDatas();
 
 	chunksManager = _chunksManager;
+	chunkPoolManager = nullptr;
 
 	fMinHeightChunk = Chunk_Min_World_Height + 2;
 	fMaxHeightChunk = Chunk_Max_World_Height - 2;
@@ -62,26 +64,23 @@ Threaded void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chun
 
 
 	SChunk_Render_Shapes****& _allBlockShapes = _chunkRender->allBlockShapes;
-	_allBlockShapes = new SChunk_Render_Shapes***[Chunk_Size];
-
 	glm::vec3 _blockPosition;
+
 	for (int x = 0; x < Chunk_Size; ++x)
 	{
 		SChunk_Render_Shapes***& _currentRenderShapesX = _allBlockShapes[x];
-		_currentRenderShapesX = new SChunk_Render_Shapes**[Chunk_Size];
-
 		_blockPosition.x = x;
 
 		for (int y = 0; y < Chunk_Size; ++y)
 		{
 			SChunk_Render_Shapes**& _currentRenderShapesY = _currentRenderShapesX[y];
-			_currentRenderShapesY = new SChunk_Render_Shapes*[Chunk_Size];
-
 			_blockPosition.y = y;
 
 			for (int z = 0; z < Chunk_Size; ++z)
 			{
+				SChunk_Render_Shapes*& _currentShape = _currentRenderShapesY[z];
 				_blockPosition.z = z;
+
 				Block* _block = _blocksData[x][y][z];
 				const EBlock_Type& _blockType = _block->GetBlockType();
 
@@ -90,10 +89,14 @@ Threaded void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chun
 
 				unsigned _index = 0;
 
-				SChunk_Render_Shapes* _currentShape = nullptr;
 				if (_blockData->blockRenderType == EBlock_Render_Type::No_Render)
 				{
 					//No Render
+					if (_currentShape)
+					{
+						chunkPoolManager->RetreiveChunkRenderShapes(_currentShape);
+						_currentShape = nullptr;
+					}
 				}
 				else
 				{
@@ -261,13 +264,36 @@ Threaded void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chun
 						const glm::vec3* _vertexs = _shapesData->GetVertexs();
 						const glm::vec2* _uvs = _shapesData->GetUVs();
 						const size_t* _vertexsSize = _shapesData->GetVertexsSize();
-						_currentShape = new SChunk_Render_Shapes(_vertexs, _uvs, _vertexsSize);
+
+						while (_currentShape == false)
+						{
+							_currentShape = chunkPoolManager->GetChunkRenderShapes();
+
+							if (_currentShape)break;
+
+							chunkPoolManager->SetHasToGenerateNewChunkRenderShapes();
+							Sleep(16);
+						}
+
+						_currentShape->SetRenderShapes(_vertexs, _uvs, _vertexsSize);
 
 
 						SChunk_Render_Data* _currentChunkRenderData = GetChunkRenderData(_currentRenderDatas, _textureID);
-
 						_currentChunkRenderData->verticesGlobalSize += *_vertexsSize;
-						_currentChunkRenderData->renderBuffer.push_back(new SChunk_Render_Buffer(_currentShape, _blockPosition));
+
+						SChunk_Render_Buffer* _currentRenderBuffer = chunkPoolManager->GetChunkRenderBuffer();
+
+						while (_currentRenderBuffer == false)
+						{
+							chunkPoolManager->SetHasToGenerateNewChunkRenderBuffer();
+							Sleep(16);
+
+							_currentRenderBuffer = chunkPoolManager->GetChunkRenderBuffer();
+						}
+
+						_currentRenderBuffer->SetRenderBuffer(_currentShape, _blockPosition);
+
+						_currentChunkRenderData->renderBuffer.push_back(_currentRenderBuffer);
 
 						const size_t& _max = *_vertexsSize;
 						for (size_t i = 0; i < _max; ++i)
@@ -277,16 +303,34 @@ Threaded void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chun
 						}
 					}
 				}
-
-				_currentRenderShapesY[z] = _currentShape;
 			}
 		}
 	}
 
 	//Check if has render
 	_chunkRender->bHasRender = _currentRenderDatas.size() > 0;
+}
 
-	//SetAllSideChunkForUpdate(_chunkData); //deprecated
+SChunk_Render_Data* Chunk_Render_Generator::GetChunkRenderData(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas, const GLuint& _textureID)
+{
+	for each (const std::pair<const GLuint&, SChunk_Render_Data*>&_data in _currentRenderDatas)
+	{
+		if (_data.first == _textureID)
+			return _data.second;
+	}
+
+	SChunk_Render_Data* _currentChunkRenderData = chunkPoolManager->GetChunkRenderData();
+	while (_currentChunkRenderData == false)
+	{
+		chunkPoolManager->SetHasToGenerateNewChunkRenderData();
+		Sleep(16);
+
+		_currentChunkRenderData = chunkPoolManager->GetChunkRenderData();
+	}
+
+	/*Texture id doesn't exist, so we create a new one.*/
+	_currentRenderDatas.emplace(_textureID, _currentChunkRenderData);
+	return _currentChunkRenderData;
 }
 
 void Chunk_Render_Generator::GenerateChunkCGRender(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas)
@@ -312,438 +356,6 @@ void Chunk_Render_Generator::GenerateChunkCGRender(std::map<GLuint, SChunk_Rende
 		_globalVertexs.clear();
 		_globalUVs.clear();
 	}
-}
-
-Threaded void Chunk_Render_Generator::SetAllSideChunkForUpdate(Chunk_Data* _chunkData)
-{
-	WaitForSingleObject(mutex_ChunkManager, INFINITE);
-
-	Chunk* _downChunk = _chunkData->downChunk;
-	Chunk* _upChunk = _chunkData->upChunk;
-	Chunk* _leftChunk = _chunkData->leftChunk;
-	Chunk* _rightChunk = _chunkData->rightChunk;
-	Chunk* _backChunk = _chunkData->backChunk;
-	Chunk* _frontChunk = _chunkData->frontChunk;
-
-	if (_downChunk)
-	{
-		_downChunk->chunkRender->sideToUpdate |= ESide::Up;
-		chunksManager->AddWaitingForSideUpdateChunk(_downChunk);
-	}
-	if (_upChunk)
-	{
-		_upChunk->chunkRender->sideToUpdate |= ESide::Down;
-		chunksManager->AddWaitingForSideUpdateChunk(_upChunk);
-	}
-
-	if (_leftChunk)
-	{
-		_leftChunk->chunkRender->sideToUpdate |= ESide::Right;
-		chunksManager->AddWaitingForSideUpdateChunk(_leftChunk);
-	}
-	if (_rightChunk)
-	{
-		_rightChunk->chunkRender->sideToUpdate |= ESide::Left;
-		chunksManager->AddWaitingForSideUpdateChunk(_rightChunk);
-	}
-
-	if (_backChunk)
-	{
-		_backChunk->chunkRender->sideToUpdate |= ESide::Front;
-		chunksManager->AddWaitingForSideUpdateChunk(_backChunk);
-	}
-	if (_frontChunk)
-	{
-		_frontChunk->chunkRender->sideToUpdate |= ESide::Back;
-		chunksManager->AddWaitingForSideUpdateChunk(_frontChunk);
-	}
-
-	ReleaseMutex(mutex_ChunkManager);
-}
-
-void Chunk_Render_Generator::UpdateChunkSideRender(Chunk* _chunk)
-{
-	WaitForSingleObject(mutex_ChunkManager, INFINITE);
-	Chunk_Data* _chunkData = _chunk->chunkData;
-	Chunk_Render* _chunkRender = _chunk->chunkRender;
-
-	Block****& _blocks = _chunkData->blocks;
-	SChunk_Render_Shapes****& _allRenderShapes = _chunkRender->allBlockShapes;
-	
-	std::map<GLuint, SChunk_Render_Data*>& _renderDatas = _chunkRender->renderDatas;
-
-	ESide& _side = _chunkRender->sideToUpdate;
-
-	std::vector<GLuint> _textureToUpdate;
-
-	if (_side & ESide::Down)
-	{
-		Chunk* _downChunk = _chunkData->downChunk;
-		if (_downChunk)
-		{
-			Chunk_Data* _downChunkData = _downChunk->chunkData;
-
-			for (int x = 0; x < Chunk_Size; ++x)
-			{
-				for (int z = 0; z < Chunk_Size; ++z)
-				{
-					Block* _block = _blocks[x][0][z];
-					const EBlock_Type& _blockType = _block->GetBlockType();
-					const SBlock_Datas const* _blockData = blocksGlobalDatas->GetBlockData(_blockType);
-
-					if (_blockData->blockRenderType != EBlock_Render_Type::No_Render)
-					{
-						if (Check_Block(_downChunkData->GetBlock(glm::uvec3(x, Chunk_Max_Size, z))))
-						{
-							const GLuint& _textureID = textureLoader->GetBlockTextureID(_blockType);
-
-							AddTextureToUpdate(_textureToUpdate, _textureID);
-
-							SChunk_Render_Shapes* _shape = _allRenderShapes[x][0][z];
-
-							if (_shape)
-							{
-								//Add the down side of the block
-								unsigned _index = blockGlobalShapes->GetVertexsIndex(_blockData->blockShapeType, _shape->vertexs);
-
-								_index |= (unsigned)ESide::Down;
-
-								const SBlock_Shape_Data* _shapeData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, _index);
-
-								_shape->vertexs = _shapeData->GetVertexs();
-								_shape->uvs = _shapeData->GetUVs();
-								_shape->vertexsSize = _shapeData->GetVertexsSize();
-							}
-							else
-							{
-								//The shape doesn't exist so we create a new one
-								const SBlock_Shape_Data* _shapesData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, (unsigned)ESide::Down);
-
-								const glm::vec3* _vertexs = _shapesData->GetVertexs();
-								const glm::vec2* _uvs = _shapesData->GetUVs();
-								const size_t* _vertexsSize = _shapesData->GetVertexsSize();
-								_shape = new SChunk_Render_Shapes(_vertexs, _uvs, _vertexsSize);
-
-								_allRenderShapes[x][0][z] = _shape;
-
-								//We add Vertexs and UVs in RegenerateRender()
-								SChunk_Render_Data* _renderTextureData = GetChunkRenderData(_renderDatas, _textureID);
-								_renderTextureData->renderBuffer.push_back(new SChunk_Render_Buffer(_shape, glm::vec3(x, 0, z)));
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	if (_side & ESide::Up)
-	{
-		Chunk* _upChunk = _chunkData->upChunk;
-		if (_upChunk)
-		{
-			Chunk_Data* _upChunkData = _upChunk->chunkData;
-
-			for (int x = 0; x < Chunk_Size; ++x)
-			{
-				for (int z = 0; z < Chunk_Size; ++z)
-				{
-					Block* _block = _blocks[x][Chunk_Max_Size][z];
-					const EBlock_Type& _blockType = _block->GetBlockType();
-					const SBlock_Datas const* _blockData = blocksGlobalDatas->GetBlockData(_blockType);
-
-					if (_blockData->blockRenderType != EBlock_Render_Type::No_Render)
-					{
-						if (Check_Block(_upChunkData->GetBlock(glm::uvec3(x, 0, z))))
-						{
-							const GLuint& _textureID = textureLoader->GetBlockTextureID(_blockType);
-
-							AddTextureToUpdate(_textureToUpdate, _textureID);
-
-							SChunk_Render_Shapes* _shape = _allRenderShapes[x][Chunk_Max_Size][z];
-
-							if (_shape)
-							{
-								//Add the down side of the block
-								unsigned _index = blockGlobalShapes->GetVertexsIndex(_blockData->blockShapeType, _shape->vertexs);
-
-								_index |= (unsigned)ESide::Up;
-
-								const SBlock_Shape_Data* _shapeData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, _index);
-
-								_shape->vertexs = _shapeData->GetVertexs();
-								_shape->uvs = _shapeData->GetUVs();
-								_shape->vertexsSize = _shapeData->GetVertexsSize();
-							}
-							else
-							{
-								//The shape doesn't exist so we create a new one
-								const SBlock_Shape_Data* _shapesData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, (unsigned)ESide::Up);
-
-								const glm::vec3* _vertexs = _shapesData->GetVertexs();
-								const glm::vec2* _uvs = _shapesData->GetUVs();
-								const size_t* _vertexsSize = _shapesData->GetVertexsSize();
-								_shape = new SChunk_Render_Shapes(_vertexs, _uvs, _vertexsSize);
-
-								_allRenderShapes[x][Chunk_Max_Size][z] = _shape;
-
-								//We add Vertexs and UVs in RegenerateRender()
-								SChunk_Render_Data* _renderTextureData = GetChunkRenderData(_renderDatas, _textureID);
-								_renderTextureData->renderBuffer.push_back(new SChunk_Render_Buffer(_shape, glm::vec3(x, Chunk_Max_Size, z)));
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	if (_side & ESide::Left)
-	{
-		Chunk* _leftChunk = _chunkData->leftChunk;
-		if (_leftChunk)
-		{
-			Chunk_Data* _leftChunkData = _leftChunk->chunkData;
-
-			for (int y = 0; y < Chunk_Size; ++y)
-			{
-				for (int z = 0; z < Chunk_Size; ++z)
-				{
-					Block* _block = _blocks[0][y][z];
-					const EBlock_Type& _blockType = _block->GetBlockType();
-					const SBlock_Datas const* _blockData = blocksGlobalDatas->GetBlockData(_blockType);
-
-					if (_blockData->blockRenderType != EBlock_Render_Type::No_Render)
-					{
-						if (Check_Block(_leftChunkData->GetBlock(glm::uvec3(Chunk_Max_Size, y, z))))
-						{
-							const GLuint& _textureID = textureLoader->GetBlockTextureID(_blockType);
-
-							AddTextureToUpdate(_textureToUpdate, _textureID);
-
-							SChunk_Render_Shapes* _shape = _allRenderShapes[0][y][z];
-
-							if (_shape)
-							{
-								//Add the Left side of the block
-								unsigned _index = blockGlobalShapes->GetVertexsIndex(_blockData->blockShapeType, _shape->vertexs);
-
-								_index |= (unsigned)ESide::Left;
-
-								const SBlock_Shape_Data* _shapeData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, _index);
-
-								_shape->vertexs = _shapeData->GetVertexs();
-								_shape->uvs = _shapeData->GetUVs();
-								_shape->vertexsSize = _shapeData->GetVertexsSize();
-							}
-							else
-							{
-								//The shape doesn't exist so we create a new one
-								const SBlock_Shape_Data* _shapesData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, (unsigned)ESide::Left);
-
-								const glm::vec3* _vertexs = _shapesData->GetVertexs();
-								const glm::vec2* _uvs = _shapesData->GetUVs();
-								const size_t* _vertexsSize = _shapesData->GetVertexsSize();
-								_shape = new SChunk_Render_Shapes(_vertexs, _uvs, _vertexsSize);
-
-								_allRenderShapes[0][y][z] = _shape;
-
-								//We add Vertexs and UVs in RegenerateRender()
-								SChunk_Render_Data* _renderTextureData = GetChunkRenderData(_renderDatas, _textureID);
-								_renderTextureData->renderBuffer.push_back(new SChunk_Render_Buffer(_shape, glm::vec3(0, y, z)));
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	if (_side & ESide::Right)
-	{
-		Chunk* _rightChunk = _chunkData->rightChunk;
-		if (_rightChunk)
-		{
-			Chunk_Data* _rightChunkData = _rightChunk->chunkData;
-
-			for (int y = 0; y < Chunk_Size; ++y)
-			{
-				for (int z = 0; z < Chunk_Size; ++z)
-				{
-					Block* _block = _blocks[Chunk_Max_Size][y][z];
-					const EBlock_Type& _blockType = _block->GetBlockType();
-					const SBlock_Datas const* _blockData = blocksGlobalDatas->GetBlockData(_blockType);
-
-					if (_blockData->blockRenderType != EBlock_Render_Type::No_Render)
-					{
-						if (Check_Block(_rightChunkData->GetBlock(glm::uvec3(0, y, z))))
-						{
-							const GLuint& _textureID = textureLoader->GetBlockTextureID(_blockType);
-
-							AddTextureToUpdate(_textureToUpdate, _textureID);
-
-							SChunk_Render_Shapes* _shape = _allRenderShapes[Chunk_Max_Size][y][z];
-
-							if (_shape)
-							{
-								//Add the Right side of the block
-								unsigned _index = blockGlobalShapes->GetVertexsIndex(_blockData->blockShapeType, _shape->vertexs);
-
-								_index |= (unsigned)ESide::Right;
-
-								const SBlock_Shape_Data* _shapeData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, _index);
-
-								_shape->vertexs = _shapeData->GetVertexs();
-								_shape->uvs = _shapeData->GetUVs();
-								_shape->vertexsSize = _shapeData->GetVertexsSize();
-							}
-							else
-							{
-								//The shape doesn't exist so we create a new one
-								const SBlock_Shape_Data* _shapesData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, (unsigned)ESide::Right);
-
-								const glm::vec3* _vertexs = _shapesData->GetVertexs();
-								const glm::vec2* _uvs = _shapesData->GetUVs();
-								const size_t* _vertexsSize = _shapesData->GetVertexsSize();
-								_shape = new SChunk_Render_Shapes(_vertexs, _uvs, _vertexsSize);
-
-								_allRenderShapes[Chunk_Max_Size][y][z] = _shape;
-
-								//We add Vertexs and UVs in RegenerateRender()
-								SChunk_Render_Data* _renderTextureData = GetChunkRenderData(_renderDatas, _textureID);
-								_renderTextureData->renderBuffer.push_back(new SChunk_Render_Buffer(_shape, glm::vec3(Chunk_Max_Size, y, z)));
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	if (_side & ESide::Back)
-	{
-		Chunk* _backChunk = _chunkData->backChunk;
-		if (_backChunk)
-		{
-			Chunk_Data* _backChunkData = _backChunk->chunkData;
-
-			for (int x = 0; x < Chunk_Size; ++x)
-			{
-				for (int y = 0; y < Chunk_Size; ++y)
-				{
-					Block* _block = _blocks[x][y][0];
-					const EBlock_Type& _blockType = _block->GetBlockType();
-					const SBlock_Datas const* _blockData = blocksGlobalDatas->GetBlockData(_blockType);
-
-					if (_blockData->blockRenderType != EBlock_Render_Type::No_Render)
-					{
-						if (Check_Block(_backChunkData->GetBlock(glm::uvec3(x, y, Chunk_Max_Size))))
-						{
-							const GLuint& _textureID = textureLoader->GetBlockTextureID(_blockType);
-
-							AddTextureToUpdate(_textureToUpdate, _textureID);
-
-							SChunk_Render_Shapes* _shape = _allRenderShapes[x][y][0];
-
-							if (_shape)
-							{
-								//Add the Back side of the block
-								unsigned _index = blockGlobalShapes->GetVertexsIndex(_blockData->blockShapeType, _shape->vertexs);
-
-								_index |= (unsigned)ESide::Back;
-
-								const SBlock_Shape_Data* _shapeData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, _index);
-
-								_shape->vertexs = _shapeData->GetVertexs();
-								_shape->uvs = _shapeData->GetUVs();
-								_shape->vertexsSize = _shapeData->GetVertexsSize();
-							}
-							else
-							{
-								//The shape doesn't exist so we create a new one
-								const SBlock_Shape_Data* _shapesData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, (unsigned)ESide::Back);
-
-								const glm::vec3* _vertexs = _shapesData->GetVertexs();
-								const glm::vec2* _uvs = _shapesData->GetUVs();
-								const size_t* _vertexsSize = _shapesData->GetVertexsSize();
-								_shape = new SChunk_Render_Shapes(_vertexs, _uvs, _vertexsSize);
-
-								_allRenderShapes[x][y][0] = _shape;
-
-								//We add Vertexs and UVs in RegenerateRender()
-								SChunk_Render_Data* _renderTextureData = GetChunkRenderData(_renderDatas, _textureID);
-								_renderTextureData->renderBuffer.push_back(new SChunk_Render_Buffer(_shape, glm::vec3(x, y, 0)));
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	if (_side & ESide::Front)
-	{
-		Chunk* _frontChunk = _chunkData->frontChunk;
-		if (_frontChunk)
-		{
-			Chunk_Data* _frontChunkData = _frontChunk->chunkData;
-
-			for (int x = 0; x < Chunk_Size; ++x)
-			{
-				for (int y = 0; y < Chunk_Size; ++y)
-				{
-					Block* _block = _blocks[x][y][Chunk_Max_Size];
-					const EBlock_Type& _blockType = _block->GetBlockType();
-					const SBlock_Datas const* _blockData = blocksGlobalDatas->GetBlockData(_blockType);
-
-					if (_blockData->blockRenderType != EBlock_Render_Type::No_Render)
-					{
-						if (Check_Block(_frontChunkData->GetBlock(glm::uvec3(x, y, 0))))
-						{
-							const GLuint& _textureID = textureLoader->GetBlockTextureID(_blockType);
-
-							AddTextureToUpdate(_textureToUpdate, _textureID);
-
-							SChunk_Render_Shapes* _shape = _allRenderShapes[x][y][Chunk_Max_Size];
-
-							if (_shape)
-							{
-								//Add the Front side of the block
-								unsigned _index = blockGlobalShapes->GetVertexsIndex(_blockData->blockShapeType, _shape->vertexs);
-
-								_index |= (unsigned)ESide::Front;
-
-								const SBlock_Shape_Data* _shapeData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, _index);
-
-								_shape->vertexs = _shapeData->GetVertexs();
-								_shape->uvs = _shapeData->GetUVs();
-								_shape->vertexsSize = _shapeData->GetVertexsSize();
-							}
-							else
-							{
-								//The shape doesn't exist so we create a new one
-								const SBlock_Shape_Data* _shapesData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, (unsigned)ESide::Front);
-
-								const glm::vec3* _vertexs = _shapesData->GetVertexs();
-								const glm::vec2* _uvs = _shapesData->GetUVs();
-								const size_t* _vertexsSize = _shapesData->GetVertexsSize();
-								_shape = new SChunk_Render_Shapes(_vertexs, _uvs, _vertexsSize);
-
-								_allRenderShapes[x][y][Chunk_Max_Size] = _shape;
-
-								//We add Vertexs and UVs in RegenerateRender()
-								SChunk_Render_Data* _renderTextureData = GetChunkRenderData(_renderDatas, _textureID);
-								_renderTextureData->renderBuffer.push_back(new SChunk_Render_Buffer(_shape, glm::vec3(x, y, Chunk_Max_Size)));
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	_side = ESide::None;
-
-	RegenerateRender(_chunk, _textureToUpdate);
-
-	ReleaseMutex(mutex_ChunkManager);
 }
 
 void Chunk_Render_Generator::AddTextureToUpdate(std::vector<GLuint>& _texturesToUpdate, const GLuint& _textureID)
