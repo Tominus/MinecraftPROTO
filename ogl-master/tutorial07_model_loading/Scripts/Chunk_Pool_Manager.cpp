@@ -28,6 +28,7 @@ Chunk_Pool_Manager::Chunk_Pool_Manager(Chunks_Manager* _chunkManager, Chunk_Data
 	bHasToGenerateNewChunkRenderShapes = false;
 
 	mutex_ChunkPool = CreateMutex(0, false, 0);
+	mutex_ChunkSideDataPool = CreateMutex(0, false, 0);
 	mutex_ChunkRenderBufferPool = CreateMutex(0, false, 0);
 	mutex_ChunkRenderDataPool = CreateMutex(0, false, 0);
 	mutex_ChunkRenderShapesPool = CreateMutex(0, false, 0);
@@ -37,6 +38,7 @@ Chunk_Pool_Manager::Chunk_Pool_Manager(Chunks_Manager* _chunkManager, Chunk_Data
 Chunk_Pool_Manager::~Chunk_Pool_Manager()
 {
 	CloseHandle(mutex_ChunkPool);
+	CloseHandle(mutex_ChunkSideDataPool);
 	CloseHandle(mutex_ChunkRenderBufferPool);
 	CloseHandle(mutex_ChunkRenderDataPool);
 	CloseHandle(mutex_ChunkRenderShapesPool);
@@ -52,20 +54,18 @@ void Chunk_Pool_Manager::InitializeAllChunkData()
 
 		Chunk_Data* _chunkData = new Chunk_Data(_chunk, this);
 		Chunk_Render* _chunkRender = new Chunk_Render(_chunk, this);
-		Chunk_SideData* _chunkSideData = new Chunk_SideData(this);
 
 		GenerateChunkHandle(_chunk);
 		GenerateChunkData(_chunkData);
 		GenerateChunkRender(_chunkRender);
-		GenerateChunkSideData(_chunkSideData);
 
 		_chunk->chunkData = _chunkData;
 		_chunk->chunkRender = _chunkRender;
-		_chunk->chunkSideData = _chunkSideData;
 
 		chunkPool.push_back(_chunk);
 	}
 
+	GenerateChunkSideData();
 	GenerateChunkRenderBuffer();
 	GenerateChunkRenderData();
 	GenerateChunkRenderShapes();
@@ -77,6 +77,12 @@ void Chunk_Pool_Manager::DestroyAllChunkData()
 	for (size_t i = 0; i < _chunkPoolSize; ++i)
 	{
 		delete chunkPool[i];
+	}
+
+	const size_t& _chunkSideDataPoolSize = chunkSideDataPool.size();
+	for (size_t i = 0; i < _chunkSideDataPoolSize; ++i)
+	{
+		delete chunkSideDataPool[i];
 	}
 
 	const size_t& _chunkRenderBufferPoolSize = chunkRenderBufferPool.size();
@@ -153,48 +159,55 @@ void Chunk_Pool_Manager::GenerateChunkRender(Chunk_Render* _chunkRender)
 		}
 	}
 }
-// TODO pool les side chunk, max sur Thread_Max_ChunkCreation
-void Chunk_Pool_Manager::GenerateChunkSideData(Chunk_SideData* _chunkSideData)
+
+void Chunk_Pool_Manager::GenerateChunkSideData()
 {
-	Block***& _blocksD = _chunkSideData->downBlocks;
-	Block***& _blocksU = _chunkSideData->upBlocks;
-	Block***& _blocksL = _chunkSideData->leftBlocks;
-	Block***& _blocksR = _chunkSideData->rightBlocks;
-	Block***& _blocksB = _chunkSideData->backBlocks;
-	Block***& _blocksF = _chunkSideData->frontBlocks;
-
-	_blocksD = new Block **[Chunk_Size];
-	_blocksU = new Block **[Chunk_Size];
-	_blocksL = new Block **[Chunk_Size];
-	_blocksR = new Block **[Chunk_Size];
-	_blocksB = new Block **[Chunk_Size];
-	_blocksF = new Block **[Chunk_Size];
-
-	for (size_t x = 0; x < Chunk_Size; ++x)
+	for (size_t i = 0; i < Thread_Max_ChunkCreation; ++i)
 	{
-		Block**& _blocksDX = _blocksD[x];
-		Block**& _blocksUX = _blocksU[x];
-		Block**& _blocksLX = _blocksL[x];
-		Block**& _blocksRX = _blocksR[x];
-		Block**& _blocksBX = _blocksB[x];
-		Block**& _blocksFX = _blocksF[x];
+		Chunk_SideData* _chunkSideData = new Chunk_SideData(this);
 
-		_blocksDX = new Block *[Chunk_Size];
-		_blocksUX = new Block *[Chunk_Size];
-		_blocksLX = new Block *[Chunk_Size];
-		_blocksRX = new Block *[Chunk_Size];
-		_blocksBX = new Block *[Chunk_Size];
-		_blocksFX = new Block *[Chunk_Size];
+		Block***& _blocksD = _chunkSideData->downBlocks;
+		Block***& _blocksU = _chunkSideData->upBlocks;
+		Block***& _blocksL = _chunkSideData->leftBlocks;
+		Block***& _blocksR = _chunkSideData->rightBlocks;
+		Block***& _blocksB = _chunkSideData->backBlocks;
+		Block***& _blocksF = _chunkSideData->frontBlocks;
 
-		for (size_t z = 0; z < Chunk_Size; ++z)
+		_blocksD = new Block **[Chunk_Size];
+		_blocksU = new Block **[Chunk_Size];
+		_blocksL = new Block **[Chunk_Size];
+		_blocksR = new Block **[Chunk_Size];
+		_blocksB = new Block **[Chunk_Size];
+		_blocksF = new Block **[Chunk_Size];
+
+		for (size_t x = 0; x < Chunk_Size; ++x)
 		{
-			_blocksDX[z] = new Block(EBlock_Type::Air);
-			_blocksUX[z] = new Block(EBlock_Type::Air);
-			_blocksLX[z] = new Block(EBlock_Type::Air);
-			_blocksRX[z] = new Block(EBlock_Type::Air);
-			_blocksBX[z] = new Block(EBlock_Type::Air);
-			_blocksFX[z] = new Block(EBlock_Type::Air);
+			Block**& _blocksDX = _blocksD[x];
+			Block**& _blocksUX = _blocksU[x];
+			Block**& _blocksLX = _blocksL[x];
+			Block**& _blocksRX = _blocksR[x];
+			Block**& _blocksBX = _blocksB[x];
+			Block**& _blocksFX = _blocksF[x];
+
+			_blocksDX = new Block *[Chunk_Size];
+			_blocksUX = new Block *[Chunk_Size];
+			_blocksLX = new Block *[Chunk_Size];
+			_blocksRX = new Block *[Chunk_Size];
+			_blocksBX = new Block *[Chunk_Size];
+			_blocksFX = new Block *[Chunk_Size];
+
+			for (size_t z = 0; z < Chunk_Size; ++z)
+			{
+				_blocksDX[z] = new Block(EBlock_Type::Air);
+				_blocksUX[z] = new Block(EBlock_Type::Air);
+				_blocksLX[z] = new Block(EBlock_Type::Air);
+				_blocksRX[z] = new Block(EBlock_Type::Air);
+				_blocksBX[z] = new Block(EBlock_Type::Air);
+				_blocksFX[z] = new Block(EBlock_Type::Air);
+			}
 		}
+
+		chunkSideDataPool.push_back(_chunkSideData);
 	}
 }
 
@@ -245,36 +258,39 @@ void Chunk_Pool_Manager::ClearChunkData(Chunk_Data* _chunkData)
 
 void Chunk_Pool_Manager::ClearChunkRender(Chunk_Render* _chunkRender)
 {
-	_chunkRender->bHasFinishGeneration = false;
-	_chunkRender->bHasRender = false;
-
-	std::map<GLuint, SChunk_Render_Data*>& _renderDatas = _chunkRender->renderDatas;
-	for each (const std::pair<GLuint, SChunk_Render_Data*>& _datas in _renderDatas)
+	if (_chunkRender->bHasRender)
 	{
-		SChunk_Render_Data* _renderBuffer = _datas.second;
-		glDeleteBuffers(1, &_renderBuffer->vertexsBuffer);
-		glDeleteBuffers(1, &_renderBuffer->uvsBuffer);
-		RetreiveChunkRenderData(_renderBuffer);
-	}
-	_renderDatas.clear();
-
-	SChunk_Render_Shapes****& _allBlockShapes = _chunkRender->allBlockShapes;
-	for (size_t x = 0; x < Chunk_Size; ++x)
-	{
-		SChunk_Render_Shapes***& _x = _allBlockShapes[x];
-		for (size_t y = 0; y < Chunk_Size; ++y)
+		std::map<GLuint, SChunk_Render_Data*>& _renderDatas = _chunkRender->renderDatas;
+		for each (const std::pair<GLuint, SChunk_Render_Data*>&_datas in _renderDatas)
 		{
-			SChunk_Render_Shapes**& _y = _x[y];
-			for (size_t z = 0; z < Chunk_Size; ++z)
+			SChunk_Render_Data* _renderBuffer = _datas.second;
+			glDeleteBuffers(1, &_renderBuffer->vertexsBuffer);
+			glDeleteBuffers(1, &_renderBuffer->uvsBuffer);
+			RetreiveChunkRenderData(_renderBuffer);
+		}
+		_renderDatas.clear();
+
+		SChunk_Render_Shapes****& _allBlockShapes = _chunkRender->allBlockShapes;
+		for (size_t x = 0; x < Chunk_Size; ++x)
+		{
+			SChunk_Render_Shapes***& _x = _allBlockShapes[x];
+			for (size_t y = 0; y < Chunk_Size; ++y)
 			{
-				if (SChunk_Render_Shapes*& _z = _y[z])
+				SChunk_Render_Shapes**& _y = _x[y];
+				for (size_t z = 0; z < Chunk_Size; ++z)
 				{
-					RetreiveChunkRenderShapes(_z);
-					_z = nullptr;
+					if (SChunk_Render_Shapes*& _z = _y[z])
+					{
+						RetreiveChunkRenderShapes(_z);
+						_z = nullptr;
+					}
 				}
 			}
 		}
 	}
+
+	_chunkRender->bHasFinishGeneration = false;
+	_chunkRender->bHasRender = false;
 }
 
 void Chunk_Pool_Manager::ClearChunkSideData(Chunk_SideData* _chunkSideData)
@@ -419,11 +435,34 @@ void Chunk_Pool_Manager::RetreiveChunk(Chunk* _chunk)
 	//ClearChunkHandle(_chunk);
 	ClearChunkData(_chunk->chunkData);
 	ClearChunkRender(_chunk->chunkRender);
-	ClearChunkSideData(_chunk->chunkSideData);
+	//ClearChunkSideData(_chunk->chunkSideData);
 
 	WaitForSingleObject(mutex_ChunkPool, INFINITE);
 	chunkPool.push_back(_chunk);
 	ReleaseMutex(mutex_ChunkPool);
+}
+
+Chunk_SideData* Chunk_Pool_Manager::GetChunkSideData()
+{
+	Chunk_SideData* _chunkSideData = nullptr;
+
+	WaitForSingleObject(mutex_ChunkSideDataPool, INFINITE);
+	if (chunkSideDataPool.size() > 0)
+	{
+		_chunkSideData = chunkSideDataPool.back();
+		chunkSideDataPool.pop_back();
+	}
+	ReleaseMutex(mutex_ChunkSideDataPool);
+
+	return _chunkSideData;
+}
+
+void Chunk_Pool_Manager::RetreiveChunkSideData(Chunk_SideData* _chunkSideData)
+{
+	WaitForSingleObject(mutex_ChunkSideDataPool, INFINITE);
+	ClearChunkSideData(_chunkSideData);
+	chunkSideDataPool.push_back(_chunkSideData);
+	ReleaseMutex(mutex_ChunkSideDataPool);
 }
 
 SChunk_Render_Buffer* Chunk_Pool_Manager::GetChunkRenderBuffer()

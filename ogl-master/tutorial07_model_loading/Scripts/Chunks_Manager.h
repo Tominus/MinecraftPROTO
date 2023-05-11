@@ -35,8 +35,10 @@ private:
 private:
 	void StartChunkManager();
 	void InitWorldChunksArray();
+	void InitChunksClear();
 
 	static int WINAPI AddChunk(SThread_AddChunk* _data);
+	static int WINAPI ClearChunks(SThread_ClearChunks* _data);
 	
 	void AddStartingWorldBaseChunk();
 	void AddWaitingForSideUpdateChunk(Chunk* _chunk);
@@ -205,6 +207,7 @@ private:
 	int opti_threadCount;
 
 	std::vector<Chunk*> worldChunksToRender;
+	std::vector<Chunk*> worldChunksToClear;
 
 	Chunk_Pool_Manager* chunkPoolManager;
 	Chunk_Data_Generator* chunkDataGenerator;
@@ -225,6 +228,7 @@ private:
 	Action<Chunk*> onChunkDestroyed;
 
 	mutable HANDLE mutex;
+	mutable HANDLE mutex_ChunksToClear;
 
 	GLuint programID;
 

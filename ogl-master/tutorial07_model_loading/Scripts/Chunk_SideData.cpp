@@ -67,4 +67,11 @@ Chunk_SideData::~Chunk_SideData()
 		delete[] backBlocks;
 		delete[] frontBlocks;
 	}
+
+	downBlocks = nullptr;
+	upBlocks = nullptr;
+	leftBlocks = nullptr;
+	rightBlocks = nullptr;
+	backBlocks = nullptr;
+	frontBlocks = nullptr;
 }

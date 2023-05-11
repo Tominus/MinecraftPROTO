@@ -30,7 +30,7 @@ private:
 	void GenerateChunkHandle(Chunk* _chunk);
 	void GenerateChunkData(Chunk_Data* _chunkData);
 	void GenerateChunkRender(Chunk_Render* _chunkRender);
-	void GenerateChunkSideData(Chunk_SideData* _chunkSideData);
+	void GenerateChunkSideData();
 	void GenerateChunkRenderBuffer();
 	void GenerateChunkRenderData();
 	void GenerateChunkRenderShapes();
@@ -54,6 +54,9 @@ public:
 	Chunk* GetChunk();
 	void RetreiveChunk(Chunk* _chunk);
 
+	Chunk_SideData* GetChunkSideData();
+	void RetreiveChunkSideData(Chunk_SideData* _chunkSideData);
+
 	SChunk_Render_Buffer* GetChunkRenderBuffer();
 	void RetreiveChunkRenderBuffer(SChunk_Render_Buffer* _chunkRenderBuffer);
 
@@ -65,6 +68,7 @@ public:
 
 private:
 	std::vector<Chunk*> chunkPool;
+	std::vector<Chunk_SideData*> chunkSideDataPool;
 	std::vector<SChunk_Render_Buffer*> chunkRenderBufferPool;
 	std::vector<SChunk_Render_Data*> chunkRenderDataPool;
 	std::vector<SChunk_Render_Shapes*> chunkRenderShapesPool;
@@ -74,6 +78,7 @@ private:
 	Chunk_Render_Generator* chunkRenderGenerator;
 
 	HANDLE mutex_ChunkPool;
+	HANDLE mutex_ChunkSideDataPool;
 	HANDLE mutex_ChunkRenderBufferPool;
 	HANDLE mutex_ChunkRenderDataPool;
 	HANDLE mutex_ChunkRenderShapesPool;

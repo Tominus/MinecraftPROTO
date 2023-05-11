@@ -1,6 +1,8 @@
 #pragma once
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <Windows.h>
+#include <vector>
 
 class Thread;
 class Chunks_Manager;
@@ -26,3 +28,25 @@ typedef struct SThread_AddChunk
 	}
 
 } SThread_AddChunk, *SThread_AddChunk_Ptr;
+
+typedef struct SThread_ClearChunks
+{
+	Thread* thisThread = nullptr;
+	bool* bExitWorld = nullptr;
+	std::vector<Chunk*>* worldChunksToClear = nullptr;
+	HANDLE* mutex_ChunksToClear = nullptr;
+	Chunk_Pool_Manager* chunkPoolManager = nullptr;
+
+	SThread_ClearChunks() = default;
+
+	SThread_ClearChunks(Thread* _thisThread, bool* _bExitWorld, std::vector<Chunk*>* _worldChunksToClear,
+		                HANDLE* _mutex_ChunksToClear, Chunk_Pool_Manager* _chunkPoolManager)
+	{
+		thisThread = _thisThread;
+		bExitWorld = _bExitWorld;
+		worldChunksToClear = _worldChunksToClear;
+		mutex_ChunksToClear = _mutex_ChunksToClear;
+		chunkPoolManager = _chunkPoolManager;
+	}
+
+} SThread_ClearChunks, *SThread_ClearChunks_Ptr;

@@ -18,11 +18,9 @@
 */
 
 /*
+* - //TODO : Retreive chunk render
 * - Calculate how many pool object is neccessary by render distance
-* - Pool les Chunk_SideData
-* - Faire le clear de chunk pas par le main et faire le retreive du chunkSide (nombre limité à Thread_Max)
 * - Retirer le rendu sous la map
-* - 
 * 
 * - same than opti_worldChunks but with State enum : None, IsGenerating, Genered
 * - mutex priority
