@@ -73,8 +73,18 @@ public:
 			return false;
 		}
 
+#if ENABLE_DEBUG_MEMORY_LEAK
+		Chunk*& _arrayChunk = opti_worldChunks[_offset.x][_offset.y][_offset.z];
+		if (_arrayChunk)
+		{
+			printf("Opti_AddChunk : AAAAAAAAAAAAAAAAAAAAA");
+		}
+		_arrayChunk = _chunk;
+		++opti_worldChunksCount;
+#else
 		opti_worldChunks[_offset.x][_offset.y][_offset.z] = _chunk;
 		++opti_worldChunksCount;
+#endif
 
 		ReleaseMutex(mutex);
 		return true;

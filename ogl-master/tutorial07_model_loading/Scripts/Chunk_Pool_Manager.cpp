@@ -65,6 +65,8 @@ void Chunk_Pool_Manager::InitializeAllChunkData()
 		chunkPool.push_back(_chunk);
 	}
 
+	debug = chunkPool;
+
 	GenerateChunkSideData();
 	GenerateChunkRenderBuffer();
 	GenerateChunkRenderData();
@@ -73,6 +75,27 @@ void Chunk_Pool_Manager::InitializeAllChunkData()
 
 void Chunk_Pool_Manager::DestroyAllChunkData()
 {
+#if ENABLE_DEBUG_MEMORY_LEAK
+	if (chunkPool.size() < Render_Distance_Total * Render_Distance_Total * Chunk_Max_World_Height)
+	{
+		for (size_t i = 0; i < debug.size(); i++)
+		{
+			bool find = false;
+
+			for (size_t j = 0; j < chunkPool.size(); j++)
+			{
+				if (debug[i] == chunkPool[j])
+					find = true;
+			}
+
+			if (!find)
+			{
+				printf("");
+			}
+		}
+	}
+#endif
+
 	const size_t& _chunkPoolSize = chunkPool.size();
 	for (size_t i = 0; i < _chunkPoolSize; ++i)
 	{
@@ -102,6 +125,12 @@ void Chunk_Pool_Manager::DestroyAllChunkData()
 	{
 		delete chunkRenderShapesPool[i];
 	}
+
+	printf("\nChunk : %i", _chunkPoolSize);
+	printf("\nChunk : %i", _chunkSideDataPoolSize);
+	printf("\nChunk : %i", _chunkRenderBufferPoolSize);
+	printf("\nChunk : %i", _chunkRenderDataPoolSize);
+	printf("\nChunk : %i", _chunkRenderShapesPoolSize);
 }
 
 #pragma region Generate
@@ -430,12 +459,9 @@ Chunk* Chunk_Pool_Manager::GetChunk()
 
 void Chunk_Pool_Manager::RetreiveChunk(Chunk* _chunk)
 {
-	//TODO data clear is maybe useless
-	
-	//ClearChunkHandle(_chunk);
 	ClearChunkData(_chunk->chunkData);
 	ClearChunkRender(_chunk->chunkRender);
-	//ClearChunkSideData(_chunk->chunkSideData);
+	//Chunk side data clear is done during chunk creation
 
 	WaitForSingleObject(mutex_ChunkPool, INFINITE);
 	chunkPool.push_back(_chunk);

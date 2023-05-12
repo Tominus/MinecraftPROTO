@@ -42,6 +42,8 @@ float initialFoV = 45.70f;
 float speed = 12.0f; // 3 units / second
 float mouseSpeed = 0.005f;
 
+bool autoMove = false;
+
 
 
 void computeMatricesFromInputs(){
@@ -121,13 +123,22 @@ void computeMatricesFromInputs(){
 	}
 
 	// Go up
-	if (glfwGetKey( window, GLFW_KEY_SPACE ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_SPACE ) == GLFW_PRESS)
+	{
 		position += glm::vec3(0, 1.0f, 0) * deltaTime * speed;
 	}
 	// Go down
-	if (glfwGetKey( window, GLFW_KEY_LEFT_SHIFT ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_LEFT_SHIFT ) == GLFW_PRESS)
+	{
 		position -= glm::vec3(0, 1.0f, 0) * deltaTime * speed;
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS)
+	{
+		autoMove = !autoMove;
+	}
+	if (autoMove)
+		position += glm::vec3(1, 0, 0) * deltaTime * speed;
 
 	float FoV = initialFoV;// - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
 

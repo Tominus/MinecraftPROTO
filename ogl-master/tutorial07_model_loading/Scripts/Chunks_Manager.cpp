@@ -55,7 +55,10 @@ Chunks_Manager::~Chunks_Manager()
 				Chunk** _chunksY = _chunksX[y];
 
 				for (size_t z = 0; z < Render_Distance_Total; ++z)
-					delete _chunksY[z];
+				{
+					if (Chunk* _chunk = _chunksY[z])
+						chunkPoolManager->RetreiveChunk(_chunk);
+				}
 				delete[] _chunksY;
 			}
 			delete[] _chunksX;
@@ -75,7 +78,7 @@ Chunks_Manager::~Chunks_Manager()
 	const size_t& _max2 = chunkWaitingForCGgen.size();
 	for (size_t i = 0; i < _max2; ++i)
 	{
-		delete chunkWaitingForCGgen[i];
+		chunkPoolManager->RetreiveChunk(chunkWaitingForCGgen[i]);
 	}
 
 	delete chunkDataGenerator;
@@ -180,7 +183,6 @@ Threaded int __stdcall Chunks_Manager::AddChunk(SThread_AddChunk* _data)
 		_hasFinishWaitSideChunk = _chunkData->CheckChunkToWaitEmpty();
 		if (_thisPtr->bInterruptThread_NotSafe)
 		{
-			//Retreive chunkSideData
 			_chunkPoolManager->RetreiveChunkSideData(_chunkSideData);
 			_chunkPoolManager->RetreiveChunk(_chunk);
 			_chunkSideData = nullptr;
@@ -219,7 +221,7 @@ Threaded int __stdcall Chunks_Manager::ClearChunks(SThread_ClearChunks* _data)
 	Thread* _thisThread = _data->thisThread;
 	bool* _bExitWorld = _data->bExitWorld;
 	std::vector<Chunk*>* _worldChunksToClear = _data->worldChunksToClear;
-	HANDLE* _mutex_ChunksToClear = _data->mutex_ChunksToClear;
+	HANDLE _mutex_ChunksToClear = _data->mutex_ChunksToClear;
 	Chunk_Pool_Manager* _chunkPoolManager = _data->chunkPoolManager;
 
 	//Loop for chunk clearing
@@ -233,16 +235,19 @@ Threaded int __stdcall Chunks_Manager::ClearChunks(SThread_ClearChunks* _data)
 		}
 		_worldChunksToClear->clear();
 		ReleaseMutex(_mutex_ChunksToClear);
-		Sleep(4);
+		Sleep(16);
 	}
 
 
-	//Exit : Delete chunk 
+	//Exit : Delete chunk
+	WaitForSingleObject(_mutex_ChunksToClear, INFINITE);
 	const size_t& _size = _worldChunksToClear->size();
 	for (size_t i = 0; i < _size; ++i)
 	{
 		_chunkPoolManager->RetreiveChunk((*_worldChunksToClear)[i]);
 	}
+	_worldChunksToClear->clear();
+	ReleaseMutex(_mutex_ChunksToClear);
 
 	delete _data;
 	_thisThread->OnFinished.Invoke(_thisThread);
@@ -361,7 +366,9 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 		else
 		{
 			//Put this chunk to the delete list
+			WaitForSingleObject(mutex_ChunksToClear, INFINITE);
 			worldChunksToClear.push_back(_chunk);
+			ReleaseMutex(mutex_ChunksToClear);
 			//worldChunksToDelete.push_back(_chunk);
 		}
 	}
@@ -427,10 +434,18 @@ void Chunks_Manager::Opti_CheckRenderDistance()
 					{
 						if (Opti_GetFirstChunkAroundPosition(_playerPositionChunkRelative))
 						{
-							if (Chunk* _chunk = chunkPoolManager->GetChunk())
+							if (_totalCreatedChunk >= Thread_Max_ChunkCreation || opti_threadCount >= Thread_Max_ChunkCreation)
 							{
-								if (Thread* _thread = threadManager->CreateThread())
+								//There is no more thread to use
+								y = Chunk_Min_World_Height;
+								x = renderDistance;
+								break;
+							}
+							else
+							{
+								if (Chunk* _chunk = chunkPoolManager->GetChunk())
 								{
+									Thread* _thread = threadManager->CreateThread();
 									_threadToActivate.push_back(_thread);
 
 									SThread_AddChunk* _handle = _chunk->handle_AddChunk;
@@ -441,21 +456,7 @@ void Chunks_Manager::Opti_CheckRenderDistance()
 									chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
 									++_totalCreatedChunk;
 									++opti_threadCount;
-
-									if (_totalCreatedChunk >= Thread_Max_ChunkCreation || opti_threadCount >= Thread_Max_ChunkCreation)
-									{
-										y = Chunk_Min_World_Height;
-										x = renderDistance;
-										break;
-									}
 								}
-							}
-							else
-							{
-								//Not enought chunk in pool
-								y = Chunk_Min_World_Height;
-								x = renderDistance;
-								break;
 							}
 						}
 					}
@@ -573,17 +574,16 @@ bool Chunks_Manager::Opti_CheckIfNoChunkLoaded(glm::vec3 _playerPositionChunkRel
 
 			if (Chunk* _chunk = chunkPoolManager->GetChunk())
 			{
-				if (Thread* _thread = threadManager->CreateThread())
-				{
-					++opti_threadCount;
-					chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
+				Thread* _thread = threadManager->CreateThread();
 
-					SThread_AddChunk* _handle = _chunk->handle_AddChunk;
-					_handle->playerPositionChunkRelative = _playerPositionChunkRelative;
-					_handle->thisThread = _thread;
+				++opti_threadCount;
+				chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
 
-					_thread->CreateThreadFunction(true, AddChunk, _handle);
-				}
+				SThread_AddChunk* _handle = _chunk->handle_AddChunk;
+				_handle->playerPositionChunkRelative = _playerPositionChunkRelative;
+				_handle->thisThread = _thread;
+
+				_thread->CreateThreadFunction(true, AddChunk, _handle);
 			}
 		}
 		return true;
