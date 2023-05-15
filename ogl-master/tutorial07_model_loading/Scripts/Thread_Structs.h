@@ -34,13 +34,13 @@ typedef struct SThread_ClearChunks
 	Thread* thisThread = nullptr;
 	bool* bExitWorld = nullptr;
 	std::vector<Chunk*>* worldChunksToClear = nullptr;
-	HANDLE* mutex_ChunksToClear = nullptr;
+	HANDLE mutex_ChunksToClear;
 	Chunk_Pool_Manager* chunkPoolManager = nullptr;
 
 	SThread_ClearChunks() = default;
 
 	SThread_ClearChunks(Thread* _thisThread, bool* _bExitWorld, std::vector<Chunk*>* _worldChunksToClear,
-		                HANDLE* _mutex_ChunksToClear, Chunk_Pool_Manager* _chunkPoolManager)
+		                HANDLE _mutex_ChunksToClear, Chunk_Pool_Manager* _chunkPoolManager)
 	{
 		thisThread = _thisThread;
 		bExitWorld = _bExitWorld;

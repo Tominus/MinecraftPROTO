@@ -2,7 +2,7 @@
 
 #define ENABLE_DEBUG_NEW_OVERRIDE 0
 
-#define ENABLE_DEBUG_MEMORY_LEAK 1
+#define ENABLE_DEBUG_MEMORY_LEAK 0
 #define ENABLE_DEBUG_BREAK_ALLOC 0
 #define BREAK_ALLOC 374927
 
@@ -10,7 +10,7 @@
 #define Chunk_Max_Size (15)
 #define Chunk_Min_World_Height (-1)
 #define Chunk_Zero_World_Height (0)
-#define Chunk_Max_World_Height (8)
+#define Chunk_Max_World_Height (16)
 
 constexpr size_t Chunk_Min_Limit_World_Height = (Chunk_Min_World_Height + 1);
 constexpr size_t Chunk_Max_Limit_World_Height = (Chunk_Max_World_Height - 1);
@@ -28,7 +28,7 @@ constexpr size_t Chunk_Max_Limit_World_Height = (Chunk_Max_World_Height - 1);
 #define Fps_Time (0.00694f) //144fps
 
 #define Render_Distance_Min (2)
-#define Render_Distance_Current (2)
+#define Render_Distance_Current (5)
 #define Render_Distance_Max (16)
 
 constexpr size_t Render_Distance_Total = ((Render_Distance_Current * 2) - 1);

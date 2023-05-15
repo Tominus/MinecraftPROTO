@@ -131,7 +131,7 @@ void Chunks_Manager::InitChunksClear()
 		throw new std::exception("[Chunks_Manager::InitChunksClear] -> Thread is nullptr");
 
 	SThread_ClearChunks* _data = new SThread_ClearChunks(_thread, &bInterruptThread_NotSafe, &worldChunksToClear,
-														 &mutex_ChunksToClear, chunkPoolManager);
+														 mutex_ChunksToClear, chunkPoolManager);
 
 	_thread->CreateThreadFunction(true, ClearChunks, _data);
 }
@@ -234,6 +234,7 @@ Threaded int __stdcall Chunks_Manager::ClearChunks(SThread_ClearChunks* _data)
 			_chunkPoolManager->RetreiveChunk((*_worldChunksToClear)[i]);
 		}
 		_worldChunksToClear->clear();
+
 		ReleaseMutex(_mutex_ChunksToClear);
 		Sleep(16);
 	}
@@ -251,7 +252,7 @@ Threaded int __stdcall Chunks_Manager::ClearChunks(SThread_ClearChunks* _data)
 
 	delete _data;
 	_thisThread->OnFinished.Invoke(_thisThread);
-	return 1;
+	return 3;
 }
 
 void Chunks_Manager::AddStartingWorldBaseChunk()
