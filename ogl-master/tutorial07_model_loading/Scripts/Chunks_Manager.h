@@ -37,7 +37,8 @@ private:
 	void InitWorldChunksArray();
 	void InitChunksClear();
 
-	static int WINAPI AddChunk(SThread_AddChunk* _data);
+	static int WINAPI GenerateChunk(SThread_AddChunk* _data);
+	static int WINAPI Opti_GenerateChunk(SThread_AddChunk* _data);
 	static int WINAPI ClearChunks(SThread_ClearChunks* _data);
 	
 	void AddStartingWorldBaseChunk();
@@ -64,29 +65,18 @@ public:
 	// Return if the chunk have been added to array
 	inline bool Opti_AddChunk(Chunk* _chunk) 
 	{
-		WaitForSingleObject(mutex, INFINITE);
 		const glm::ivec3& _offset = _chunk->chunkPosition - opti_worldChunksOffset;
+		const int& _x = _offset.x;
+		const int& _z = _offset.z;
 
-		if (_offset.x < 0 || _offset.x >= Render_Distance_Total || _offset.z < 0 || _offset.z >= Render_Distance_Total)
+		if (_x < 0 || _x >= Render_Distance_Total || _z < 0 || _z >= Render_Distance_Total)
 		{
-			ReleaseMutex(mutex);
 			return false;
 		}
 
-#if ENABLE_DEBUG_MEMORY_LEAK
-		Chunk*& _arrayChunk = opti_worldChunks[_offset.x][_offset.y][_offset.z];
-		if (_arrayChunk)
-		{
-			printf("Opti_AddChunk : AAAAAAAAAAAAAAAAAAAAA");
-		}
-		_arrayChunk = _chunk;
+		opti_worldChunks[_x][_offset.y][_z] = _chunk;
 		++opti_worldChunksCount;
-#else
-		opti_worldChunks[_offset.x][_offset.y][_offset.z] = _chunk;
-		++opti_worldChunksCount;
-#endif
 
-		ReleaseMutex(mutex);
 		return true;
 	}
 
@@ -97,10 +87,12 @@ public:
 
 		WaitForSingleObject(mutex, INFINITE);
 		const glm::ivec3& _offset = _position - opti_worldChunksOffset;
+		const int& _x = _offset.x;
+		const int& _z = _offset.z;
 
-		if (_offset.x > -1 && _offset.x < Render_Distance_Total && _offset.z > -1 && _offset.z < Render_Distance_Total)
+		if (_x > -1 && _x < Render_Distance_Total && _z > -1 && _z < Render_Distance_Total)
 		{
-			_chunk = opti_worldChunks[_offset.x][_offset.y][_offset.z];
+			_chunk = opti_worldChunks[_x][_offset.y][_z];
 		}
 
 		ReleaseMutex(mutex);
@@ -112,59 +104,60 @@ public:
 	{
 		WaitForSingleObject(mutex, INFINITE);
 		const glm::ivec3& _offset = _position - opti_worldChunksOffset;
+		const int& _x = _offset.x;
+		const int& _y = _offset.y;
+		const int& _z = _offset.z;
 
-		if (_offset.x > -2 && _offset.x <= Render_Distance_Total && _offset.z > -2 && _offset.z <= Render_Distance_Total)
+		if (_x > -2 && _x <= Render_Distance_Total && _z > -2 && _z <= Render_Distance_Total)
 		{
-
-			if (_offset.x > 0)
+			if (_x > 0)
 			{
-				if (Chunk* _chunk = opti_worldChunks[_offset.x - 1][_offset.y][_offset.z])
+				if (Chunk* _chunk = opti_worldChunks[_x - 1][_y][_z])
 				{
 					ReleaseMutex(mutex);
 					return _chunk;
 				}
 			}
-			if (_offset.y > 0)
+			if (_y > 0)
 			{
-				if (Chunk* _chunk = opti_worldChunks[_offset.x][_offset.y - 1][_offset.z])
+				if (Chunk* _chunk = opti_worldChunks[_x][_y - 1][_z])
 				{
 					ReleaseMutex(mutex);
 					return _chunk;
 				}
 			}
-			if (_offset.z > 0)
+			if (_z > 0)
 			{
-				if (Chunk* _chunk = opti_worldChunks[_offset.x][_offset.y][_offset.z - 1])
+				if (Chunk* _chunk = opti_worldChunks[_x][_y][_z - 1])
 				{
 					ReleaseMutex(mutex);
 					return _chunk;
 				}
 			}
-			if (_offset.x < Render_Distance_Total_Limit)
+			if (_x < Render_Distance_Total_Limit)
 			{
-				if (Chunk* _chunk = opti_worldChunks[_offset.x + 1][_offset.y][_offset.z])
+				if (Chunk* _chunk = opti_worldChunks[_x + 1][_y][_z])
 				{
 					ReleaseMutex(mutex);
 					return _chunk;
 				}
 			}
-			if (_offset.y < Chunk_Max_Limit_World_Height)
+			if (_y < Chunk_Max_Limit_World_Height)
 			{
-				if (Chunk* _chunk = opti_worldChunks[_offset.x][_offset.y + 1][_offset.z])
+				if (Chunk* _chunk = opti_worldChunks[_x][_y + 1][_z])
 				{
 					ReleaseMutex(mutex);
 					return _chunk;
 				}
 			}
-			if (_offset.z < Render_Distance_Total_Limit)
+			if (_z < Render_Distance_Total_Limit)
 			{
-				if (Chunk* _chunk = opti_worldChunks[_offset.x][_offset.y][_offset.z + 1])
+				if (Chunk* _chunk = opti_worldChunks[_x][_y][_z + 1])
 				{
 					ReleaseMutex(mutex);
 					return _chunk;
 				}
 			}
-
 		}
 
 		ReleaseMutex(mutex);

@@ -136,7 +136,7 @@ void Chunks_Manager::InitChunksClear()
 	_thread->CreateThreadFunction(true, ClearChunks, _data);
 }
 
-Threaded int __stdcall Chunks_Manager::AddChunk(SThread_AddChunk* _data)
+Threaded int __stdcall Chunks_Manager::GenerateChunk(SThread_AddChunk* _data)
 {
 	Thread* _thisThread = _data->thisThread;
 	Chunks_Manager* _thisPtr = _data->chunkManager;
@@ -216,6 +216,89 @@ Threaded int __stdcall Chunks_Manager::AddChunk(SThread_AddChunk* _data)
 	return 1;
 }
 
+int __stdcall Chunks_Manager::Opti_GenerateChunk(SThread_AddChunk* _data)
+{
+	Thread* _thisThread = _data->thisThread;
+	Chunks_Manager* _thisPtr = _data->chunkManager;
+	Chunk_Pool_Manager* _chunkPoolManager = _thisPtr->chunkPoolManager;
+	HANDLE _mutex = _thisPtr->mutex;
+
+	Chunk* _chunk = _data->chunk;
+	_chunk->SetLocalPosition(_data->playerPositionChunkRelative);
+	Chunk_SideData*& _chunkSideData = _chunk->chunkSideData;
+	_chunkSideData = _chunkPoolManager->GetChunkSideData();
+
+	while (_chunkSideData == nullptr)
+	{
+		Sleep(16);
+
+		_chunkSideData = _chunkPoolManager->GetChunkSideData();
+	}
+
+	//---Data
+	_chunk->InitChunkData();
+
+	bool _hasRender = _chunk->chunkRender->bHasRender;
+	Chunk_Data* _chunkData = _chunk->chunkData;
+
+	//---Render
+	if (_hasRender)
+	{
+		_chunk->InitChunkRender();
+	}
+	else
+	{
+		//TODO : Retreive chunk render
+	}
+
+	/*WaitForSingleObject(_mutex, INFINITE);
+	if (!_thisPtr->bInterruptThread_NotSafe)
+	{
+		_thisPtr->chunkBeingGenerating.push_back(_chunk);
+		_thisPtr->onChunkDestroyed.AddDynamic(_chunkData, &Chunk_Data::RemoveSideChunk);
+		_thisPtr->chunkDataGenerator->SetSideChunks(_chunkData);
+	}
+	ReleaseMutex(_mutex);
+
+	//---Side
+	WaitForSingleObject(_mutex, INFINITE);
+	bool _hasFinishWaitSideChunk = _chunkData->CheckChunkToWaitEmpty();
+	ReleaseMutex(_mutex);
+
+	while (_hasFinishWaitSideChunk == false)
+	{
+		Sleep(16);
+
+		WaitForSingleObject(_mutex, INFINITE);
+		_hasFinishWaitSideChunk = _chunkData->CheckChunkToWaitEmpty();
+		if (_thisPtr->bInterruptThread_NotSafe)
+		{
+			_chunkPoolManager->RetreiveChunkSideData(_chunkSideData);
+			_chunkPoolManager->RetreiveChunk(_chunk);
+			_chunkSideData = nullptr;
+			ReleaseMutex(_mutex);
+			_thisThread->OnFinished.Invoke(_thisThread);
+			return 2;
+		}
+		ReleaseMutex(_mutex);
+	}*/
+
+	
+
+	//---Finish
+	_chunkPoolManager->RetreiveChunkSideData(_chunkSideData);
+	_chunkSideData = nullptr;
+
+	WaitForSingleObject(_mutex, INFINITE);
+	_thisPtr->chunkWaitingForCGgen.push_back(_chunk);
+	//_thisPtr->chunkBeingGenerating.push_back(_chunk);
+	//_thisPtr->onChunkInitialized.Invoke_Delete(_chunk);
+	ReleaseMutex(_mutex);
+
+	_thisThread->OnFinished.Invoke(_thisThread);
+	return 1;
+}
+
 Threaded int __stdcall Chunks_Manager::ClearChunks(SThread_ClearChunks* _data)
 {
 	Thread* _thisThread = _data->thisThread;
@@ -227,16 +310,27 @@ Threaded int __stdcall Chunks_Manager::ClearChunks(SThread_ClearChunks* _data)
 	//Loop for chunk clearing
 	while (!*_bExitWorld)
 	{
-		WaitForSingleObject(_mutex_ChunksToClear, INFINITE);
+#if Debug_FPS_ClearChunk
+		const int& _iLastTime = World::Instance()->GetGameTime() * 1000.f;
+		printf("[Chunks_Manager::ClearChunks] -> start\n");
+#endif
 		const size_t& _size = _worldChunksToClear->size();
 		for (size_t i = 0; i < _size; ++i)
 		{
+			WaitForSingleObject(_mutex_ChunksToClear, INFINITE);
+
 			_chunkPoolManager->RetreiveChunk((*_worldChunksToClear)[i]);
+
+			ReleaseMutex(_mutex_ChunksToClear);
 		}
 		_worldChunksToClear->clear();
 
-		ReleaseMutex(_mutex_ChunksToClear);
-		Sleep(16);
+#if Debug_FPS_ClearChunk
+		const int& _elapsed = World::Instance()->GetGameTime() * 1000.f - _iLastTime;
+		printf("[Chunks_Manager::ClearChunks] -> end %i\n", _elapsed);
+#endif
+
+		Sleep(50);
 	}
 
 
@@ -284,11 +378,19 @@ void Chunks_Manager::UpdateChunksManager() const
 
 Threaded void Chunks_Manager::TickChunksManager() const
 {
+#if Debug_FPS_Global
+	printf("[Chunks_Manager::TickChunksManager] -> start %i\n", World::Instance()->GetElapsedTime());
+#endif
+
 	WaitForSingleObject(mutex, INFINITE);
 	
 	onTick.Invoke();
 
 	ReleaseMutex(mutex);
+
+#if Debug_FPS_Global
+	printf("[Chunks_Manager::TickChunksManager] -> end %i\n\n", World::Instance()->GetElapsedTime());
+#endif
 }
 
 void Chunks_Manager::UpdateRender()
@@ -314,7 +416,7 @@ void Chunks_Manager::Exit()
 
 	bInterruptThread_NotSafe = true;
 
-	chunkBeingGenerating.clear();
+	//chunkBeingGenerating.clear();
 
 	onChunkInitialized.Clear();
 	onChunkDestroyed.Clear();
@@ -353,16 +455,18 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 		--_size;
 
 		chunkPositionFinishGeneration.push_back(_chunk->chunkPosition);
-		for (_index = 0; chunkBeingGenerating[_index] != _chunk; ++_index)
+		/*for (_index = 0; chunkBeingGenerating[_index] != _chunk; ++_index)
 		{
-
+			
 		}
-		chunkBeingGenerating.erase(chunkBeingGenerating.begin() + _index);
+		chunkBeingGenerating.erase(chunkBeingGenerating.begin() + _index);*/
 
 		if (Opti_AddChunk(_chunk))
 		{
 			if (_hasRender)
+			{
 				worldChunksToRender.push_back(_chunk);
+			}
 		}
 		else
 		{
@@ -370,9 +474,12 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 			WaitForSingleObject(mutex_ChunksToClear, INFINITE);
 			worldChunksToClear.push_back(_chunk);
 			ReleaseMutex(mutex_ChunksToClear);
-			//worldChunksToDelete.push_back(_chunk);
 		}
 	}
+
+#if Debug_FPS_Global
+	printf("[Chunks_Manager::CheckGenerateNewChunkRender] -> %i\n", World::Instance()->GetElapsedTime());
+#endif
 }
 
 void Chunks_Manager::CheckGenerateChunkPosition()
@@ -393,6 +500,10 @@ void Chunks_Manager::CheckGenerateChunkPosition()
 		chunkPositionFinishGeneration.erase(chunkPositionFinishGeneration.begin());
 		--_size;
 	}
+
+#if Debug_FPS_Global
+	printf("[Chunks_Manager::CheckGenerateChunkPosition] -> %i\n", World::Instance()->GetElapsedTime());
+#endif
 }
 
 void Chunks_Manager::CheckUpdateChunkSideRender()
@@ -413,6 +524,7 @@ void Chunks_Manager::Opti_CheckRenderDistance()
 	Opti_RecenterWorldChunksArray(_playerPositionChunkRelative);
 
 	if (Opti_CheckIfNoChunkLoaded(_playerPositionChunkRelative))return;
+	if (opti_worldChunksCount == Total_Chunk)return;
 
 	std::vector<Thread*> _threadToActivate;
 	size_t _totalCreatedChunk = 0;
@@ -453,7 +565,7 @@ void Chunks_Manager::Opti_CheckRenderDistance()
 									_handle->playerPositionChunkRelative = _playerPositionChunkRelative;
 									_handle->thisThread = _thread;
 
-									_thread->CreateThreadFunction(false, AddChunk, _handle);
+									_thread->CreateThreadFunction(false, Opti_GenerateChunk, _handle);
 									chunkPositionBeingGenerated.push_back(_playerPositionChunkRelative);
 									++_totalCreatedChunk;
 									++opti_threadCount;
@@ -476,6 +588,10 @@ void Chunks_Manager::Opti_CheckRenderDistance()
 	{
 		_threadToActivate[i]->Execute();
 	}
+
+#if Debug_FPS_Global
+	printf("[Chunks_Manager::Opti_CheckRenderDistance] -> %i\n", World::Instance()->GetElapsedTime());
+#endif
 }
 
 void Chunks_Manager::Opti_RecenterWorldChunksArray(const glm::vec3& _playerPositionChunkRelative)
@@ -554,6 +670,10 @@ void Chunks_Manager::Opti_RecenterWorldChunksArray(const glm::vec3& _playerPosit
 
 		opti_worldChunksOffset.x += _moveOffsetMinX;
 		opti_worldChunksOffset.z += _moveOffsetMinZ;
+
+#if Debug_FPS_Global
+		printf("[Chunks_Manager::Opti_RecenterWorldChunksArray] -> %i\n", World::Instance()->GetElapsedTime());
+#endif
 	}
 }
 
@@ -561,7 +681,7 @@ bool Chunks_Manager::Opti_CheckIfNoChunkLoaded(glm::vec3 _playerPositionChunkRel
 {
 	if (opti_worldChunksCount == 0)
 	{
-		if (chunkPositionBeingGenerated.size() == 0 && chunkPositionFinishGeneration.size() == 0)
+		if (chunkPositionBeingGenerated.size() == 0 /* && chunkPositionFinishGeneration.size() == 0*/)
 		{
 			const float& _playerHeight = round((getPositionHeight() - 8.f) / 16.f);
 			if (_playerHeight < Chunk_Min_Limit_World_Height)
@@ -584,7 +704,7 @@ bool Chunks_Manager::Opti_CheckIfNoChunkLoaded(glm::vec3 _playerPositionChunkRel
 				_handle->playerPositionChunkRelative = _playerPositionChunkRelative;
 				_handle->thisThread = _thread;
 
-				_thread->CreateThreadFunction(true, AddChunk, _handle);
+				_thread->CreateThreadFunction(true, Opti_GenerateChunk, _handle);
 			}
 		}
 		return true;

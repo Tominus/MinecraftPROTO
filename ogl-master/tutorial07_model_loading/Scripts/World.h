@@ -47,8 +47,19 @@ public:
 
 	inline GLFWwindow* GetWindow() const { return window; }
 
+	inline const bool& GetIsExiting() const { return bIsExiting; }
 	inline const float& GetDeltaTime() const { return deltaTime; }
-	inline const float& GetGameTime() const { return gameTime; }
+	inline const float& GetGameBeginFrameTime() const { return gameTime; }
+	inline const float& GetGameTime() const { return std::clock() / 1000.f; }
+
+	//Return the time elapsed in ms between last call
+	inline const long& GetElapsedTime() const
+	{
+		const long& _currentClock = std::clock();
+		const long& _elapsed = _currentClock - lastTime;
+		lastTime = _currentClock;
+		return _elapsed;
+	}
 
 private:
 	TextureLoader* textureLoader;
@@ -61,8 +72,10 @@ private:
 
 	GLFWwindow* window;
 
+	bool bIsExiting;
 	float deltaTime;
 	float gameTime;
 	float tickTime;
 	float fpsTime;
+	mutable long lastTime;
 };

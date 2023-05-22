@@ -18,6 +18,7 @@
 */
 
 /*
+* - Check pk GenerateCGRender lag
 * - //TODO : Retreive chunk render
 * - Calculate how many pool object is neccessary by render distance
 * - Retirer le rendu sous la map

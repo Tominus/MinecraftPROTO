@@ -68,7 +68,6 @@ public:
 
 private:
 	std::vector<Chunk*> chunkPool;
-	std::vector<Chunk*> debug;
 	std::vector<Chunk_SideData*> chunkSideDataPool;
 	std::vector<SChunk_Render_Buffer*> chunkRenderBufferPool;
 	std::vector<SChunk_Render_Data*> chunkRenderDataPool;

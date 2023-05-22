@@ -11,6 +11,7 @@
 #include "Chunk_Render.h"
 #include "Chunk_SideData.h"
 #include "Thread_Structs.h"
+#include "World.h"
 
 
 Chunk_Pool_Manager::Chunk_Pool_Manager(Chunks_Manager* _chunkManager, Chunk_Data_Generator* _chunkDataGenerator, Chunk_Render_Generator* _chunkRenderGenerator)
@@ -47,8 +48,7 @@ Chunk_Pool_Manager::~Chunk_Pool_Manager()
 
 void Chunk_Pool_Manager::InitializeAllChunkData()
 {
-	const size_t& _size = Render_Distance_Total * Render_Distance_Total * Chunk_Max_World_Height;
-	for (size_t i = 0; i < _size; ++i)
+	for (size_t i = 0; i < Total_Chunk; ++i)
 	{
 		Chunk* _chunk = new Chunk(chunkDataGenerator, chunkRenderGenerator);
 
@@ -65,8 +65,6 @@ void Chunk_Pool_Manager::InitializeAllChunkData()
 		chunkPool.push_back(_chunk);
 	}
 
-	debug = chunkPool;
-
 	GenerateChunkSideData();
 	GenerateChunkRenderBuffer();
 	GenerateChunkRenderData();
@@ -75,27 +73,6 @@ void Chunk_Pool_Manager::InitializeAllChunkData()
 
 void Chunk_Pool_Manager::DestroyAllChunkData()
 {
-#if ENABLE_DEBUG_MEMORY_LEAK
-	if (chunkPool.size() < Render_Distance_Total * Render_Distance_Total * Chunk_Max_World_Height)
-	{
-		for (size_t i = 0; i < debug.size(); i++)
-		{
-			bool find = false;
-
-			for (size_t j = 0; j < chunkPool.size(); j++)
-			{
-				if (debug[i] == chunkPool[j])
-					find = true;
-			}
-
-			if (!find)
-			{
-				printf("");
-			}
-		}
-	}
-#endif
-
 	const size_t& _chunkPoolSize = chunkPool.size();
 	for (size_t i = 0; i < _chunkPoolSize; ++i)
 	{
@@ -126,11 +103,11 @@ void Chunk_Pool_Manager::DestroyAllChunkData()
 		delete chunkRenderShapesPool[i];
 	}
 
-	printf("\nChunk : %i", _chunkPoolSize);
-	printf("\nChunk : %i", _chunkSideDataPoolSize);
-	printf("\nChunk : %i", _chunkRenderBufferPoolSize);
-	printf("\nChunk : %i", _chunkRenderDataPoolSize);
-	printf("\nChunk : %i", _chunkRenderShapesPoolSize);
+	printf("\nChunkPool : %i", _chunkPoolSize);
+	printf("\nChunkSide : %i", _chunkSideDataPoolSize);
+	printf("\nChunkBuffer : %i", _chunkRenderBufferPoolSize);
+	printf("\nChunkData : %i", _chunkRenderDataPoolSize);
+	printf("\nChunkShapes : %i\n", _chunkRenderShapesPoolSize);
 }
 
 #pragma region Generate
@@ -290,7 +267,7 @@ void Chunk_Pool_Manager::ClearChunkRender(Chunk_Render* _chunkRender)
 	if (_chunkRender->bHasRender)
 	{
 		std::map<GLuint, SChunk_Render_Data*>& _renderDatas = _chunkRender->renderDatas;
-		for each (const std::pair<GLuint, SChunk_Render_Data*>&_datas in _renderDatas)
+		for each (const std::pair<GLuint, SChunk_Render_Data*>& _datas in _renderDatas)
 		{
 			SChunk_Render_Data* _renderBuffer = _datas.second;
 			glDeleteBuffers(1, &_renderBuffer->vertexsBuffer);
@@ -356,6 +333,11 @@ void Chunk_Pool_Manager::ClearChunkSideData(Chunk_SideData* _chunkSideData)
 #pragma region Update
 void Chunk_Pool_Manager::Update()
 {
+#if Debug_FPS_Global
+	if (!World::Instance()->GetIsExiting())
+		printf("[Chunk_Pool_Manager::Update] -> begin %i\n", World::Instance()->GetElapsedTime());
+#endif
+
 	WaitForSingleObject(mutex_HasToGenerateData, INFINITE);
 
 	CheckHasToGenerateNewChunkRenderBuffer();
@@ -363,6 +345,11 @@ void Chunk_Pool_Manager::Update()
 	CheckHasToGenerateNewChunkRenderShapes();
 
 	ReleaseMutex(mutex_HasToGenerateData);
+
+#if Debug_FPS_Global
+	if (!World::Instance()->GetIsExiting())
+		printf("[Chunk_Pool_Manager::Update] -> end %i\n", World::Instance()->GetElapsedTime());
+#endif
 }
 
 void Chunk_Pool_Manager::CheckHasToGenerateNewChunkRenderBuffer()
@@ -370,7 +357,7 @@ void Chunk_Pool_Manager::CheckHasToGenerateNewChunkRenderBuffer()
 	if (bHasToGenerateNewChunkRenderBuffer)
 	{
 		iTotalBuffer += 1024;
-		printf("\nBuffer : %i  Data : %i  Shapes : %i", iTotalBuffer, iTotalData, iTotalShapes);
+		printf("Buffer : %i  Data : %i  Shapes : %i\n", iTotalBuffer, iTotalData, iTotalShapes);
 
 		WaitForSingleObject(mutex_ChunkRenderBufferPool, INFINITE);
 		for (size_t i = 0; i < 1024; ++i)
@@ -388,7 +375,7 @@ void Chunk_Pool_Manager::CheckHasToGenerateNewChunkRenderData()
 	if (bHasToGenerateNewChunkRenderData)
 	{
 		iTotalData += 64;
-		printf("\nBuffer : %i  Data : %i  Shapes : %i", iTotalBuffer, iTotalData, iTotalShapes);
+		printf("Buffer : %i  Data : %i  Shapes : %i\n", iTotalBuffer, iTotalData, iTotalShapes);
 
 		WaitForSingleObject(mutex_ChunkRenderDataPool, INFINITE);
 		for (size_t i = 0; i < 64; ++i)
@@ -406,7 +393,7 @@ void Chunk_Pool_Manager::CheckHasToGenerateNewChunkRenderShapes()
 	if (bHasToGenerateNewChunkRenderShapes)
 	{
 		iTotalShapes += 1024;
-		printf("\nBuffer : %i  Data : %i  Shapes : %i", iTotalBuffer, iTotalData, iTotalShapes);
+		printf("Buffer : %i  Data : %i  Shapes : %i\n", iTotalBuffer, iTotalData, iTotalShapes);
 
 		WaitForSingleObject(mutex_ChunkRenderShapesPool, INFINITE);
 		for (size_t i = 0; i < 1024; ++i)

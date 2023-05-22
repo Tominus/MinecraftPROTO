@@ -41,11 +41,11 @@ Chunk_Render_Generator::~Chunk_Render_Generator()
 
 Threaded void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chunkRender, Chunk_Data* _chunkData)
 {
-	WaitForSingleObject(mutex_ChunkManager, INFINITE);
+	//WaitForSingleObject(mutex_ChunkManager, INFINITE);
 	Chunk* _ownerChunk = _chunkRender->ownerChunk;
 	const glm::vec3& _chunkPosition = _ownerChunk->GetChunkPosition();
 	Chunk_SideData* _sideData = _ownerChunk->chunkSideData;
-	ReleaseMutex(mutex_ChunkManager);
+	//ReleaseMutex(mutex_ChunkManager);
 
 	const float& _chunkHeight = _chunkPosition.y;
 	Block*** _downSide = _sideData->downBlocks;

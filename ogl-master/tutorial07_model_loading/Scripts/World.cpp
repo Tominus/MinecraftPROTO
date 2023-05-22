@@ -21,10 +21,12 @@ World::World()
 
 	window = nullptr;
 
+	bIsExiting = false;
 	gameTime = 0.f;
 	tickTime = 0.f;
 	fpsTime = 0.f;
 	deltaTime = 0.f;
+	lastTime = 0;
 }
 
 World::~World()
@@ -103,6 +105,7 @@ void World::Update()
 
 void World::Exit()
 {
+	bIsExiting = true;
 	chunksManager->Exit();
 }
 
