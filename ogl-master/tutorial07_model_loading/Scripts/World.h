@@ -50,7 +50,7 @@ public:
 	inline const bool& GetIsExiting() const { return bIsExiting; }
 	inline const float& GetDeltaTime() const { return deltaTime; }
 	inline const float& GetGameBeginFrameTime() const { return gameTime; }
-	inline const float& GetGameTime() const { return std::clock() / 1000.f; }
+	inline const float& GetGameTime() const { return (float)std::clock() / 1000.f; }
 
 	//Return the time elapsed in ms between last call
 	inline const long& GetElapsedTime() const

@@ -216,6 +216,7 @@ private:
 	Chunk_Data_Generator* chunkDataGenerator;
 	Chunk_Render_Generator* chunkRenderGenerator;
 	Thread_Manager* threadManager;
+	World* world;
 
 	std::vector<Chunk*> chunkBeingGenerating;
 

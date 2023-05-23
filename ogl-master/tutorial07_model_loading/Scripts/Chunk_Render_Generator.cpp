@@ -258,7 +258,7 @@ Threaded void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chun
 							}
 						}
 					}
-
+					
 					if (const SBlock_Shape_Data* _shapesData = blockGlobalShapes->GetBlockVertexsAndUVs(_blockData->blockShapeType, _index))
 					{
 						const glm::vec3* _vertexs = _shapesData->GetVertexs();
@@ -280,7 +280,7 @@ Threaded void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chun
 
 						SChunk_Render_Data* _currentChunkRenderData = GetChunkRenderData(_currentRenderDatas, _textureID);
 						_currentChunkRenderData->verticesGlobalSize += *_vertexsSize;
-
+						
 						SChunk_Render_Buffer* _currentRenderBuffer = chunkPoolManager->GetChunkRenderBuffer();
 
 						while (_currentRenderBuffer == false)
@@ -294,7 +294,7 @@ Threaded void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chun
 						_currentRenderBuffer->SetRenderBuffer(_currentShape, _blockPosition);
 
 						_currentChunkRenderData->renderBuffer.push_back(_currentRenderBuffer);
-
+						
 						const size_t& _max = *_vertexsSize;
 						for (size_t i = 0; i < _max; ++i)
 						{

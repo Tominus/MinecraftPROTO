@@ -28,6 +28,8 @@ Chunks_Manager::Chunks_Manager()
 
 	threadManager = Thread_Manager::Instance();
 
+	world = World::Instance();
+
 	renderDistance = Render_Distance_Current;
 	renderMaxDistance = renderDistance - 1;
 
@@ -216,7 +218,7 @@ Threaded int __stdcall Chunks_Manager::GenerateChunk(SThread_AddChunk* _data)
 	return 1;
 }
 
-int __stdcall Chunks_Manager::Opti_GenerateChunk(SThread_AddChunk* _data)
+Threaded int __stdcall Chunks_Manager::Opti_GenerateChunk(SThread_AddChunk* _data)
 {
 	Thread* _thisThread = _data->thisThread;
 	Chunks_Manager* _thisPtr = _data->chunkManager;
@@ -437,6 +439,8 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 	size_t _size (chunkWaitingForCGgen.size());
 	size_t _index = 0;
 
+	//const float& _startTime = world->GetGameTime();
+
 	while (_size > 0)
 	{
 		Chunk* _chunk = chunkWaitingForCGgen[0];
@@ -475,6 +479,12 @@ void Chunks_Manager::CheckGenerateNewChunkRender()
 			worldChunksToClear.push_back(_chunk);
 			ReleaseMutex(mutex_ChunksToClear);
 		}
+
+		/*if (world->GetGameTime() - _startTime > 0.008f)
+		{
+			printf("%f > 0.008f\n", world->GetGameTime() - _startTime);
+			break;
+		}*/
 	}
 
 #if Debug_FPS_Global
