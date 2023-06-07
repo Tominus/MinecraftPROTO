@@ -18,6 +18,9 @@
 */
 
 /*
+* - Generate graphics in thread by giving them the windows i think
+* - Delete pool and set thread windows to be main (something like that)
+* 
 * - Check pk GenerateCGRender lag
 * - //TODO : Retreive chunk render
 * - Calculate how many pool object is neccessary by render distance
