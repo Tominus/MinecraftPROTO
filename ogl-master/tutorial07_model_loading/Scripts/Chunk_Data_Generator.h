@@ -31,8 +31,8 @@ private:
 
 	inline EBlock_Type GenerateHeight(const glm::vec3& _blockPosition)
 	{
-		//Smooth world
-		double _noise = perlinNoise->CalculateNoise(_blockPosition.x / 2, _blockPosition.z / 2);
+		//Hard coded values to smooth world
+		double _noise = perlinNoise->CalculateNoise(_blockPosition.x / 2.f,	_blockPosition.z / 2.f);
 		_noise /= 8.0;
 		_noise += 128.0;
 
@@ -42,11 +42,11 @@ private:
 		}
 		else
 		{
-			return (EBlock_Type)(rand() % 4 + 2); //Generate only stone
+			return static_cast<EBlock_Type>(rand() % 4 + 2);
 		}
 	}
 
-	Threaded void SetSideChunks(Chunk_Data*& _chunkData) const;
+	void SetSideChunks(Chunk_Data*& _chunkData) const;
 
 private:
 	//maybe the generator seed and a ?Terrain_Generator

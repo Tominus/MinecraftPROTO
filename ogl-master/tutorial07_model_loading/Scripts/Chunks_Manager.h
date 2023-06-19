@@ -71,6 +71,7 @@ public:
 
 		if (_x < 0 || _x >= Render_Distance_Total || _z < 0 || _z >= Render_Distance_Total)
 		{
+			//Out of bounds
 			return false;
 		}
 
@@ -90,7 +91,8 @@ public:
 		const int& _x = _offset.x;
 		const int& _z = _offset.z;
 
-		if (_x > -1 && _x < Render_Distance_Total && _z > -1 && _z < Render_Distance_Total)
+		if (_x > -1 && _x < Render_Distance_Total && 
+			_z > -1 && _z < Render_Distance_Total)
 		{
 			_chunk = opti_worldChunks[_x][_offset.y][_z];
 		}
@@ -204,8 +206,8 @@ public:
 
 private:
 	Chunk**** opti_worldChunks;
-	size_t opti_worldChunksCount;
 	glm::vec3 opti_worldChunksOffset;
+	size_t    opti_worldChunksCount;
 
 	int opti_threadCount;
 

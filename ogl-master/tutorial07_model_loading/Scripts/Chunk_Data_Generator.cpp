@@ -70,6 +70,7 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data* _chunkData)
 		}
 	}
 
+	//Check if has render and need to generate side data
 	for (size_t x = 0; x < Chunk_Size; ++x)
 	{
 		Block***& _blocksX = _blocks[x];
@@ -94,9 +95,9 @@ void Chunk_Data_Generator::GenerateNewChunkData(Chunk_Data* _chunkData)
 void Chunk_Data_Generator::GenerateChunkSideData(Chunk* _chunk)
 {
 	Chunk_SideData* _chunkSideData = _chunk->chunkSideData;
-	glm::vec3 _chunkWorldPosition(_chunk->worldPosition);
-	float _chunkHeightPosition = _chunk->chunkPosition.y;
-	float _ownerChunkHeight = _chunkWorldPosition.y;
+	const glm::vec3& _chunkWorldPosition = _chunk->worldPosition;
+	const float& _chunkHeightPosition = _chunk->chunkPosition.y;
+	const float& _ownerChunkHeight = _chunkWorldPosition.y;
 
 	//Down Side
 	if (_chunkHeightPosition > fMinChunkHeight)

@@ -227,65 +227,24 @@ Threaded int __stdcall Chunks_Manager::Opti_GenerateChunk(SThread_AddChunk* _dat
 
 	Chunk* _chunk = _data->chunk;
 	_chunk->SetLocalPosition(_data->playerPositionChunkRelative);
+
+	Chunk_Data* _chunkData = _chunk->chunkData;
+
 	Chunk_SideData*& _chunkSideData = _chunk->chunkSideData;
 	_chunkSideData = _chunkPoolManager->GetChunkSideData();
 
 	while (_chunkSideData == nullptr)
 	{
 		Sleep(16);
-
 		_chunkSideData = _chunkPoolManager->GetChunkSideData();
 	}
 
 	//---Data
 	_chunk->InitChunkData();
 
-	bool _hasRender = _chunk->chunkRender->bHasRender;
-	Chunk_Data* _chunkData = _chunk->chunkData;
-
 	//---Render
-	if (_hasRender)
-	{
+	if (_chunk->chunkRender->bHasRender)
 		_chunk->InitChunkRender();
-	}
-	else
-	{
-		//TODO : Retreive chunk render
-	}
-
-	/*WaitForSingleObject(_mutex, INFINITE);
-	if (!_thisPtr->bInterruptThread_NotSafe)
-	{
-		_thisPtr->chunkBeingGenerating.push_back(_chunk);
-		_thisPtr->onChunkDestroyed.AddDynamic(_chunkData, &Chunk_Data::RemoveSideChunk);
-		_thisPtr->chunkDataGenerator->SetSideChunks(_chunkData);
-	}
-	ReleaseMutex(_mutex);
-
-	//---Side
-	WaitForSingleObject(_mutex, INFINITE);
-	bool _hasFinishWaitSideChunk = _chunkData->CheckChunkToWaitEmpty();
-	ReleaseMutex(_mutex);
-
-	while (_hasFinishWaitSideChunk == false)
-	{
-		Sleep(16);
-
-		WaitForSingleObject(_mutex, INFINITE);
-		_hasFinishWaitSideChunk = _chunkData->CheckChunkToWaitEmpty();
-		if (_thisPtr->bInterruptThread_NotSafe)
-		{
-			_chunkPoolManager->RetreiveChunkSideData(_chunkSideData);
-			_chunkPoolManager->RetreiveChunk(_chunk);
-			_chunkSideData = nullptr;
-			ReleaseMutex(_mutex);
-			_thisThread->OnFinished.Invoke(_thisThread);
-			return 2;
-		}
-		ReleaseMutex(_mutex);
-	}*/
-
-	
 
 	//---Finish
 	_chunkPoolManager->RetreiveChunkSideData(_chunkSideData);
@@ -293,8 +252,6 @@ Threaded int __stdcall Chunks_Manager::Opti_GenerateChunk(SThread_AddChunk* _dat
 
 	WaitForSingleObject(_mutex, INFINITE);
 	_thisPtr->chunkWaitingForCGgen.push_back(_chunk);
-	//_thisPtr->chunkBeingGenerating.push_back(_chunk);
-	//_thisPtr->onChunkInitialized.Invoke_Delete(_chunk);
 	ReleaseMutex(_mutex);
 
 	_thisThread->OnFinished.Invoke(_thisThread);
@@ -551,10 +508,13 @@ void Chunks_Manager::Opti_CheckRenderDistance()
 			{
 				_playerPositionChunkRelative.z += z;
 
+				//Check if chunk is already there
 				if (!Opti_GetChunk(_playerPositionChunkRelative))
 				{
+					//Check of the chunk is being generating
 					if (!GetIsChunkAtPositionBeingGenerated(_playerPositionChunkRelative))
 					{
+						//Check if a valid chunk is around position
 						if (Opti_GetFirstChunkAroundPosition(_playerPositionChunkRelative))
 						{
 							if (_totalCreatedChunk >= Thread_Max_ChunkCreation || opti_threadCount >= Thread_Max_ChunkCreation)
@@ -618,19 +578,19 @@ void Chunks_Manager::Opti_RecenterWorldChunksArray(const glm::vec3& _playerPosit
 		const int& _moveOffsetMaxX = Render_Distance_Total + _moveOffsetMinX - 1;
 		const int& _moveOffsetMaxZ = Render_Distance_Total + _moveOffsetMinZ - 1;
 
-		//Delete chunk low
+		//Clear chunks out of bounds
 		WaitForSingleObject(mutex_ChunksToClear, INFINITE);
 		for (int x = 0; x < Render_Distance_Total; ++x)
 		{
 			Chunk*** _chunksX = opti_worldChunks[x];
-
 			for (int y = 0; y < Chunk_Max_World_Height; ++y)
 			{
 				Chunk** _chunksY = _chunksX[y];
-
 				for (int z = 0; z < Render_Distance_Total; ++z)
 				{
-					if (_moveOffsetMinX > x || _moveOffsetMinZ > z || _moveOffsetMaxX < x || _moveOffsetMaxZ < z)
+					//Move offset checking chunk OOB
+					if (_moveOffsetMinX > x || _moveOffsetMinZ > z ||
+						_moveOffsetMaxX < x || _moveOffsetMaxZ < z)
 					{
 						if (Chunk*& _chunk = _chunksY[z])
 						{

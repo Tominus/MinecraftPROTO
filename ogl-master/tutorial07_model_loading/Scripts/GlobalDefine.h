@@ -31,7 +31,7 @@ constexpr size_t Chunk_Max_Limit_World_Height = (Chunk_Max_World_Height - 1);
 #define Debug_FPS_ClearChunk (0)
 
 #define Render_Distance_Min (2)
-#define Render_Distance_Current (5)
+#define Render_Distance_Current (8)
 #define Render_Distance_Max (16)
 
 constexpr size_t Render_Distance_Total = ((Render_Distance_Current * 2) - 1);

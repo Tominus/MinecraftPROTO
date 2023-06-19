@@ -31,10 +31,13 @@ private:
 
 	void GenerateChunkCGRender(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas);
 
+	//Deprecated
 	void AddTextureToUpdate(std::vector<GLuint>& _texturesToUpdate, const GLuint& _textureID);
+	//Deprecated
 	void RegenerateRender(Chunk* _chunk, std::vector<GLuint>& _texturesToUpdate);
-
+	//Deprecated
 	void GenerateChunkUpdatedCGRender(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas, std::vector<GLuint>& _texturesToUpdate);
+	//Deprecated
 	void ClearUnUsedChunkCGRender();
 
 private:

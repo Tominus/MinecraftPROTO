@@ -9,6 +9,7 @@ class Chunks_Manager;
 class Chunk;
 class Chunk_Data_Generator;
 class Chunk_Render_Generator;
+class Chunk_Pool_Manager;
 
 typedef struct SThread_AddChunk
 {

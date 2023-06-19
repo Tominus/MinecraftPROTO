@@ -135,7 +135,7 @@ void Blocks_Global_Shapes::GenerateBlocksShapeDatas()
 
 		std::vector<SBlock_Shape_Data*> _blockShapes;
 
-		//push a null render cause there is no render for the block
+		//There is no render for the first block
 		_blockShapes.push_back(nullptr);
 
 		for (size_t i = 1; i < Block_Total_Possible_Shapes; ++i)
@@ -169,7 +169,8 @@ void Blocks_Global_Shapes::GenerateBlocksShapeDatas()
 				_shapeUVs[j] = _tmpUVs[j];
 			}
 
-			_blockShapes.push_back(new SBlock_Shape_Data(_shapeVertices, _shapeUVs, _shapeVertexsSize, _max));
+			_blockShapes.push_back(new SBlock_Shape_Data(_shapeVertices, _shapeUVs,
+														 _shapeVertexsSize, _max));
 		}
 
 		blockShapesDatas.emplace(EBlock_Shapes_Type::Block, _blockShapes);

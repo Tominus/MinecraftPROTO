@@ -20,15 +20,17 @@ public:
 		bIsExecuted = _autoActivate;
 		currentThread = CreateThread(0, 0, (Thread_Func)_method, _params, CREATE_SUSPENDED, currentThreadID);
 	
+		//Set affinity mask from Thread_Manager
 		SetThreadAffinityMask(currentThread, currentThreadAffinity);
 		
 		if (!SetThreadPriority(currentThread, THREAD_PRIORITY_NORMAL))
 			throw std::exception("[Thread::CreateThreadFunction] -> Can't set Thread priority");
 
+		//Set the processor used by the thread
 		PPROCESSOR_NUMBER _processorNumber = new PROCESSOR_NUMBER();
 		GetThreadIdealProcessorEx(currentThread, _processorNumber);
 
-		if (_processorNumber->Number == '\0')
+		if (_processorNumber->Number == '\0') //'\0' is the main thread
 		{
 			_processorNumber->Number = (BYTE)(GetActiveProcessorCount(0) - 1);
 			if (!SetThreadIdealProcessorEx(currentThread, _processorNumber, _processorNumber))

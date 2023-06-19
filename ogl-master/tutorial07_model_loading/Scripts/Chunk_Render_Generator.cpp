@@ -313,7 +313,7 @@ Threaded void Chunk_Render_Generator::GenerateNewChunkRender(Chunk_Render* _chun
 
 SChunk_Render_Data* Chunk_Render_Generator::GetChunkRenderData(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas, const GLuint& _textureID)
 {
-	for each (const std::pair<const GLuint&, SChunk_Render_Data*>&_data in _currentRenderDatas)
+	for each (const std::pair<const GLuint&, SChunk_Render_Data*>& _data in _currentRenderDatas)
 	{
 		if (_data.first == _textureID)
 			return _data.second;
@@ -358,6 +358,7 @@ void Chunk_Render_Generator::GenerateChunkCGRender(std::map<GLuint, SChunk_Rende
 	}
 }
 
+//Deprecated
 void Chunk_Render_Generator::AddTextureToUpdate(std::vector<GLuint>& _texturesToUpdate, const GLuint& _textureID)
 {
 	const size_t& _max = _texturesToUpdate.size();
@@ -370,6 +371,7 @@ void Chunk_Render_Generator::AddTextureToUpdate(std::vector<GLuint>& _texturesTo
 	_texturesToUpdate.push_back(_textureID);
 }
 
+//Deprecated
 void Chunk_Render_Generator::RegenerateRender(Chunk* _chunk, std::vector<GLuint>& _texturesToUpdate)
 {
 	Chunk_Render* _chunkRender = _chunk->chunkRender;
@@ -412,6 +414,7 @@ void Chunk_Render_Generator::RegenerateRender(Chunk* _chunk, std::vector<GLuint>
 	GenerateChunkUpdatedCGRender(_renderDatas, _texturesToUpdate);
 }
 
+//Deprecated
 Threaded void Chunk_Render_Generator::GenerateChunkUpdatedCGRender(std::map<GLuint, SChunk_Render_Data*>& _currentRenderDatas, std::vector<GLuint>& _texturesToUpdate)
 {
 	const size_t& _max = _texturesToUpdate.size();
@@ -450,6 +453,7 @@ Threaded void Chunk_Render_Generator::GenerateChunkUpdatedCGRender(std::map<GLui
 	}
 }
 
+//Deprecated
 void Chunk_Render_Generator::ClearUnUsedChunkCGRender()
 {
 	//TODO if last block of a render is destroy

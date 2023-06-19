@@ -4,7 +4,7 @@
 Thread::Thread(DWORD_PTR _threadAffinity)
 {
 	bIsExecuted = false;
-	currentThread = nullptr;
+	currentThread = 0;
 	currentThreadID = nullptr;
 	currentThreadAffinity = _threadAffinity;
 }
